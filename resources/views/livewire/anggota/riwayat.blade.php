@@ -11,21 +11,24 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     {
         $user = Auth::user();
 
-        $totalPokok = $user->simpananPokok?->jumlah ?? 0;
         $totalWajib = $user->simpananWajib()->sum('jumlah');
         $totalTarik = $user->penarikan()->sum('jumlah');
-        $saldo = ($totalPokok + $totalWajib) - $totalTarik;
 
         $riwayatWajib = $user->simpananWajib()
             ->orderByDesc('tahun')
             ->orderByDesc('bulan')
+            ->take(5)
             ->get();
 
         $riwayatTarik = $user->penarikan()
             ->orderByDesc('tanggal')
             ->get();
 
-        return compact('totalPokok', 'totalWajib', 'totalTarik', 'saldo', 'riwayatWajib', 'riwayatTarik');
+        $riwayatPinjaman = $user->pinjaman()
+            ->orderByDesc('created_at')
+            ->get();
+
+        return compact('totalWajib', 'totalTarik', 'riwayatWajib', 'riwayatTarik', 'riwayatPinjaman');
     }
 }; ?>
 
@@ -133,7 +136,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         @endif
     </div>
 
-    {{-- Simpanan Pokok --}}
+    {{-- Riwayat Pinjaman --}}
     <div
         class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm overflow-hidden">
         <div
@@ -141,43 +144,57 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             <div class="flex items-center gap-2">
                 <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500 text-white">
                     <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path d="M3 21h18M9 8h1m5 0h1M3 7l9-4 9 4M6 21V10m12 11V10M10 21v-6h4v6" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <p class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Simpanan Pokok</p>
+                <p class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Riwayat Pinjaman</p>
             </div>
+            <span class="text-xs font-bold text-blue-700 dark:text-blue-300">{{ $riwayatPinjaman->count() }} Ajuan</span>
         </div>
-        <div class="px-4 py-3">
-            @php $pokok = auth()->user()->simpananPokok; @endphp
-            @if($pokok)
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-zinc-400">Dibayar {{ $pokok->tanggal->format('d M Y') }}</p>
-                        @if($pokok->keterangan)
-                            <p class="text-xs text-zinc-400 mt-0.5">{{ $pokok->keterangan }}</p>
+
+        @if($riwayatPinjaman->isEmpty())
+            <div class="py-8 text-center text-zinc-400">
+                <p class="text-sm">Belum ada riwayat pinjaman</p>
+            </div>
+        @else
+            @foreach($riwayatPinjaman as $i => $item)
+                <div class="flex items-center justify-between px-4 py-3
+                            {{ $i < $riwayatPinjaman->count() - 1 ? 'border-b border-zinc-100 dark:border-zinc-800' : '' }}">
+                    <div class="flex items-center gap-2.5">
+                        <div class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg 
+                            @if($item->status === 'disetujui') bg-emerald-100 dark:bg-emerald-900/40
+                            @elseif($item->status === 'ditolak') bg-rose-100 dark:bg-rose-900/40
+                            @else bg-orange-100 dark:bg-orange-900/40 @endif">
+                            
+                            @if($item->status === 'disetujui')
+                                <svg class="size-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                            @elseif($item->status === 'ditolak')
+                                <svg class="size-3.5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                            @else
+                                <svg class="size-3.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            @endif
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                                Rp {{ number_format($item->jumlah_ajuan, 0, ',', '.') }}
+                            </p>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">
+                                {{ $item->tenor }} bln &bull; {{ $item->created_at->format('d M Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        @if($item->status === 'disetujui')
+                            <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold text-emerald-600 border border-emerald-200 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-400">Disetujui</span>
+                        @elseif($item->status === 'ditolak')
+                            <span class="inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-semibold text-rose-600 border border-rose-200 dark:border-rose-800/50 dark:bg-rose-950/40 dark:text-rose-400">Ditolak</span>
+                        @else
+                            <span class="inline-flex rounded-full bg-orange-50 px-2 py-0.5 text-[9px] font-semibold text-orange-600 border border-orange-200 dark:border-orange-800/50 dark:bg-orange-950/40 dark:text-orange-400">Proses</span>
                         @endif
                     </div>
-                    <p class="text-base font-bold text-blue-700 dark:text-blue-300">Rp
-                        {{ number_format($pokok->jumlah, 0, ',', '.') }}</p>
                 </div>
-                <div
-                    class="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 px-2 py-0.5">
-                    <svg class="size-3 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                        stroke-width="3">
-                        <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span class="text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">Sudah Dibayar</span>
-                </div>
-            @else
-                <div class="flex items-center justify-between">
-                    <p class="text-sm text-zinc-500">Belum membayar simpanan pokok</p>
-                    <a href="{{ route('simpanan.pokok') }}" wire:navigate
-                        class="inline-flex items-center rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-semibold text-white">
-                        Bayar
-                    </a>
-                </div>
-            @endif
-        </div>
+            @endforeach
+        @endif
     </div>
 
     <div class="h-4"></div>

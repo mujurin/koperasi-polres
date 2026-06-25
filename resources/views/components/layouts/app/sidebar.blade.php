@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="">
 
 <head>
     @include('partials.head')
@@ -26,6 +26,12 @@
                     <flux:navlist.item icon="arrow-down-tray" :href="route('simpanan.penarikan')"
                         :current="request()->routeIs('simpanan.penarikan')" wire:navigate>
                         Persetujuan Penarikan
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="clock" href="{{ route('pinjaman.antrian') }}" :current="request()->routeIs('pinjaman.antrian') || request()->routeIs('pinjaman.review')" wire:navigate>
+                        Antrian Pinjaman
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index') }}" :current="request()->routeIs('pinjaman.index')" wire:navigate>
+                        Daftar Pinjaman
                     </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist.group>

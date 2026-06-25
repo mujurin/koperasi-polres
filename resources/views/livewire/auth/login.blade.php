@@ -35,10 +35,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
         if (Auth::attempt(['nrp' => $this->nrp, 'password' => $this->password], $this->remember)) {
             RateLimiter::clear($this->throttleKey());
             Session::regenerate();
+
             $default = Auth::user()->isAdmin()
                 ? route('dashboard', absolute: false)
                 : route('anggota.dashboard', absolute: false);
-            $this->redirectIntended(default: $default, navigate: true);
+
+            $intended = session()->pull('url.intended', $default);
+            if (!Auth::user()->isAdmin() && !Str::contains($intended, 'anggota')) {
+                $intended = $default;
+            }
+            $this->redirect($intended, navigate: true);
             return;
         }
 
@@ -72,7 +78,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 $default = $user->isAdmin()
                     ? route('dashboard', absolute: false)
                     : route('anggota.dashboard', absolute: false);
-                $this->redirectIntended(default: $default, navigate: true);
+
+                $intended = session()->pull('url.intended', $default);
+                if (!$user->isAdmin() && !Str::contains($intended, 'anggota')) {
+                    $intended = $default;
+                }
+                $this->redirect($intended, navigate: true);
                 return;
             }
         } catch (\Exception $e) {
@@ -118,7 +129,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header title="Koperasi Polres" description="Masukkan NRP dan password untuk masuk" />
+    <x-auth-header title="PRIMKOPPOL LOTARA" description="Masukkan NRP dan password untuk masuk" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />

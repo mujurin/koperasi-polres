@@ -28,6 +28,9 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             ->get();
 
         $pengajuanPinjaman = $user->pinjaman()
+            ->withCount(['angsurans' => function ($query) {
+                $query->where('status_pembayaran', 'Lunas');
+            }])
             ->orderByDesc('created_at')
             ->take(3)
             ->get();
@@ -49,16 +52,16 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     {{-- ═══════════════════════════════════════════════════════
     HERO GRADIENT CARD — SALDO
     ════════════════════════════════════════════════════════════ --}}
-    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 px-5 pt-7 pb-16">
+    <div class="relative overflow-hidden bg-white px-5 pt-7 pb-16 border-b border-zinc-100 dark:bg-zinc-900 dark:border-zinc-800">
         {{-- decorative circles --}}
-        <div class="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10"></div>
-        <div class="absolute -right-4 top-16 h-24 w-24 rounded-full bg-white/10"></div>
-        <div class="absolute left-0 bottom-0 h-20 w-full bg-gradient-to-t from-black/10 to-transparent"></div>
+        <div class="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-indigo-50/50 dark:bg-indigo-900/10"></div>
+        <div class="absolute -right-4 top-16 h-24 w-24 rounded-full bg-blue-50/50 dark:bg-blue-900/10"></div>
+        <div class="absolute left-0 bottom-0 h-20 w-full bg-gradient-to-t from-zinc-50 to-transparent dark:from-zinc-900"></div>
 
         <div class="relative">
-            <p class="text-xs font-semibold text-blue-100 uppercase tracking-widest mb-1">Saldo Koperasi Saya</p>
-            <p class="text-4xl font-bold text-white tracking-tight">Rp {{ number_format($saldo, 0, ',', '.') }}</p>
-            <p class="mt-1.5 text-sm text-blue-100">per {{ now()->translatedFormat('d F Y') }}</p>
+            <p class="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-1">Saldo Koperasi Saya</p>
+            <p class="text-4xl font-bold text-zinc-900 dark:text-white tracking-tight">Rp {{ number_format($saldo, 0, ',', '.') }}</p>
+            <p class="mt-1.5 text-sm text-zinc-500">per {{ now()->translatedFormat('d F Y') }}</p>
         </div>
     </div>
 
@@ -222,49 +225,21 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     {{-- ═══════════════════════════════════════════════════════
     PROGRES PENGAJUAN PINJAMAN
     ════════════════════════════════════════════════════════════ --}}
-    @if($this->pengajuanPinjaman->isNotEmpty())
-        <div class="px-4 mt-8">
-            <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">Progres Pengajuan Pinjaman</p>
-            
-            <div class="flex flex-col gap-3">
-                @foreach($this->pengajuanPinjaman as $pinjaman)
-                    <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 shadow-sm">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">{{ $pinjaman->created_at->format('d M Y') }}</span>
-                            @if($pinjaman->status === 'disetujui')
-                                <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 border border-emerald-200 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-400">Disetujui</span>
-                            @elseif($pinjaman->status === 'ditolak')
-                                <span class="inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-600 border border-rose-200 dark:border-rose-800/50 dark:bg-rose-950/40 dark:text-rose-400">Ditolak</span>
-                            @else
-                                <span class="inline-flex rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-orange-600 border border-orange-200 dark:border-orange-800/50 dark:bg-orange-950/40 dark:text-orange-400">Sedang Diproses</span>
-                            @endif
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-lg font-bold text-zinc-900 dark:text-white">Rp {{ number_format($pinjaman->jumlah_ajuan, 0, ',', '.') }}</p>
-                                <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{{ $pinjaman->tenor }} bln • {{ $pinjaman->jenis_permohonan ?? 'Biasa' }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-    {{-- ═══════════════════════════════════════════════════════
-    PROGRES PENGAJUAN PINJAMAN
-    ════════════════════════════════════════════════════════════ --}}
     @if($pengajuanPinjaman->isNotEmpty())
-        <div class="px-4 mt-8">
+        <div class="px-4 mt-6">
             <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">Progres Pengajuan Pinjaman</p>
             
             <div class="flex flex-col gap-3">
                 @foreach($pengajuanPinjaman as $pinjaman)
-                    <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 shadow-sm">
+                    <a href="{{ route('anggota.riwayat-setoran') }}" wire:navigate class="block rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 shadow-sm hover:shadow-md active:scale-[0.99] transition-all">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">{{ $pinjaman->created_at->format('d M Y') }}</span>
                             @if($pinjaman->status === 'disetujui')
-                                <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 border border-emerald-200 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-400">Disetujui</span>
+                                @if($pinjaman->angsurans_count > 0)
+                                    <span class="inline-flex rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold text-indigo-600 border border-indigo-200 dark:border-indigo-800/50 dark:bg-indigo-950/40 dark:text-indigo-400">Sedang Berjalan</span>
+                                @else
+                                    <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 border border-emerald-200 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-400">Disetujui</span>
+                                @endif
                             @elseif($pinjaman->status === 'ditolak')
                                 <span class="inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-600 border border-rose-200 dark:border-rose-800/50 dark:bg-rose-950/40 dark:text-rose-400">Ditolak</span>
                             @else
@@ -277,12 +252,12 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                                 <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{{ $pinjaman->tenor }} bln • {{ $pinjaman->jenis_permohonan ?? 'Biasa' }}</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>
     @endif
 
     {{-- spacer for bottom nav --}}
-    <div class="h-6"></div>
+    <div class="h-28"></div>
 </div>

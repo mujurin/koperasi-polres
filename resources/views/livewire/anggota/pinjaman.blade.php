@@ -12,14 +12,35 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     public string $keterangan = '';
     public string $jenis_permohonan = 'Biasa';
     public bool $saved = false;
+    public bool $hasActiveRequest = false;
 
     // Simulation properties
     public float $biaya_administrasi = 0;
     public float $jumlah_diterima = 0;
     public float $angsuran_perbulan = 0;
+    public float $sisaPinjaman = 0;
+    public float $pinaltiKompensasi = 0;
+    public bool $isKompensasi = false;
 
     public function mount()
     {
+        $this->hasActiveRequest = Auth::user()->pinjaman()->where('status', 'proses')->exists();
+        
+        // Cek Pijaman berjalan (Sistem Kompensasi)
+        $pinjamanAktif = Auth::user()->pinjaman()->where('status', 'disetujui')->latest()->first();
+        $this->sisaPinjaman = 0;
+        
+        if ($pinjamanAktif) {
+            $totalTerbayar = \App\Models\Angsuran::where('pinjaman_id', $pinjamanAktif->id)
+                ->where('status_pembayaran', 'Lunas')
+                ->sum('jumlah_bayar');
+
+            $totalKewajiban = $pinjamanAktif->angsuran_perbulan * $pinjamanAktif->tenor;
+            
+            $this->sisaPinjaman = max(0, $totalKewajiban - $totalTerbayar);
+            $this->pinaltiKompensasi = $pinjamanAktif->jumlah_ajuan * 0.01;
+        }
+
         $this->hitungSimulasi();
     }
 
@@ -34,20 +55,36 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     {
         $jumlah = (float) ($this->jumlah_ajuan ?: 0);
         $tenorBulan = (int) $this->tenor;
+        $sisaLama = (float) $this->sisaPinjaman;
 
         if ($jumlah > 0 && $tenorBulan > 0) {
-            // Jasa 1% dari total ajuan
-            $this->biaya_administrasi = $jumlah * 0.01;
-            
-            // Diterima = Ajuan - Biaya Administrasi
-            $this->jumlah_diterima = $jumlah - $this->biaya_administrasi;
-            
-            // Angsuran = (Ajuan / Tenor) + Biaya Administrasi (fixed per bulan, as per spec: "ditambah jasa 1% dari jumlah pengajuan")
-            // Wait, "ditambah jasa 1% dari jumlah pengajuan" means 1% is added EVERY month? Or just once?
-            // "dibagi tenor dan ditambah jasa 1% dari jumah pengajuan" -> (jumlah / tenor) + (1% * jumlah). Yes, added to monthly angsuran!
-            $pokokAngsuran = $jumlah / $tenorBulan;
-            $jasaBulan = $jumlah * 0.01; // 1% per bulan? Wait, the spec says "ditambah jasa 1% dari jumlah pengajuan"
-            $this->angsuran_perbulan = $pokokAngsuran + $jasaBulan;
+            if ($sisaLama > 0) {
+                // Skema KOMPENSASI
+                $this->isKompensasi = true;
+                $nilaiKompensasi = $jumlah - $sisaLama - $this->pinaltiKompensasi;
+                if ($nilaiKompensasi <= 0) {
+                    $this->biaya_administrasi = 0;
+                    $this->jumlah_diterima = 0;
+                    $this->angsuran_perbulan = 0;
+                } else {
+                    $this->biaya_administrasi = $jumlah * 0.01;
+                    $this->jumlah_diterima = $nilaiKompensasi - $this->biaya_administrasi;
+                    
+                    // Unified Debt: Angsuran applies to the TOTAL combined debt (jumlah ajuan)
+                    $pokokAngsuran = $jumlah / $tenorBulan;
+                    $jasaBulan = $jumlah * 0.01;
+                    $this->angsuran_perbulan = $pokokAngsuran + $jasaBulan;
+                }
+            } else {
+                // Skema BIASA
+                $this->isKompensasi = false;
+                $this->biaya_administrasi = $jumlah * 0.01;
+                $this->jumlah_diterima = $jumlah - $this->biaya_administrasi;
+                
+                $pokokAngsuran = $jumlah / $tenorBulan;
+                $jasaBulan = $jumlah * 0.01;
+                $this->angsuran_perbulan = $pokokAngsuran + $jasaBulan;
+            }
         } else {
             $this->biaya_administrasi = 0;
             $this->jumlah_diterima = 0;
@@ -62,8 +99,12 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
     public function simpan(): void
     {
+        if (Auth::user()->pinjaman()->where('status', 'proses')->exists()) {
+            return;
+        }
+
         $this->validate([
-            'jumlah_ajuan' => 'required|numeric|min:500000',
+            'jumlah_ajuan' => 'required|numeric|min:1',
             'tenor' => 'required|integer|min:1|max:120',
             'jenis_permohonan' => 'required|in:Biasa,Urgent',
             'keterangan' => 'nullable|string|max:255',
@@ -87,6 +128,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         // Reset form
         $this->jumlah_ajuan = '';
         $this->keterangan = '';
+        $this->hasActiveRequest = true;
         $this->hitungSimulasi();
     }
 }; ?>
@@ -130,17 +172,60 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     @endif
 
     {{-- Form Request & Simulasi --}}
+    @if($hasActiveRequest && !$saved)
+        <div class="rounded-2xl border border-orange-200 bg-orange-50 dark:border-orange-800/50 dark:bg-orange-950/40 p-5 mt-2 shadow-sm">
+            <div class="flex items-start gap-3">
+                <svg class="size-6 text-orange-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <div>
+                    <h3 class="text-sm font-bold text-orange-800 dark:text-orange-200">Permohonan Sedang Diproses</h3>
+                    <p class="text-xs text-orange-600 dark:text-orange-400 mt-1">Anda tidak dapat mengajukan pinjaman baru karena masih ada permohonan yang sedang menunggu persetujuan admin.</p>
+                </div>
+            </div>
+        </div>
+    @elseif(!$saved)
     <div class="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 mt-2">
         <div class="p-5 flex flex-col gap-6">
             
             <form wire:submit="simpan" class="flex flex-col gap-5">
                 <div>
                     <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Jumlah Pengajuan Pinjaman (Rp)</label>
-                    <input wire:model.live.debounce.500ms="jumlah_ajuan" type="number" min="500000" step="100000"
-                        class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
-                        placeholder="Contoh: 10000000">
-                    <p class="text-[10px] text-zinc-500 mt-1">Minimal pengajuan Rp 500.000</p>
+                    <div x-data="{
+                        display: '',
+                        timeout: null,
+                        init() {
+                            this.display = this.format($wire.jumlah_ajuan);
+                            this.$watch('$wire.jumlah_ajuan', val => {
+                                if(!val) this.display = '';
+                            });
+                        },
+                        format(v) {
+                            let val = String(v||'').split('.')[0];
+                            let num = val.replace(/[^0-9]/g, '');
+                            return num ? new Intl.NumberFormat('id-ID').format(num) : '';
+                        },
+                        updateVal(e) {
+                            this.display = this.format(e.target.value);
+                            clearTimeout(this.timeout);
+                            this.timeout = setTimeout(() => {
+                                $wire.set('jumlah_ajuan', this.display.replace(/[^0-9]/g, ''));
+                            }, 500);
+                        }
+                    }">
+                        <input x-model="display" @input="updateVal" type="text" inputmode="numeric"
+                            class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                            placeholder="Contoh: 10.000.000">
+                    </div>
+                    <div class="flex justify-end items-center mt-1">
+                        @if($sisaPinjaman > 0)
+                            <p class="text-[10px] font-bold text-orange-600 dark:text-orange-400">Tanggungan saat ini: Rp {{ number_format($sisaPinjaman + $pinaltiKompensasi, 0, ',', '.') }} (Ajuan wajib lebih besar)</p>
+                        @endif
+                    </div>
                     @error('jumlah_ajuan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    @if($sisaPinjaman > 0 && (float)($jumlah_ajuan ?: 0) > 0 && (float)$jumlah_ajuan <= ($sisaPinjaman + $pinaltiKompensasi))
+                        <span class="text-[10px] text-red-500 mt-1 block">Untuk layanan Kompensasi, pengajuan baru harus lebih besar dari tanggungan berjalan (Sisa pokok + Pinalti Jasa).</span>
+                    @endif
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -180,10 +265,27 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     </h3>
                     
                     <div class="flex flex-col gap-2.5">
+                        @if($isKompensasi)
+                        <div class="flex flex-col border border-orange-100 dark:border-orange-900/50 bg-orange-50/50 dark:bg-orange-950/20 p-2.5 rounded-lg mb-1">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="text-xs font-semibold text-orange-800 dark:text-orange-400">Sisa Pinjaman Berjalan</span>
+                                <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp {{ number_format($sisaPinjaman, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="text-[11px] text-orange-800 dark:text-orange-400">Pinalti Jasa (1x)</span>
+                                <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp {{ number_format($pinaltiKompensasi, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-1.5 border-t border-dashed border-orange-200 dark:border-orange-900/80">
+                                <span class="text-xs font-bold text-orange-800 dark:text-orange-400">Nilai Kompensasi Bersih</span>
+                                <span class="text-sm font-bold text-orange-600 dark:text-orange-400">Rp {{ number_format((float)($jumlah_ajuan ?: 0) - $sisaPinjaman - $pinaltiKompensasi, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+                        @else
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
                             <span class="text-xs text-zinc-600 dark:text-zinc-400">Total Pengajuan</span>
                             <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format((float)($jumlah_ajuan ?: 0), 0, ',', '.') }}</span>
                         </div>
+                        @endif
                         
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
                             <div class="flex items-center gap-1">
@@ -205,13 +307,14 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     </div>
                 </div>
 
-                <button type="submit" @if(!(float)$jumlah_ajuan) disabled @endif
+                <button type="submit" @if(!(float)$jumlah_ajuan || ($sisaPinjaman > 0 && (float)$jumlah_ajuan <= ($sisaPinjaman + $pinaltiKompensasi))) disabled @endif
                     class="w-full mt-2 rounded-xl bg-zinc-900 dark:bg-white px-4 py-3.5 text-sm font-semibold text-white dark:text-zinc-900 shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
                     Kirim Permohonan
                 </button>
             </form>
         </div>
     </div>
+    @endif
 
     {{-- Riwayat Pinjaman --}}
     <div class="mt-4">

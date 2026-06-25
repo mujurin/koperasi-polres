@@ -34,4 +34,9 @@ class Pinjaman extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function angsurans()
+    {
+        return $this->hasMany(Angsuran::class, 'pinjaman_id');
+    }
 }

@@ -25,9 +25,16 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('simpanan/penarikan', 'simpanan.penarikan')->name('simpanan.penarikan');
     Volt::route('simpanan/anggota/{user}', 'simpanan.anggota-detail')->name('simpanan.anggota.detail');
 
+    // Pinjaman Module (Admin area)
+    Volt::route('pinjaman/antrian', 'pinjaman.antrian')->name('pinjaman.antrian');
+    Volt::route('pinjaman/review/{pinjaman}', 'pinjaman.review')->name('pinjaman.review');
+    Volt::route('pinjaman/daftar', 'pinjaman.index')->name('pinjaman.index');
+    Volt::route('pinjaman/{pinjaman}/rincian', 'pinjaman.show')->name('pinjaman.show');
+
     // Anggota (Member PWA area)
     Volt::route('anggota', 'anggota.dashboard')->name('anggota.dashboard');
     Volt::route('anggota/simpanan', 'anggota.simpanan')->name('anggota.simpanan');
+    Volt::route('anggota/riwayat-setoran', 'anggota.riwayat-setoran')->name('anggota.riwayat-setoran');
     Volt::route('anggota/riwayat', 'anggota.riwayat')->name('anggota.riwayat');
     Volt::route('anggota/penarikan', 'anggota.penarikan')->name('anggota.penarikan');
     Volt::route('anggota/pinjaman', 'anggota.pinjaman')->name('anggota.pinjaman');
