@@ -33,6 +33,9 @@
                     <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index') }}" :current="request()->routeIs('pinjaman.index')" wire:navigate>
                         Daftar Pinjaman
                     </flux:navlist.item>
+                    <flux:navlist.item icon="wrench-screwdriver" href="{{ route('admin.dummy-angsuran') }}" :current="request()->routeIs('admin.dummy-angsuran')" wire:navigate>
+                        Dummy Angsuran
+                    </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>

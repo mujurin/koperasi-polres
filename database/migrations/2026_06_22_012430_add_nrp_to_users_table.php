@@ -11,7 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('nrp')->unique()->nullable()->after('name');
+            // Cek apakah kolom 'nrp' BELUM ada sebelum menambahkannya
+            if (!Schema::hasColumn('users', 'nrp')) {
+                $table->string('nrp')->unique()->nullable()->after('name');
+            }
         });
     }
 
@@ -21,8 +24,13 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropUnique(['nrp']);
-            $table->dropColumn('nrp');
+            // Pastikan kolom ada sebelum mencoba menghapus index dan kolomnya
+            if (Schema::hasColumn('users', 'nrp')) {
+                // Drop index unique terlebih dahulu
+                $table->dropUnique(['nrp']);
+                // Lalu drop kolomnya
+                $table->dropColumn('nrp');
+            }
         });
     }
 };
