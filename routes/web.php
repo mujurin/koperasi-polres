@@ -31,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('pinjaman/daftar', 'pinjaman.index')->name('pinjaman.index');
     Volt::route('pinjaman/{pinjaman}/rincian', 'pinjaman.show')->name('pinjaman.show');
 
+    // Admin Tools
+    Volt::route('admin/dummy-angsuran', 'admin.dummy-angsuran')->name('admin.dummy-angsuran');
+
     // Anggota (Member PWA area)
     Volt::route('anggota', 'anggota.dashboard')->name('anggota.dashboard');
     Volt::route('anggota/simpanan', 'anggota.simpanan')->name('anggota.simpanan');
