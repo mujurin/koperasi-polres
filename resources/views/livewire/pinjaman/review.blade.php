@@ -16,6 +16,8 @@ new #[Layout('components.layouts.app')] class extends Component {
     public $simulasiDiterima = 0;
     public $simulasiAngsuran = 0;
     public $simulasiBiaya = 0;
+    public $simulasiPokok = 0;
+    public $simulasiJasa = 0;
     public $sisaPinjaman = 0;
     public $pinaltiKompensasi = 0;
     public $isKompensasi = false;
@@ -95,21 +97,29 @@ new #[Layout('components.layouts.app')] class extends Component {
                     $this->simulasiBiaya = 0;
                     $this->simulasiDiterima = 0;
                     $this->simulasiAngsuran = 0;
+                    $this->simulasiPokok = 0;
+                    $this->simulasiJasa = 0;
                 } else {
                     $this->simulasiBiaya = $jumlah * 0.01;
                     $this->simulasiDiterima = $nilaiKompensasi - $this->simulasiBiaya;
-                    $this->simulasiAngsuran = ($jumlah / $tenor) + ($jumlah * 0.01);
+                    $this->simulasiPokok = $jumlah / $tenor;
+                    $this->simulasiJasa = $jumlah * 0.01;
+                    $this->simulasiAngsuran = $this->simulasiPokok + $this->simulasiJasa;
                 }
             } else {
                 $this->isKompensasi = false;
                 $this->simulasiBiaya = $jumlah * 0.01;
                 $this->simulasiDiterima = $jumlah - $this->simulasiBiaya;
-                $this->simulasiAngsuran = ($jumlah / $tenor) + ($jumlah * 0.01);
+                $this->simulasiPokok = $jumlah / $tenor;
+                $this->simulasiJasa = $jumlah * 0.01;
+                $this->simulasiAngsuran = $this->simulasiPokok + $this->simulasiJasa;
             }
         } else {
             $this->simulasiBiaya = 0;
             $this->simulasiDiterima = 0;
             $this->simulasiAngsuran = 0;
+            $this->simulasiPokok = 0;
+            $this->simulasiJasa = 0;
         }
     }
 
@@ -392,6 +402,18 @@ new #[Layout('components.layouts.app')] class extends Component {
                                         {{ number_format((float) ($formJumlahAjuan ?: 0), 0, ',', '.') }}</span>
                                 </div>
                             @endif
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Pokok Angsuran</span>
+                                <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp
+                                    {{ number_format($simulasiPokok ?? 0, 0, ',', '.') }}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Jasa Pinjaman (1%)</span>
+                                <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp
+                                    {{ number_format($simulasiJasa ?? 0, 0, ',', '.') }}</span>
+                            </div>
 
                             <div class="flex justify-between items-center">
                                 <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Potongan Administrasi

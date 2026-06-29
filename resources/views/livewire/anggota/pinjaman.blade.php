@@ -18,6 +18,8 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     public float $biaya_administrasi = 0;
     public float $jumlah_diterima = 0;
     public float $angsuran_perbulan = 0;
+    public float $pokok_angsuran = 0;
+    public float $jasa_perbulan = 0;
     public float $sisaPinjaman = 0;
     public float $pinaltiKompensasi = 0;
     public bool $isKompensasi = false;
@@ -66,14 +68,16 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     $this->biaya_administrasi = 0;
                     $this->jumlah_diterima = 0;
                     $this->angsuran_perbulan = 0;
+                    $this->pokok_angsuran = 0;
+                    $this->jasa_perbulan = 0;
                 } else {
                     $this->biaya_administrasi = $jumlah * 0.01;
                     $this->jumlah_diterima = $nilaiKompensasi - $this->biaya_administrasi;
                     
                     // Unified Debt: Angsuran applies to the TOTAL combined debt (jumlah ajuan)
-                    $pokokAngsuran = $jumlah / $tenorBulan;
-                    $jasaBulan = $jumlah * 0.01;
-                    $this->angsuran_perbulan = $pokokAngsuran + $jasaBulan;
+                    $this->pokok_angsuran = $jumlah / $tenorBulan;
+                    $this->jasa_perbulan = $jumlah * 0.01;
+                    $this->angsuran_perbulan = $this->pokok_angsuran + $this->jasa_perbulan;
                 }
             } else {
                 // Skema BIASA
@@ -81,14 +85,16 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                 $this->biaya_administrasi = $jumlah * 0.01;
                 $this->jumlah_diterima = $jumlah - $this->biaya_administrasi;
                 
-                $pokokAngsuran = $jumlah / $tenorBulan;
-                $jasaBulan = $jumlah * 0.01;
-                $this->angsuran_perbulan = $pokokAngsuran + $jasaBulan;
+                $this->pokok_angsuran = $jumlah / $tenorBulan;
+                $this->jasa_perbulan = $jumlah * 0.01;
+                $this->angsuran_perbulan = $this->pokok_angsuran + $this->jasa_perbulan;
             }
         } else {
             $this->biaya_administrasi = 0;
             $this->jumlah_diterima = 0;
             $this->angsuran_perbulan = 0;
+            $this->pokok_angsuran = 0;
+            $this->jasa_perbulan = 0;
         }
     }
 
@@ -201,8 +207,11 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                             });
                         },
                         format(v) {
-                            let val = String(v||'').split('.')[0];
-                            let num = val.replace(/[^0-9]/g, '');
+                            let str = String(v||'');
+                            // If there is a decimal like .00 from backend, we might want to split it by dot, 
+                            // but since it's IDR formatted as 1.000 from input, it uses dots as separators.
+                            // However, Livewire model returns plain numbers without decimals like '6000'.
+                            let num = str.replace(/[^0-9]/g, '');
                             return num ? new Intl.NumberFormat('id-ID').format(num) : '';
                         },
                         updateVal(e) {
@@ -287,6 +296,16 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                         </div>
                         @endif
                         
+                        <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
+                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Pokok Angsuran</span>
+                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($pokok_angsuran, 0, ',', '.') }}</span>
+                        </div>
+
+                        <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
+                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Jasa Pinjaman (1%)</span>
+                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($jasa_perbulan, 0, ',', '.') }}</span>
+                        </div>
+
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
                             <div class="flex items-center gap-1">
                                 <span class="text-xs text-zinc-600 dark:text-zinc-400">Potongan Administrasi (1%)</span>
