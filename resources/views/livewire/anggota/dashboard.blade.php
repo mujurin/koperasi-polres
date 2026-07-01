@@ -124,18 +124,62 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     <div class="px-4 mt-6">
         <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">Aksi Cepat</p>
         <div class="grid grid-cols-2 gap-3">
-            <a href="{{ route('anggota.pinjaman') }}" wire:navigate
-                class="flex flex-col items-center gap-2 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 shadow-sm hover:shadow-md transition-all active:scale-95">
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-white shadow-sm">
-                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <span
-                    class="text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 text-center leading-tight">Permohonan
-                    Pinjaman</span>
-            </a>
+            <div x-data="{ showMenu: false }" class="relative">
+                <button @click="showMenu = true" type="button" class="flex flex-col items-center gap-2 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 shadow-sm hover:shadow-md transition-all active:scale-95 w-full">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-white shadow-sm">
+                        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 text-center leading-tight">Permohonan<br>Pinjaman</span>
+                </button>
+
+                <template x-teleport="body">
+                    <div x-show="showMenu" style="display: none;" class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                        <div x-show="showMenu" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"
+                            x-transition:enter-end="translate-y-0 sm:scale-100 opacity-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="translate-y-0 sm:scale-100 opacity-100"
+                            x-transition:leave-end="translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"
+                            @click.away="showMenu = false"
+                            class="w-full max-w-md bg-white dark:bg-zinc-900 rounded-t-3xl sm:rounded-2xl shadow-2xl p-5 flex flex-col gap-4 border border-zinc-200 dark:border-zinc-800">
+                            
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <h3 class="text-lg font-bold text-zinc-900 dark:text-white">Jenis Pinjaman</h3>
+                                    <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Pilih skema permohonan pinjaman.</p>
+                                </div>
+                                <button @click="showMenu = false" class="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200 transition-colors">
+                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                            </div>
+
+                            <div class="flex flex-col gap-3 pb-2">
+                                <a href="{{ route('anggota.pinjaman', ['type' => 'baru']) }}" wire:navigate class="group flex items-start gap-4 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-orange-500 dark:hover:border-orange-500 bg-white dark:bg-zinc-900 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-all text-left w-full active:scale-[0.98]">
+                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-400 group-hover:scale-110 transition-transform">
+                                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                    </div>
+                                    <div class="flex-1 mt-0.5">
+                                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">Pengajuan Baru</h4>
+                                        <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Pilih ini jika Anda belum memiliki pinjaman berjalan.</p>
+                                    </div>
+                                </a>
+                                
+                                <a href="{{ route('anggota.pinjaman', ['type' => 'kompensasi']) }}" wire:navigate class="group flex items-start gap-4 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500 dark:hover:border-indigo-500 bg-white dark:bg-zinc-900 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-all text-left w-full active:scale-[0.98]">
+                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+                                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                    </div>
+                                    <div class="flex-1 mt-0.5">
+                                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Kompensasi (Top-up)</h4>
+                                        <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Pengajuan baru sekaligus melunasi sisa pinjaman lama Anda.</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
             <a href="{{ route('anggota.penarikan') }}" wire:navigate
                 class="flex flex-col items-center gap-2 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 shadow-sm hover:shadow-md transition-all active:scale-95">
                 <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500 text-white shadow-sm">

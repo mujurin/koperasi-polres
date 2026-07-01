@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Admin Tools
     Volt::route('admin/dummy-angsuran', 'admin.dummy-angsuran')->name('admin.dummy-angsuran');
+    Volt::route('admin/reset-data', 'admin.reset-data')->name('admin.reset-data');
 
     // Anggota (Member PWA area)
     Volt::route('anggota', 'anggota.dashboard')->name('anggota.dashboard');

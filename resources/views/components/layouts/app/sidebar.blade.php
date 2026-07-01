@@ -27,14 +27,22 @@
                         :current="request()->routeIs('simpanan.penarikan')" wire:navigate>
                         Persetujuan Penarikan
                     </flux:navlist.item>
-                    <flux:navlist.item icon="clock" href="{{ route('pinjaman.antrian') }}" :current="request()->routeIs('pinjaman.antrian') || request()->routeIs('pinjaman.review')" wire:navigate>
+                    <flux:navlist.item icon="clock" href="{{ route('pinjaman.antrian') }}"
+                        :current="request()->routeIs('pinjaman.antrian') || request()->routeIs('pinjaman.review')"
+                        wire:navigate>
                         Antrian Pinjaman
                     </flux:navlist.item>
-                    <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index') }}" :current="request()->routeIs('pinjaman.index')" wire:navigate>
+                    <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index') }}"
+                        :current="request()->routeIs('pinjaman.index')" wire:navigate>
                         Daftar Pinjaman
                     </flux:navlist.item>
-                    <flux:navlist.item icon="wrench-screwdriver" href="{{ route('admin.dummy-angsuran') }}" :current="request()->routeIs('admin.dummy-angsuran')" wire:navigate>
+                    <flux:navlist.item icon="wrench-screwdriver" href="{{ route('admin.dummy-angsuran') }}"
+                        :current="request()->routeIs('admin.dummy-angsuran')" wire:navigate>
                         Dummy Angsuran
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="trash" href="{{ route('admin.reset-data') }}"
+                        :current="request()->routeIs('admin.reset-data')" wire:navigate>
+                        Reset Data
                     </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist.group>

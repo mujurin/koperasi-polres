@@ -3,9 +3,12 @@
 use App\Models\Pinjaman;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.anggota')] class extends Component {
+    #[Url]
+    public string $type = 'baru';
 
     public string $jumlah_ajuan = '';
     public string $tenor = '';
@@ -27,6 +30,8 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     public int $nomorAntrianSaya = 0;
     public int $totalAntrian = 0;
     public string $statusRequestSaya = '';
+    public bool $invalidType = false;
+    public string $invalidMessage = '';
 
     public function mount()
     {
@@ -62,6 +67,14 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             
             $this->sisaPinjaman = max(0, $totalKewajiban - $totalTerbayar);
             $this->pinaltiKompensasi = $pinjamanAktif->jumlah_ajuan * 0.01;
+        }
+
+        if ($this->type === 'baru' && $this->sisaPinjaman > 0) {
+            $this->invalidType = true;
+            $this->invalidMessage = 'Anda masih memiliki tanggungan pinjaman aktif. Silakan gunakan fitur Kompensasi (Top-up) jika ingin mengajukan pinjaman baru.';
+        } elseif ($this->type === 'kompensasi' && $this->sisaPinjaman <= 0) {
+            $this->invalidType = true;
+            $this->invalidMessage = 'Anda tidak memiliki pinjaman aktif yang bisa di-kompensasikan. Silakan gunakan fitur Pengajuan Baru.';
         }
 
         $this->hitungSimulasi();
@@ -182,7 +195,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             </svg>
         </a>
         <div>
-            <h1 class="text-xl font-bold text-zinc-900 dark:text-white leading-tight">Pinjaman</h1>
+            <h1 class="text-xl font-bold text-zinc-900 dark:text-white leading-tight">Pinjaman {{ $type === 'kompensasi' ? '(Kompensasi)' : 'Baru' }}</h1>
             <p class="text-xs text-zinc-500 dark:text-zinc-400">Pengajuan Pinjaman Koperasi</p>
         </div>
     </div>
@@ -247,6 +260,23 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             </div>
         </div>
     @elseif(!$saved)
+    @if($invalidType)
+        <div class="rounded-2xl border border-rose-200 bg-rose-50 p-5 mt-2 shadow-sm dark:bg-rose-950/40 dark:border-rose-800/50">
+            <div class="flex items-start gap-4">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-900/50 dark:text-rose-400">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-rose-900 dark:text-rose-100">Perhatian</h3>
+                    <p class="text-xs text-rose-700 dark:text-rose-300 mt-1">{{ $invalidMessage }}</p>
+                    <a href="{{ route('anggota.dashboard') }}" wire:navigate class="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-rose-800 hover:text-rose-600 dark:text-rose-200 dark:hover:text-rose-100 bg-rose-100 dark:bg-rose-900/50 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800">
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                        Kembali ke Beranda
+                    </a>
+                </div>
+            </div>
+        </div>
+    @else
     <div class="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 mt-2">
         <div class="p-5 flex flex-col gap-6">
             
@@ -332,36 +362,19 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     </h3>
                     
                     <div class="flex flex-col gap-2.5">
-                        @if($isKompensasi)
-                        <div class="flex flex-col border border-orange-100 dark:border-orange-900/50 bg-orange-50/50 dark:bg-orange-950/20 p-2.5 rounded-lg mb-1">
-                            <div class="flex justify-between items-center mb-1.5">
-                                <span class="text-xs font-semibold text-orange-800 dark:text-orange-400">Sisa Pokok Pinjaman</span>
-                                <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp {{ number_format($sisaPinjaman, 0, ',', '.') }}</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-1.5">
-                                <span class="text-[11px] text-orange-800 dark:text-orange-400">Pinalti Jasa (1x)</span>
-                                <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp {{ number_format($pinaltiKompensasi, 0, ',', '.') }}</span>
-                            </div>
-                            <div class="flex justify-between items-center pt-1.5 border-t border-dashed border-orange-200 dark:border-orange-900/80">
-                                <span class="text-xs font-bold text-orange-800 dark:text-orange-400">Nilai Kompensasi Bersih</span>
-                                <span class="text-sm font-bold text-orange-600 dark:text-orange-400">Rp {{ number_format((float)($jumlah_ajuan ?: 0) - $sisaPinjaman - $pinaltiKompensasi, 0, ',', '.') }}</span>
-                            </div>
-                        </div>
-                        @else
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
                             <span class="text-xs text-zinc-600 dark:text-zinc-400">Total Pengajuan</span>
                             <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format((float)($jumlah_ajuan ?: 0), 0, ',', '.') }}</span>
                         </div>
-                        @endif
-                        
+
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
-                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Pokok Angsuran</span>
-                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($pokok_angsuran, 0, ',', '.') }}</span>
+                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Sisa Pokok Hutang</span>
+                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($isKompensasi ? $sisaPinjaman : 0, 0, ',', '.') }}</span>
                         </div>
 
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
-                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Jasa Pinjaman (1%)</span>
-                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($jasa_perbulan, 0, ',', '.') }}</span>
+                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Jasa Pinalti (1x)</span>
+                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($isKompensasi ? $pinaltiKompensasi : 0, 0, ',', '.') }}</span>
                         </div>
 
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
@@ -371,9 +384,21 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                             <span class="text-sm font-semibold text-rose-600 dark:text-rose-400">- Rp {{ number_format($biaya_administrasi, 0, ',', '.') }}</span>
                         </div>
 
+                        <div class="my-1 border-t border-dashed border-indigo-200 dark:border-indigo-800/60"></div>
+
                         <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'border-rose-300 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/20' : 'border-emerald-100 dark:border-emerald-900/30' }}">
-                            <span class="text-xs font-semibold {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'text-rose-800 dark:text-rose-400' : 'text-emerald-800 dark:text-emerald-400' }}">Jumlah Bersih Diterima</span>
+                            <span class="text-xs font-semibold {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'text-rose-800 dark:text-rose-400' : 'text-emerald-800 dark:text-emerald-400' }}">Diterima</span>
                             <span class="text-base font-bold {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400' }}">Rp {{ number_format($jumlah_diterima, 0, ',', '.') }}</span>
+                        </div>
+
+                        <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
+                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Tenor</span>
+                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">{{ (int)($tenor ?: 0) }} Bulan</span>
+                        </div>
+
+                        <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-zinc-100 dark:border-zinc-800">
+                            <span class="text-xs text-zinc-600 dark:text-zinc-400">Jasa Pinjaman (1%)</span>
+                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp {{ number_format($jasa_perbulan, 0, ',', '.') }}</span>
                         </div>
 
                         <div class="mt-2 text-center p-3 rounded-lg bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-500/50">
@@ -391,6 +416,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             </form>
         </div>
     </div>
+    @endif
     @endif
 
     {{-- Riwayat Pinjaman --}}
