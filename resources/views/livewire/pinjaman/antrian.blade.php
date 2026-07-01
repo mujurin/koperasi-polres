@@ -10,11 +10,14 @@ new #[Layout('components.layouts.app')] class extends Component {
     public function with(): array
     {
         $antrian = Pinjaman::with('user')
-            ->where('status', 'proses')
+            ->whereIn('status', ['proses', 'ditunda'])
             ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'asc')
             ->get();
 
-        return compact('antrian');
+        $firstProsesId = $antrian->firstWhere('status', 'proses')?->id;
+
+        return compact('antrian', 'firstProsesId');
     }
 
 }; ?>
@@ -38,7 +41,13 @@ new #[Layout('components.layouts.app')] class extends Component {
                 </div>
                 <div>
                     <h2 class="font-semibold text-zinc-900 dark:text-white text-sm">Menunggu Persetujuan</h2>
-                    <p class="text-xs text-zinc-400">{{ $antrian->count() }} pengajuan pinjaman</p>
+                    <div class="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                        <span>{{ $antrian->where('status', 'proses')->count() }} siap diproses</span>
+                        @if($antrian->where('status', 'ditunda')->count() > 0)
+                            <span>•</span>
+                            <span class="text-amber-600 dark:text-amber-400 font-semibold">{{ $antrian->where('status', 'ditunda')->count() }} tertunda</span>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,6 +67,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                     <thead>
                         <tr class="bg-zinc-50 dark:bg-zinc-800/60">
                             <th
+                                class="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                                No. Antrian</th>
+                            <th
                                 class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                                 Tanggal</th>
                             <th
@@ -75,8 +87,36 @@ new #[Layout('components.layouts.app')] class extends Component {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800">
-                        @foreach($antrian as $pinjaman)
-                            <tr class="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40 transition-colors">
+                        @foreach($antrian as $index => $pinjaman)
+                            @php
+                                $isFirstProses = ($pinjaman->id === $firstProsesId);
+                                $isDitunda = ($pinjaman->status === 'ditunda');
+                            @endphp
+                            <tr class="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40 transition-colors {{ $isDitunda ? 'bg-amber-50/40 dark:bg-amber-950/20 border-l-4 border-amber-500' : ($isFirstProses ? 'bg-emerald-50/30 dark:bg-emerald-950/10 border-l-4 border-emerald-500' : '') }}">
+                                <td class="px-5 py-3 text-center">
+                                    @if($isDitunda)
+                                        <div class="flex flex-col items-center justify-center gap-1">
+                                            <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold text-amber-700 bg-amber-100 rounded-full dark:bg-amber-900/60 dark:text-amber-300 ring-1 ring-amber-500/40 shadow-sm">
+                                                #{{ $index + 1 }}
+                                            </span>
+                                            <span class="text-[9px] font-extrabold tracking-wider text-amber-600 dark:text-amber-400 uppercase">Tertunda</span>
+                                        </div>
+                                    @elseif($isFirstProses)
+                                        <div class="flex flex-col items-center justify-center gap-1">
+                                            <span class="inline-flex items-center justify-center px-3 py-1 text-xs font-black text-emerald-700 bg-emerald-100 rounded-full dark:bg-emerald-900/60 dark:text-emerald-300 ring-2 ring-emerald-500/40 animate-pulse shadow-sm">
+                                                #{{ $index + 1 }}
+                                            </span>
+                                            <span class="text-[9px] font-extrabold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase">Giliran Proses</span>
+                                        </div>
+                                    @else
+                                        <div class="flex flex-col items-center justify-center gap-1">
+                                            <span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold text-zinc-600 bg-zinc-100 rounded-full dark:bg-zinc-800 dark:text-zinc-400">
+                                                #{{ $index + 1 }}
+                                            </span>
+                                            <span class="text-[9px] font-medium text-zinc-400">Menunggu</span>
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="px-5 py-3 text-zinc-500 dark:text-zinc-400 text-xs">
                                     {{ $pinjaman->created_at->format('d M Y') }}<br>
                                     {{ $pinjaman->created_at->format('H:i') }}
@@ -122,11 +162,25 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     </div>
                                 </td>
                                 <td class="px-5 py-3 text-center">
-                                    <a wire:navigate href="{{ route('pinjaman.review', $pinjaman->id) }}"
-                                        class="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors dark:border-indigo-800/50 dark:bg-indigo-900/20 dark:text-indigo-300 dark:hover:bg-indigo-900/40 shadow-sm">
-                                        <flux:icon name="magnifying-glass" class="size-4" />
-                                        Review
-                                    </a>
+                                    @if($isDitunda)
+                                        <a wire:navigate href="{{ route('pinjaman.review', $pinjaman->id) }}"
+                                            class="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-100/80 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-200 transition-colors dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-300 dark:hover:bg-amber-900/60 shadow-sm">
+                                            <flux:icon name="clock" class="size-4" />
+                                            Review Tunda
+                                        </a>
+                                    @elseif($isFirstProses)
+                                        <a wire:navigate href="{{ route('pinjaman.review', $pinjaman->id) }}"
+                                            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-500 transition-all shadow-md shadow-emerald-600/20">
+                                            <flux:icon name="play" class="size-4" />
+                                            Proses #{{ $index + 1 }}
+                                        </a>
+                                    @else
+                                        <a wire:navigate href="{{ route('pinjaman.review', $pinjaman->id) }}"
+                                            class="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors dark:border-indigo-800/50 dark:bg-indigo-900/20 dark:text-indigo-300 dark:hover:bg-indigo-900/40 shadow-sm">
+                                            <flux:icon name="magnifying-glass" class="size-4" />
+                                            Review
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

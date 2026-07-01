@@ -20,21 +20,44 @@ new #[Layout('components.layouts.app')] class extends Component {
     public $simulasiJasa = 0;
     public $sisaPinjaman = 0;
     public $pinaltiKompensasi = 0;
+    public $pinjamanLamaAjuan = 0;
     public $isKompensasi = false;
 
     public $riwayatGaji = [];
 
     public $showFormTolak = false;
     public $alasanPenolakan = '';
+    public $posisiAntrian = 1;
+    public $totalAntrian = 1;
+    public $firstProsesId = null;
+    public $isFirstProses = false;
 
     public function mount(Pinjaman $pinjaman)
     {
-        // Fail if not in proses
-        if ($pinjaman->status !== 'proses') {
+        // Fail if not in proses or ditunda
+        if (!in_array($pinjaman->status, ['proses', 'ditunda'])) {
             return redirect()->route('pinjaman.antrian');
         }
 
         $this->pinjaman = $pinjaman->load('user');
+
+        $this->posisiAntrian = Pinjaman::whereIn('status', ['proses', 'ditunda'])
+            ->where(function ($query) use ($pinjaman) {
+                $query->where('created_at', '<', $pinjaman->created_at)
+                      ->orWhere(function ($q) use ($pinjaman) {
+                          $q->where('created_at', '=', $pinjaman->created_at)
+                            ->where('id', '<=', $pinjaman->id);
+                      });
+            })
+            ->count();
+        $this->totalAntrian = Pinjaman::whereIn('status', ['proses', 'ditunda'])->count();
+
+        $this->firstProsesId = Pinjaman::where('status', 'proses')
+            ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'asc')
+            ->value('id');
+
+        $this->isFirstProses = ($this->pinjaman->id === $this->firstProsesId);
 
         $this->formJumlahAjuan = $this->pinjaman->jumlah_ajuan;
         $this->formTenor = $this->pinjaman->tenor;
@@ -55,6 +78,7 @@ new #[Layout('components.layouts.app')] class extends Component {
 
             $this->sisaPinjaman = max(0, $totalKewajiban - $totalTerbayar);
             $this->pinaltiKompensasi = $pinjamanAktif->jumlah_ajuan * 0.01;
+            $this->pinjamanLamaAjuan = (float) $pinjamanAktif->jumlah_ajuan;
         }
 
         $this->hitungSimulasi();
@@ -137,6 +161,11 @@ new #[Layout('components.layouts.app')] class extends Component {
 
         $this->hitungSimulasi();
 
+        if ($this->isKompensasi && $this->simulasiDiterima > $this->pinjamanLamaAjuan) {
+            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, bersih yang diterima (Rp ' . number_format($this->simulasiDiterima, 0, ',', '.') . ') tidak boleh melebihi jumlah pinjaman sebelumnya (Rp ' . number_format($this->pinjamanLamaAjuan, 0, ',', '.') . ').');
+            return;
+        }
+
         $keteranganBaru = $this->pinjaman->keterangan;
         if ($this->isKompensasi && !str_contains(strtolower($keteranganBaru), 'kompensasi')) {
             $keteranganBaru = '[Kompensasi] ' . $keteranganBaru;
@@ -206,6 +235,22 @@ new #[Layout('components.layouts.app')] class extends Component {
         ]);
         return redirect()->route('pinjaman.antrian');
     }
+
+    public function tundaReview()
+    {
+        $this->pinjaman->update([
+            'status' => 'ditunda',
+        ]);
+        return redirect()->route('pinjaman.antrian');
+    }
+
+    public function aktifkanReview()
+    {
+        $this->pinjaman->update([
+            'status' => 'proses',
+        ]);
+        return redirect()->route('pinjaman.antrian');
+    }
 }; ?>
 
 <div class="flex h-full w-full flex-1 flex-col gap-6 p-6 max-w-4xl mx-auto">
@@ -221,6 +266,52 @@ new #[Layout('components.layouts.app')] class extends Component {
             </p>
         </div>
     </div>
+
+    @if($pinjaman->status === 'ditunda')
+        <div class="rounded-2xl border border-amber-300 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/40 p-4 flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60">
+                    <flux:icon name="clock" class="size-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Pengajuan Tertunda (Antrian #{{ $posisiAntrian }})</h3>
+                    <p class="text-xs text-amber-600 dark:text-amber-400">Pengajuan ini sebelumnya ditunda. Anda dapat menyetujui, menolak, atau mengaktifkannya kembali ke antrian aktif.</p>
+                </div>
+            </div>
+            <button type="button" wire:click="aktifkanReview" class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-amber-400 px-3.5 py-2 text-xs font-extrabold text-black hover:bg-amber-500 transition-colors shadow-sm">
+                <flux:icon name="arrow-path" class="size-3.5" />
+                Aktifkan Kembali
+            </button>
+        </div>
+    @elseif($isFirstProses)
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800/50 dark:bg-emerald-950/40 p-4 flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/60">
+                    <flux:icon name="check-circle" class="size-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-emerald-800 dark:text-emerald-200">Antrian #{{ $posisiAntrian }} (Prioritas Utama Siap Diproses)</h3>
+                    <p class="text-xs text-emerald-600 dark:text-emerald-400">Pengajuan ini adalah giliran aktif saat ini dari total {{ $totalAntrian }} antrian.</p>
+                </div>
+            </div>
+            <span class="inline-flex rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-sm">Siap Diproses</span>
+        </div>
+    @else
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/40 p-4 flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60">
+                    <flux:icon name="exclamation-triangle" class="size-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Peringatan Urutan Antrian (#{{ $posisiAntrian }} dari {{ $totalAntrian }})</h3>
+                    <p class="text-xs text-amber-600 dark:text-amber-400">Terdapat pengajuan lain yang masuk lebih dulu atau menunggu diproses. Disarankan memproses antrian prioritas terlebih dahulu.</p>
+                </div>
+            </div>
+            <a wire:navigate href="{{ route('pinjaman.antrian') }}" class="inline-flex shrink-0 items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-amber-500 transition-colors shadow-sm">
+                Lihat Antrian Prioritas
+            </a>
+        </div>
+    @endif
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -350,6 +441,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                             </div>
                             @error('formJumlahAjuan') <span
                             class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                            @if($isKompensasi && $simulasiDiterima > $pinjamanLamaAjuan)
+                                <span class="text-[10px] text-red-500 mt-1 block">Untuk Kompensasi, bersih yang diterima (Rp {{ number_format($simulasiDiterima, 0, ',', '.') }}) tidak boleh melebihi jumlah pinjaman sebelumnya (Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}).</span>
+                            @endif
                         </div>
 
                         <div>
@@ -467,10 +561,26 @@ new #[Layout('components.layouts.app')] class extends Component {
                                 <flux:icon name="check-circle" class="size-5" />
                                 Simpan & Setujui
                             </button>
-                            <button type="button" wire:click="konfirmasiTolak"
-                                class="w-full rounded-xl bg-white dark:bg-zinc-800 py-3 text-sm font-bold text-rose-600 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-all shadow-sm">
-                                Tolak Pengajuan
-                            </button>
+                            <div class="grid grid-cols-2 gap-3">
+                                @if($pinjaman->status !== 'ditunda')
+                                    <button type="button" wire:click="tundaReview"
+                                        class="w-full rounded-xl bg-amber-500 py-3 text-sm font-bold text-white hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all shadow-sm flex justify-center items-center gap-1.5">
+                                        <flux:icon name="clock" class="size-4" />
+                                        Tunda
+                                    </button>
+                                @else
+                                    <button type="button" wire:click="aktifkanReview"
+                                        class="w-full rounded-xl bg-amber-400 py-3 text-sm font-extrabold text-black hover:bg-amber-500 focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-all shadow-sm flex justify-center items-center gap-1.5">
+                                        <flux:icon name="arrow-path" class="size-4" />
+                                        Aktifkan
+                                    </button>
+                                @endif
+                                <button type="button" wire:click="konfirmasiTolak"
+                                    class="w-full rounded-xl bg-white dark:bg-zinc-800 py-3 text-sm font-bold text-rose-600 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-all shadow-sm flex justify-center items-center gap-1.5">
+                                    <flux:icon name="x-circle" class="size-4" />
+                                    Tolak
+                                </button>
+                            </div>
                         </div>
                     @endif
                 </form>

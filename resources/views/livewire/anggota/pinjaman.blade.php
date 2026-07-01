@@ -22,17 +22,38 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     public float $jasa_perbulan = 0;
     public float $sisaPinjaman = 0;
     public float $pinaltiKompensasi = 0;
+    public float $pinjamanLamaAjuan = 0;
     public bool $isKompensasi = false;
+    public int $nomorAntrianSaya = 0;
+    public int $totalAntrian = 0;
+    public string $statusRequestSaya = '';
 
     public function mount()
     {
-        $this->hasActiveRequest = Auth::user()->pinjaman()->where('status', 'proses')->exists();
+        $pendingLoan = Auth::user()->pinjaman()->whereIn('status', ['proses', 'ditunda'])->first();
+        if ($pendingLoan) {
+            $this->hasActiveRequest = true;
+            $this->statusRequestSaya = $pendingLoan->status;
+            $this->nomorAntrianSaya = Pinjaman::whereIn('status', ['proses', 'ditunda'])
+                ->where(function ($query) use ($pendingLoan) {
+                    $query->where('created_at', '<', $pendingLoan->created_at)
+                          ->orWhere(function ($q) use ($pendingLoan) {
+                              $q->where('created_at', '=', $pendingLoan->created_at)
+                                ->where('id', '<=', $pendingLoan->id);
+                          });
+                })
+                ->count();
+            $this->totalAntrian = Pinjaman::whereIn('status', ['proses', 'ditunda'])->count();
+        } else {
+            $this->hasActiveRequest = false;
+        }
         
         // Cek Pijaman berjalan (Sistem Kompensasi)
         $pinjamanAktif = Auth::user()->pinjaman()->where('status', 'disetujui')->latest()->first();
         $this->sisaPinjaman = 0;
         
         if ($pinjamanAktif) {
+            $this->pinjamanLamaAjuan = (float) $pinjamanAktif->jumlah_ajuan;
             $totalTerbayar = \App\Models\Angsuran::where('pinjaman_id', $pinjamanAktif->id)
                 ->where('status_pembayaran', 'Lunas')
                 ->sum('jumlah_bayar');
@@ -118,6 +139,17 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
         $this->hitungSimulasi();
 
+        if ($this->sisaPinjaman > 0) {
+            if ((float) $this->jumlah_ajuan <= ($this->sisaPinjaman + $this->pinaltiKompensasi)) {
+                $this->addError('jumlah_ajuan', 'Untuk layanan Kompensasi, pengajuan baru harus lebih besar dari tanggungan berjalan (Sisa pokok + Pinalti Jasa).');
+                return;
+            }
+            if ($this->jumlah_diterima > $this->pinjamanLamaAjuan) {
+                $this->addError('jumlah_ajuan', 'Untuk layanan Kompensasi, bersih yang diterima (Rp ' . number_format($this->jumlah_diterima, 0, ',', '.') . ') tidak boleh melebihi jumlah pinjaman sebelumnya (Rp ' . number_format($this->pinjamanLamaAjuan, 0, ',', '.') . ').');
+                return;
+            }
+        }
+
         Pinjaman::create([
             'user_id' => Auth::user()->id,
             'jumlah_ajuan' => $this->jumlah_ajuan,
@@ -179,15 +211,39 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
     {{-- Form Request & Simulasi --}}
     @if($hasActiveRequest && !$saved)
-        <div class="rounded-2xl border border-orange-200 bg-orange-50 dark:border-orange-800/50 dark:bg-orange-950/40 p-5 mt-2 shadow-sm">
-            <div class="flex items-start gap-3">
-                <svg class="size-6 text-orange-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-                <div>
-                    <h3 class="text-sm font-bold text-orange-800 dark:text-orange-200">Permohonan Sedang Diproses</h3>
-                    <p class="text-xs text-orange-600 dark:text-orange-400 mt-1">Anda tidak dapat mengajukan pinjaman baru karena masih ada permohonan yang sedang menunggu persetujuan admin.</p>
+        <div class="rounded-2xl border {{ $statusRequestSaya === 'ditunda' ? 'border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/40' : 'border-orange-200 bg-orange-50 dark:border-orange-800/50 dark:bg-orange-950/40' }} p-5 mt-2 shadow-sm">
+            <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <svg class="size-6 {{ $statusRequestSaya === 'ditunda' ? 'text-amber-500' : 'text-orange-500' }} mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        @if($statusRequestSaya === 'ditunda')
+                            <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Permohonan Pinjaman Ditunda Sementara</h3>
+                            <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">Permohonan pinjaman Anda saat ini sedang ditunda oleh admin. Posisi urutan antrian Anda tetap dipertahankan (#{{ $nomorAntrianSaya }}).</p>
+                        @else
+                            <h3 class="text-sm font-bold text-orange-800 dark:text-orange-200">Permohonan Sedang Diproses</h3>
+                            <p class="text-xs text-orange-600 dark:text-orange-400 mt-1">Anda tidak dapat mengajukan pinjaman baru karena masih ada permohonan yang sedang menunggu persetujuan admin.</p>
+                        @endif
+                        @if($nomorAntrianSaya > 0)
+                            <div class="mt-2.5 inline-flex items-center gap-2 rounded-lg {{ $statusRequestSaya === 'ditunda' ? 'bg-amber-100 dark:bg-amber-900/50 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200' : 'bg-orange-100 dark:bg-orange-900/50 border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-200' }} px-3 py-1.5 border">
+                                <flux:icon name="clock" class="size-4 {{ $statusRequestSaya === 'ditunda' ? 'text-amber-600 dark:text-amber-400' : 'text-orange-600 dark:text-orange-400' }}" />
+                                <span class="text-xs font-semibold">
+                                    Nomor Antrian Anda: <strong class="{{ $statusRequestSaya === 'ditunda' ? 'text-amber-600 dark:text-amber-400' : 'text-orange-600 dark:text-orange-400' }}">#{{ $nomorAntrianSaya }}</strong> dari {{ $totalAntrian }} pengajuan
+                                </span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
+                @if($statusRequestSaya === 'ditunda')
+                    <span class="inline-flex shrink-0 rounded-full bg-amber-100 dark:bg-amber-900/50 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                        Tertunda (#{{ $nomorAntrianSaya }})
+                    </span>
+                @elseif($nomorAntrianSaya === 1)
+                    <span class="inline-flex shrink-0 rounded-full bg-emerald-100 dark:bg-emerald-900/50 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 animate-pulse border border-emerald-200 dark:border-emerald-800">
+                        Giliran Berikutnya
+                    </span>
+                @endif
             </div>
         </div>
     @elseif(!$saved)
@@ -228,12 +284,14 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     </div>
                     <div class="flex justify-end items-center mt-1">
                         @if($sisaPinjaman > 0)
-                            <p class="text-[10px] font-bold text-orange-600 dark:text-orange-400">Tanggungan saat ini: Rp {{ number_format($sisaPinjaman + $pinaltiKompensasi, 0, ',', '.') }} (Ajuan wajib lebih besar)</p>
+                            <p class="text-[10px] font-bold text-orange-600 dark:text-orange-400">Tanggungan saat ini: Rp {{ number_format($sisaPinjaman + $pinaltiKompensasi, 0, ',', '.') }} | Maks. Bersih Diterima: Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}</p>
                         @endif
                     </div>
                     @error('jumlah_ajuan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     @if($sisaPinjaman > 0 && (float)($jumlah_ajuan ?: 0) > 0 && (float)$jumlah_ajuan <= ($sisaPinjaman + $pinaltiKompensasi))
                         <span class="text-[10px] text-red-500 mt-1 block">Untuk layanan Kompensasi, pengajuan baru harus lebih besar dari tanggungan berjalan (Sisa pokok + Pinalti Jasa).</span>
+                    @elseif($sisaPinjaman > 0 && (float)($jumlah_ajuan ?: 0) > 0 && $jumlah_diterima > $pinjamanLamaAjuan)
+                        <span class="text-[10px] text-red-500 mt-1 block">Untuk layanan Kompensasi, bersih yang diterima (Rp {{ number_format($jumlah_diterima, 0, ',', '.') }}) tidak boleh melebihi jumlah pinjaman sebelumnya (Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}).</span>
                     @endif
                 </div>
 
@@ -277,7 +335,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                         @if($isKompensasi)
                         <div class="flex flex-col border border-orange-100 dark:border-orange-900/50 bg-orange-50/50 dark:bg-orange-950/20 p-2.5 rounded-lg mb-1">
                             <div class="flex justify-between items-center mb-1.5">
-                                <span class="text-xs font-semibold text-orange-800 dark:text-orange-400">Sisa Pinjaman Berjalan</span>
+                                <span class="text-xs font-semibold text-orange-800 dark:text-orange-400">Sisa Pokok Pinjaman</span>
                                 <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp {{ number_format($sisaPinjaman, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between items-center mb-1.5">
@@ -313,9 +371,9 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                             <span class="text-sm font-semibold text-rose-600 dark:text-rose-400">- Rp {{ number_format($biaya_administrasi, 0, ',', '.') }}</span>
                         </div>
 
-                        <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
-                            <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400">Jumlah Bersih Diterima</span>
-                            <span class="text-base font-bold text-emerald-600 dark:text-emerald-400">Rp {{ number_format($jumlah_diterima, 0, ',', '.') }}</span>
+                        <div class="flex justify-between items-center bg-white dark:bg-zinc-900/50 p-2.5 rounded-lg border {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'border-rose-300 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/20' : 'border-emerald-100 dark:border-emerald-900/30' }}">
+                            <span class="text-xs font-semibold {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'text-rose-800 dark:text-rose-400' : 'text-emerald-800 dark:text-emerald-400' }}">Jumlah Bersih Diterima</span>
+                            <span class="text-base font-bold {{ ($isKompensasi && $jumlah_diterima > $pinjamanLamaAjuan) ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400' }}">Rp {{ number_format($jumlah_diterima, 0, ',', '.') }}</span>
                         </div>
 
                         <div class="mt-2 text-center p-3 rounded-lg bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-500/50">
@@ -326,7 +384,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     </div>
                 </div>
 
-                <button type="submit" @if(!(float)$jumlah_ajuan || ($sisaPinjaman > 0 && (float)$jumlah_ajuan <= ($sisaPinjaman + $pinaltiKompensasi))) disabled @endif
+                <button type="submit" @if(!(float)$jumlah_ajuan || ($sisaPinjaman > 0 && ((float)$jumlah_ajuan <= ($sisaPinjaman + $pinaltiKompensasi) || $jumlah_diterima > $pinjamanLamaAjuan))) disabled @endif
                     class="w-full mt-2 rounded-xl bg-zinc-900 dark:bg-white px-4 py-3.5 text-sm font-semibold text-white dark:text-zinc-900 shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
                     Kirim Permohonan
                 </button>
