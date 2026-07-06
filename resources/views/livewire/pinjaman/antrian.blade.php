@@ -170,7 +170,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                                         </a>
                                     @elseif($isFirstProses)
                                         <a wire:navigate href="{{ route('pinjaman.review', $pinjaman->id) }}"
-                                            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-500 transition-all shadow-md shadow-emerald-600/20">
+                                            class="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-100/80 px-4 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-200 transition-colors dark:border-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 dark:hover:bg-emerald-900/60 shadow-sm">
                                             <flux:icon name="play" class="size-4" />
                                             Proses #{{ $index + 1 }}
                                         </a>
@@ -190,22 +190,4 @@ new #[Layout('components.layouts.app')] class extends Component {
         @endif
     </div>
 
-    {{-- Modal Review --}}
-    <div x-data="{ show: @entangle('showModal') }" x-show="show" class="relative z-50" aria-labelledby="modal-title"
-        role="dialog" aria-modal="true" style="display: none;">
-        <!-- Backdrop -->
-        <div x-show="show" x-transition.opacity
-            class="fixed inset-0 bg-zinc-900/80 backdrop-blur-sm transition-opacity"></div>
-
-        <!-- Modal panel -->
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div x-show="show" x-transition
-                    class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-md dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-
-                    <div
-                        class="border-b border-zinc-100 dark:border-zinc-800 px-6 py-4 flex justify-between items-center bg-zinc-50/50 dark:bg-zinc-800/20">
-                        <h3 class="text-lg font-bold text-zinc-900 dark:text-white" id="modal-title">Review Pengajuan
-                            Pinjaman</h3>
-                        <button wire:click="$set('showModal', false)" </div>
-                    </div>
+</div>

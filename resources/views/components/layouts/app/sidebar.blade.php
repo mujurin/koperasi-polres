@@ -3,6 +3,7 @@
 
 <head>
     @include('partials.head')
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 </head>
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">

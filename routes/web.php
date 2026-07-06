@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
     // Pinjaman Module (Admin area)
     Volt::route('pinjaman/antrian', 'pinjaman.antrian')->name('pinjaman.antrian');
     Volt::route('pinjaman/review/{pinjaman}', 'pinjaman.review')->name('pinjaman.review');
+    Volt::route('pinjaman/cetak/{pinjaman}', 'pinjaman.cetak')->name('pinjaman.cetak');
     Volt::route('pinjaman/daftar', 'pinjaman.index')->name('pinjaman.index');
     Volt::route('pinjaman/{pinjaman}/rincian', 'pinjaman.show')->name('pinjaman.show');
 

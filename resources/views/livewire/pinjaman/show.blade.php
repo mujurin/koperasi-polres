@@ -22,12 +22,20 @@ new #[Layout('components.layouts.app')] class extends Component {
     {{-- Header --}}
     <div class="flex items-center gap-4">
         <a wire:navigate href="{{ route('pinjaman.index') }}"
-            class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white transition-colors">
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:hover:text-white transition-colors">
             <flux:icon name="arrow-left" class="size-5" />
         </a>
-        <div>
+        <div class="flex-1">
             <h1 class="text-2xl font-bold text-zinc-900 dark:text-white">Riwayat Angsuran</h1>
             <p class="text-sm text-zinc-500 dark:text-zinc-400">Rincian pembayaran cicilan pinjaman anggota.</p>
+        </div>
+        <div class="ml-auto">
+            <a href="{{ route('pinjaman.cetak', $pinjaman->id) }}" target="_blank"
+                class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-indigo-700 shadow-sm transition-colors">
+                <flux:icon name="printer" class="size-4" />
+                <span class="hidden sm:inline">Cetak Persetujuan</span>
+                <span class="sm:hidden">Cetak</span>
+            </a>
         </div>
     </div>
 
@@ -153,7 +161,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                             <p class="text-xs md:text-sm font-bold text-emerald-800 dark:text-emerald-400">Dilunasi via
                                 Kompensasi</p>
                             <p class="text-[11px] md:text-xs text-emerald-600 dark:text-emerald-500 mt-0.5">
-                                Sisa hutang telah ditutup otomatis dengan pencairan dari pinjaman baru sebesar <span class="font-bold">Rp {{ number_format($pinjamanBaru->jumlah_ajuan ?? 0, 0, ',', '.') }}</span>.
+                                Sisa hutang telah ditutup otomatis dengan pencairan dari pinjaman baru sebesar <span
+                                    class="font-bold">Rp
+                                    {{ number_format($pinjamanBaru->jumlah_ajuan ?? 0, 0, ',', '.') }}</span>.
                             </p>
                         </div>
                     </div>
@@ -247,7 +257,11 @@ new #[Layout('components.layouts.app')] class extends Component {
                             class="{{ $kurangTarget ? 'bg-rose-50/60 hover:bg-rose-100/60 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-900 dark:text-rose-100' : 'hover:bg-zinc-50 dark:hover:bg-zinc-800/30' }} transition-colors">
                             <td
                                 class="px-5 py-3 font-bold {{ $kurangTarget ? 'text-rose-700 dark:text-rose-400' : 'text-zinc-700 dark:text-zinc-300' }}">
-                                Angsuran #{{ $angsuran->angsuran_ke }}
+                                @if($angsuran->angsuran_ke == 999)
+                                    <span class="text-orange-600 dark:text-orange-400">Pelunasan Kompensasi</span>
+                                @else
+                                    Angsuran #{{ $angsuran->angsuran_ke }}
+                                @endif
                                 @if($kurangTarget)
                                     <flux:icon name="exclamation-triangle" class="size-4 inline-block ml-1.5 text-rose-500" />
                                 @endif

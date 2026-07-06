@@ -286,6 +286,8 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                                 @endif
                             @elseif($pinjaman->status === 'ditolak')
                                 <span class="inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-600 border border-rose-200 dark:border-rose-800/50 dark:bg-rose-950/40 dark:text-rose-400">Ditolak</span>
+                            @elseif($pinjaman->status === 'lunas')
+                                <span class="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-300 dark:border-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300">Lunas</span>
                             @else
                                 <span class="inline-flex rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-orange-600 border border-orange-200 dark:border-orange-800/50 dark:bg-orange-950/40 dark:text-orange-400">Sedang Diproses</span>
                             @endif

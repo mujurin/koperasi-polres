@@ -162,12 +162,14 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                             {{ $i < $riwayatPinjaman->count() - 1 ? 'border-b border-zinc-100 dark:border-zinc-800' : '' }}">
                     <div class="flex items-center gap-2.5">
                         <div class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg 
-                            @if($item->status === 'disetujui') bg-emerald-100 dark:bg-emerald-900/40
+                            @if($item->status === 'disetujui' || $item->status === 'lunas') bg-emerald-100 dark:bg-emerald-900/40
                             @elseif($item->status === 'ditolak') bg-rose-100 dark:bg-rose-900/40
                             @else bg-orange-100 dark:bg-orange-900/40 @endif">
                             
                             @if($item->status === 'disetujui')
                                 <svg class="size-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                            @elseif($item->status === 'lunas')
+                                <svg class="size-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             @elseif($item->status === 'ditolak')
                                 <svg class="size-3.5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
                             @else
@@ -186,6 +188,8 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     <div class="text-right">
                         @if($item->status === 'disetujui')
                             <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-semibold text-emerald-600 border border-emerald-200 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-400">Disetujui</span>
+                        @elseif($item->status === 'lunas')
+                            <span class="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-semibold text-emerald-700 border border-emerald-300 dark:border-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300">Lunas</span>
                         @elseif($item->status === 'ditolak')
                             <span class="inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-semibold text-rose-600 border border-rose-200 dark:border-rose-800/50 dark:bg-rose-950/40 dark:text-rose-400">Ditolak</span>
                         @else

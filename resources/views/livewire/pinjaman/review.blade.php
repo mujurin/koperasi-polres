@@ -21,6 +21,8 @@ new #[Layout('components.layouts.app')] class extends Component {
     public $sisaPinjaman = 0;
     public $pinaltiKompensasi = 0;
     public $pinjamanLamaAjuan = 0;
+    public $jasaTunggakan = 0;
+    public $tunggakanBulan = 0;
     public $isKompensasi = false;
 
     public $riwayatGaji = [];
@@ -44,10 +46,10 @@ new #[Layout('components.layouts.app')] class extends Component {
         $this->posisiAntrian = Pinjaman::whereIn('status', ['proses', 'ditunda'])
             ->where(function ($query) use ($pinjaman) {
                 $query->where('created_at', '<', $pinjaman->created_at)
-                      ->orWhere(function ($q) use ($pinjaman) {
-                          $q->where('created_at', '=', $pinjaman->created_at)
+                    ->orWhere(function ($q) use ($pinjaman) {
+                        $q->where('created_at', '=', $pinjaman->created_at)
                             ->where('id', '<=', $pinjaman->id);
-                      });
+                    });
             })
             ->count();
         $this->totalAntrian = Pinjaman::whereIn('status', ['proses', 'ditunda'])->count();
@@ -79,6 +81,22 @@ new #[Layout('components.layouts.app')] class extends Component {
             $this->sisaPinjaman = max(0, $totalKewajiban - $totalTerbayar);
             $this->pinaltiKompensasi = $pinjamanAktif->jumlah_ajuan * 0.01;
             $this->pinjamanLamaAjuan = (float) $pinjamanAktif->jumlah_ajuan;
+
+            $bulanBerjalan = (\Carbon\Carbon::now()->year - $pinjamanAktif->updated_at->year) * 12
+                + (\Carbon\Carbon::now()->month - $pinjamanAktif->updated_at->month);
+            $targetLunas = max(0, $bulanBerjalan - 1);
+
+            $bulanTerbayar = \App\Models\Angsuran::where('pinjaman_id', $pinjamanAktif->id)
+                ->where('status_pembayaran', 'Lunas')
+                ->count();
+
+            $this->tunggakanBulan = max(0, $targetLunas - $bulanTerbayar);
+
+            if ($this->tunggakanBulan > 0) {
+                $jasaPersenLama = $pinjamanAktif->jasa_persen ?? 1;
+                $jasaPerbulanLama = $pinjamanAktif->jumlah_ajuan * ($jasaPersenLama / 100);
+                $this->jasaTunggakan = $this->tunggakanBulan * $jasaPerbulanLama;
+            }
         }
 
         $this->hitungSimulasi();
@@ -115,7 +133,7 @@ new #[Layout('components.layouts.app')] class extends Component {
         if ($jumlah > 0 && $tenor > 0) {
             if ($sisaLama > 0) {
                 $this->isKompensasi = true;
-                $nilaiKompensasi = $jumlah - $sisaLama - $this->pinaltiKompensasi;
+                $nilaiKompensasi = $jumlah - $sisaLama - $this->pinaltiKompensasi - $this->jasaTunggakan;
 
                 if ($nilaiKompensasi <= 0) {
                     $this->simulasiBiaya = 0;
@@ -154,8 +172,8 @@ new #[Layout('components.layouts.app')] class extends Component {
             'formTenor' => 'required|integer|min:1|max:120',
         ]);
 
-        if ($this->isKompensasi && $this->formJumlahAjuan <= ($this->sisaPinjaman + $this->pinaltiKompensasi)) {
-            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, ajuan harus lebih besar dari sisa hutang & pinalti (Rp ' . number_format($this->sisaPinjaman + $this->pinaltiKompensasi, 0, ',', '.') . ').');
+        if ($this->isKompensasi && $this->formJumlahAjuan <= ($this->sisaPinjaman + $this->pinaltiKompensasi + $this->jasaTunggakan)) {
+            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, ajuan harus lebih besar dari sisa hutang, pinalti, & tunggakan (Rp ' . number_format($this->sisaPinjaman + $this->pinaltiKompensasi + $this->jasaTunggakan, 0, ',', '.') . ').');
             return;
         }
 
@@ -188,11 +206,10 @@ new #[Layout('components.layouts.app')] class extends Component {
                 ->first();
 
             if ($pinjamanAktif && $this->sisaPinjaman > 0) {
-                // Insert a closure angsuran to mathematically settle the old Pinjaman
                 \App\Models\Angsuran::create([
                     'pinjaman_id' => $pinjamanAktif->id,
                     'angsuran_ke' => 999, // Special identifier for Kompensasi early payoff
-                    'jumlah_bayar' => $this->sisaPinjaman + $this->pinaltiKompensasi,
+                    'jumlah_bayar' => $this->sisaPinjaman + $this->pinaltiKompensasi + $this->jasaTunggakan,
                     'tanggal_bayar' => now(),
                     'status_pembayaran' => 'Lunas'
                 ]);
@@ -204,7 +221,7 @@ new #[Layout('components.layouts.app')] class extends Component {
             }
         }
 
-        return redirect()->route('pinjaman.antrian');
+        return redirect()->route('pinjaman.cetak', $this->pinjaman->id);
     }
 
     public function konfirmasiTolak()
@@ -268,46 +285,61 @@ new #[Layout('components.layouts.app')] class extends Component {
     </div>
 
     @if($pinjaman->status === 'ditunda')
-        <div class="rounded-2xl border border-amber-300 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/40 p-4 flex items-center justify-between shadow-sm">
+        <div
+            class="rounded-2xl border border-amber-300 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/40 p-4 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60">
+                <div
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60">
                     <flux:icon name="clock" class="size-6 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Pengajuan Tertunda (Antrian #{{ $posisiAntrian }})</h3>
-                    <p class="text-xs text-amber-600 dark:text-amber-400">Pengajuan ini sebelumnya ditunda. Anda dapat menyetujui, menolak, atau mengaktifkannya kembali ke antrian aktif.</p>
+                    <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Pengajuan Tertunda (Antrian
+                        #{{ $posisiAntrian }})</h3>
+                    <p class="text-xs text-amber-600 dark:text-amber-400">Pengajuan ini sebelumnya ditunda. Anda dapat
+                        menyetujui, menolak, atau mengaktifkannya kembali ke antrian aktif.</p>
                 </div>
             </div>
-            <button type="button" wire:click="aktifkanReview" class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-amber-400 px-3.5 py-2 text-xs font-extrabold text-black hover:bg-amber-500 transition-colors shadow-sm">
+            <button type="button" wire:click="aktifkanReview"
+                class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-amber-400 px-3.5 py-2 text-xs font-extrabold text-black hover:bg-amber-500 transition-colors shadow-sm">
                 <flux:icon name="arrow-path" class="size-3.5" />
                 Aktifkan Kembali
             </button>
         </div>
     @elseif($isFirstProses)
-        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800/50 dark:bg-emerald-950/40 p-4 flex items-center justify-between shadow-sm">
+        <div
+            class="rounded-2xl border border-emerald-200 bg-emerald-50 dark:border-emerald-800/50 dark:bg-emerald-950/40 p-4 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/60">
+                <div
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/60">
                     <flux:icon name="check-circle" class="size-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-emerald-800 dark:text-emerald-200">Antrian #{{ $posisiAntrian }} (Prioritas Utama Siap Diproses)</h3>
-                    <p class="text-xs text-emerald-600 dark:text-emerald-400">Pengajuan ini adalah giliran aktif saat ini dari total {{ $totalAntrian }} antrian.</p>
+                    <h3 class="text-sm font-bold text-emerald-800 dark:text-emerald-200">Antrian #{{ $posisiAntrian }}
+                        (Prioritas Utama Siap Diproses)</h3>
+                    <p class="text-xs text-emerald-600 dark:text-emerald-400">Pengajuan ini adalah giliran aktif saat ini
+                        dari total {{ $totalAntrian }} antrian.</p>
                 </div>
             </div>
-            <span class="inline-flex rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-sm">Siap Diproses</span>
+            <span class="inline-flex rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-sm">Siap
+                Diproses</span>
         </div>
     @else
-        <div class="rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/40 p-4 flex items-center justify-between shadow-sm">
+        <div
+            class="rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/40 p-4 flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60">
+                <div
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60">
                     <flux:icon name="exclamation-triangle" class="size-6 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Peringatan Urutan Antrian (#{{ $posisiAntrian }} dari {{ $totalAntrian }})</h3>
-                    <p class="text-xs text-amber-600 dark:text-amber-400">Terdapat pengajuan lain yang masuk lebih dulu atau menunggu diproses. Disarankan memproses antrian prioritas terlebih dahulu.</p>
+                    <h3 class="text-sm font-bold text-amber-800 dark:text-amber-200">Peringatan Urutan Antrian
+                        (#{{ $posisiAntrian }} dari {{ $totalAntrian }})</h3>
+                    <p class="text-xs text-amber-600 dark:text-amber-400">Terdapat pengajuan lain yang masuk lebih dulu atau
+                        menunggu diproses. Disarankan memproses antrian prioritas terlebih dahulu.</p>
                 </div>
             </div>
-            <a wire:navigate href="{{ route('pinjaman.antrian') }}" class="inline-flex shrink-0 items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-amber-500 transition-colors shadow-sm">
+            <a wire:navigate href="{{ route('pinjaman.antrian') }}"
+                class="inline-flex shrink-0 items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-amber-500 transition-colors shadow-sm">
                 Lihat Antrian Prioritas
             </a>
         </div>
@@ -442,7 +474,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                             @error('formJumlahAjuan') <span
                             class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                             @if($isKompensasi && $simulasiDiterima > $pinjamanLamaAjuan)
-                                <span class="text-[10px] text-red-500 mt-1 block">Untuk Kompensasi, bersih yang diterima (Rp {{ number_format($simulasiDiterima, 0, ',', '.') }}) tidak boleh melebihi jumlah pinjaman sebelumnya (Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}).</span>
+                                <span class="text-[10px] text-red-500 mt-1 block">Untuk Kompensasi, bersih yang diterima (Rp
+                                    {{ number_format($simulasiDiterima, 0, ',', '.') }}) tidak boleh melebihi jumlah
+                                    pinjaman sebelumnya (Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}).</span>
                             @endif
                         </div>
 
@@ -470,8 +504,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                             @if($isKompensasi)
                                 <div
                                     class="flex justify-between items-center bg-orange-50/50 dark:bg-orange-950/20 p-2 rounded-lg border border-orange-100 dark:border-orange-900/50 mb-1">
-                                    <span class="text-[11px] font-semibold text-orange-800 dark:text-orange-400">Sisa
-                                        Pinjaman Berjalan</span>
+                                    <span class="text-[11px] font-semibold text-orange-800 dark:text-orange-400">Sisa Pokok
+                                        Hutang</span>
                                     <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp
                                         {{ number_format($sisaPinjaman, 0, ',', '.') }}</span>
                                 </div>
@@ -483,11 +517,19 @@ new #[Layout('components.layouts.app')] class extends Component {
                                         {{ number_format($pinaltiKompensasi, 0, ',', '.') }}</span>
                                 </div>
                                 <div
-                                    class="flex justify-between items-center mb-2 border-b border-orange-100 dark:border-orange-900/50 pb-2">
-                                    <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Nilai Kompensasi
-                                        Bersih</span>
-                                    <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp
-                                        {{ number_format((float) ($formJumlahAjuan ?: 0) - $sisaPinjaman - $pinaltiKompensasi, 0, ',', '.') }}</span>
+                                    class="flex justify-between items-center bg-orange-50/50 dark:bg-orange-950/20 p-2 rounded-lg border border-orange-100 dark:border-orange-900/50 mb-2">
+                                    <span class="text-[11px] font-semibold text-orange-800 dark:text-orange-400">Potongan
+                                        Administrasi
+                                        (1%)</span>
+                                    <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp
+                                        {{ number_format($simulasiBiaya ?? 0, 0, ',', '.') }}</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center bg-orange-50/50 dark:bg-orange-950/20 p-2 rounded-lg border border-orange-100 dark:border-orange-900/50 mb-2">
+                                    <span class="text-[11px] font-semibold text-orange-800 dark:text-orange-400">Jasa
+                                        Tunggakan ({{ $tunggakanBulan }} Bulan)</span>
+                                    <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp
+                                        {{ number_format($jasaTunggakan, 0, ',', '.') }}</span>
                                 </div>
                             @else
                                 <div class="flex justify-between items-center">
@@ -497,23 +539,17 @@ new #[Layout('components.layouts.app')] class extends Component {
                                 </div>
                             @endif
 
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center mt-1">
                                 <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Pokok Angsuran</span>
                                 <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp
                                     {{ number_format($simulasiPokok ?? 0, 0, ',', '.') }}</span>
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Jasa Pinjaman (1%)</span>
+                                <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Jasa Pinjaman (1%) /
+                                    Bulan</span>
                                 <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200">Rp
                                     {{ number_format($simulasiJasa ?? 0, 0, ',', '.') }}</span>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span class="text-[11px] text-zinc-600 dark:text-zinc-400">Potongan Administrasi
-                                    (1%)</span>
-                                <span class="text-sm font-semibold text-rose-600 dark:text-rose-400">- Rp
-                                    {{ number_format($simulasiBiaya ?? 0, 0, ',', '.') }}</span>
                             </div>
 
                             <div
@@ -558,8 +594,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                         <div class="mt-6 flex flex-col gap-3">
                             <button type="submit"
                                 class="w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-zinc-50 hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all shadow-sm flex justify-center items-center gap-2">
-                                <flux:icon name="check-circle" class="size-5" />
-                                Simpan & Setujui
+                                <flux:icon name="printer" class="size-5" />
+                                Setujui & Cetak
                             </button>
                             <div class="grid grid-cols-2 gap-3">
                                 @if($pinjaman->status !== 'ditunda')

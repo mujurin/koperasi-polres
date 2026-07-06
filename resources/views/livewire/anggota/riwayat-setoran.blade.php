@@ -129,12 +129,18 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                 <div class="flex items-center justify-between px-4 py-3
                             {{ $i < $riwayatSetoran->count() - 1 ? 'border-b border-zinc-100 dark:border-zinc-800' : '' }}">
                     <div class="flex items-center gap-3">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50 dark:bg-zinc-800/50">
-                            <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">Ke-{{ $item->angsuran_ke }}</span>
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full {{ $item->angsuran_ke == 999 ? 'bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400' : 'bg-zinc-50 dark:bg-zinc-800/50' }}">
+                            @if($item->angsuran_ke == 999)
+                                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            @else
+                                <span class="text-xs font-bold text-zinc-600 dark:text-zinc-300">Ke-{{ $item->angsuran_ke }}</span>
+                            @endif
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-                                Angsuran Pinjaman
+                            <p class="text-sm font-semibold {{ $item->angsuran_ke == 999 ? 'text-orange-800 dark:text-orange-400' : 'text-zinc-800 dark:text-zinc-200' }}">
+                                {{ $item->angsuran_ke == 999 ? 'Pelunasan Kompensasi' : 'Angsuran Pinjaman' }}
                             </p>
                             <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
                                 {{ \Carbon\Carbon::parse($item->tanggal_bayar)->format('d M Y') }}
