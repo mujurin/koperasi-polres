@@ -1,8 +1,8 @@
 {
-    "name": "Koperasi Polres",
-    "short_name": "Koperasi",
-    "description": "Sistem Informasi & Simpan Pinjam Koperasi Polres",
-    "start_url": "/anggota/dashboard",
+    "name": "PRIMKOPPOL LOTARA",
+    "short_name": "PRIMKOPPOL",
+    "description": "Primer Koperasi Kepolisian Resort Lombok Utara",
+    "start_url": "/anggota",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#4f46e5",
@@ -11,12 +11,14 @@
         {
             "src": "/icon-192x192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         },
         {
             "src": "/icon-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 }

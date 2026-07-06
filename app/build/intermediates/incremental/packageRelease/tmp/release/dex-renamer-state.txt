@@ -1,0 +1,4 @@
+#Mon Jul 06 22:36:00 WITA 2026
+base.0=/Applications/XAMPP/xamppfiles/htdocs/koperasi-polres/app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

@@ -3,13 +3,38 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+Route::get('/.well-known/assetlinks.json', function () {
+    $path = public_path('.well-known/assetlinks.json');
+    if (file_exists($path)) {
+        return response()->file($path, ['Content-Type' => 'application/json']);
+    }
+    return response()->json([
+        [
+            'relation' => ['delegate_permission/common.handle_all_urls'],
+            'target' => [
+                'namespace' => 'android_app',
+                'package_name' => 'com.siapklu.koperasi.twa',
+                'sha256_cert_fingerprints' => [
+                    'AF:59:39:9F:3C:45:B7:39:1D:DF:ED:03:4D:AA:D7:4B:A9:85:CB:6E:87:1C:E1:8C:16:95:01:BD:6B:84:C0:1F'
+                ],
+            ],
+        ],
+    ]);
+});
+
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('anggota.dashboard');
+    }
     return redirect()->route('login');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('dashboard', function () {
+    if (!auth()->user()->isAdmin()) {
+        return redirect()->route('anggota.dashboard');
+    }
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

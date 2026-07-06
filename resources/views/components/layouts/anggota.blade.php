@@ -12,7 +12,6 @@
     <title>Koperasi Polres — Simpanan Saya</title>
 
     <link rel="manifest" href="{{ asset('manifest.json') }}">
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
