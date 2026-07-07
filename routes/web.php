@@ -24,7 +24,9 @@ Route::get('/.well-known/assetlinks.json', function () {
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return redirect()->route('anggota.dashboard');
+        return auth()->user()->isAdmin()
+            ? redirect()->route('dashboard')
+            : redirect()->route('anggota.dashboard');
     }
     return redirect()->route('login');
 })->name('home');
@@ -52,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Pinjaman Module (Admin area)
     Volt::route('pinjaman/antrian', 'pinjaman.antrian')->name('pinjaman.antrian');
+    Volt::route('pinjaman/rekap', 'pinjaman.rekap')->name('pinjaman.rekap');
     Volt::route('pinjaman/review/{pinjaman}', 'pinjaman.review')->name('pinjaman.review');
     Volt::route('pinjaman/cetak/{pinjaman}', 'pinjaman.cetak')->name('pinjaman.cetak');
     Volt::route('pinjaman/daftar', 'pinjaman.index')->name('pinjaman.index');

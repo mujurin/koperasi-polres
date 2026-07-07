@@ -73,7 +73,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
             $bulanBerjalan = (\Carbon\Carbon::now()->year - $pinjamanAktif->updated_at->year) * 12 
                            + (\Carbon\Carbon::now()->month - $pinjamanAktif->updated_at->month);
-            $targetLunas = max(0, $bulanBerjalan - 1);
+            $targetLunas = max(0, $bulanBerjalan);
             
             $bulanTerbayar = \App\Models\Angsuran::where('pinjaman_id', $pinjamanAktif->id)
                 ->where('status_pembayaran', 'Lunas')
@@ -108,6 +108,13 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     {
         if (in_array($property, ['jumlah_ajuan', 'tenor'])) {
             $this->hitungSimulasi();
+        }
+        if ($property === 'jenis_permohonan') {
+            if ($this->jenis_permohonan === 'Urgent') {
+                $this->keterangan = 'Keluarga Meninggal';
+            } else {
+                $this->keterangan = '';
+            }
         }
     }
 
@@ -372,7 +379,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
                     <div>
                         <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Jenis Permohonan</label>
-                        <select wire:model="jenis_permohonan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
+                        <select wire:model.live="jenis_permohonan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
                             <option value="Biasa">Biasa</option>
                             <option value="Urgent">Urgent</option>
                         </select>
@@ -382,9 +389,17 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Keterangan / Tujuan Pinjaman</label>
-                    <input wire:model="keterangan" type="text"
-                        class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
-                        placeholder="Contoh: Renovasi rumah">
+                    @if($jenis_permohonan === 'Urgent')
+                        <select wire:model="keterangan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
+                            <option value="Keluarga Meninggal">Keluarga Meninggal</option>
+                            <option value="Keluarga Opname">Keluarga Opname</option>
+                            <option value="Pendidikan Polri">Pendidikan Polri</option>
+                        </select>
+                    @else
+                        <input wire:model="keterangan" type="text"
+                            class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                            placeholder="Contoh: Renovasi rumah">
+                    @endif
                     @error('keterangan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 

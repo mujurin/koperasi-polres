@@ -36,7 +36,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             RateLimiter::clear($this->throttleKey());
             Session::regenerate();
 
-            $default = route('anggota.dashboard', absolute: false);
+            $default = Auth::user()->isAdmin() ? route('dashboard', absolute: false) : route('anggota.dashboard', absolute: false);
 
             $intended = session()->pull('url.intended', $default);
             if (!Auth::user()->isAdmin() && !Str::contains($intended, 'anggota')) {
@@ -73,7 +73,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 RateLimiter::clear($this->throttleKey());
                 Session::regenerate();
 
-                $default = route('anggota.dashboard', absolute: false);
+                $default = $user->isAdmin() ? route('dashboard', absolute: false) : route('anggota.dashboard', absolute: false);
 
                 $intended = session()->pull('url.intended', $default);
                 if (!$user->isAdmin() && !Str::contains($intended, 'anggota')) {

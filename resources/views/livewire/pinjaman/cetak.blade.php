@@ -46,7 +46,7 @@ new #[Layout('components.layouts.print')] class extends Component {
 
                 $bulanBerjalan = (\Carbon\Carbon::parse($this->pinjaman->created_at)->year - $pinjamanLama->updated_at->year) * 12
                     + (\Carbon\Carbon::parse($this->pinjaman->created_at)->month - $pinjamanLama->updated_at->month);
-                $targetLunas = max(0, $bulanBerjalan - 1);
+                $targetLunas = max(0, $bulanBerjalan);
 
                 $bulanTerbayar = \App\Models\Angsuran::where('pinjaman_id', $pinjamanLama->id)
                     ->where('status_pembayaran', 'Lunas')
