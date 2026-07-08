@@ -1,0 +1,7 @@
+[
+    {
+        "id": 4,
+        "status": "lunas",
+        "keterangan": "renov (Lunas via Kompensasi Pinjaman Baru)"
+    }
+]
