@@ -40,6 +40,10 @@
                     :current="request()->routeIs('pinjaman.index')" wire:navigate>
                     Daftar Pinjaman
                 </flux:navlist.item>
+                <flux:navlist.item icon="arrow-down-on-square" href="{{ route('pinjaman.tarik-setoran') }}"
+                    :current="request()->routeIs('pinjaman.tarik-setoran')" wire:navigate>
+                    Tarik Setoran
+                </flux:navlist.item>
                 <flux:navlist.item icon="chart-bar" href="{{ route('pinjaman.rekap') }}"
                     :current="request()->routeIs('pinjaman.rekap')" wire:navigate>
                     Rekap Pinjaman

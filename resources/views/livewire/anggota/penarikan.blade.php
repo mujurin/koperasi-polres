@@ -25,8 +25,18 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         return Auth::user()->penarikan()->latest('created_at')->get();
     }
 
+    public function getAdaPenarikanProsesProperty(): bool
+    {
+        return Auth::user()->penarikan()->where('status', 'proses')->exists();
+    }
+
     public function simpan(): void
     {
+        if ($this->adaPenarikanProses) {
+            $this->addError('jumlah', 'Anda masih memiliki penarikan dalam proses.');
+            return;
+        }
+
         $saldoAkhir = $this->saldoSekarang;
 
         $this->validate([
@@ -36,13 +46,6 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
         if ($this->jumlah > $saldoAkhir) {
             $this->addError('jumlah', 'Jumlah penarikan tidak boleh melebihi saldo akhir Anda (Rp ' . number_format($saldoAkhir, 0, ',', '.') . ').');
-            return;
-        }
-
-        // Hitung juga penarikan yang masih proses
-        $pendingPenarikan = Auth::user()->penarikan()->where('status', 'proses')->sum('jumlah');
-        if (($this->jumlah + $pendingPenarikan) > $saldoAkhir) {
-            $this->addError('jumlah', 'Anda masih memiliki penarikan dalam proses sebesar Rp ' . number_format($pendingPenarikan, 0, ',', '.') . '. Total penarikan tidak boleh melebihi saldo.');
             return;
         }
 
@@ -106,7 +109,17 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     @endif
 
     {{-- Form Request --}}
-    @if($this->saldoSekarang <= 0)
+    @if($this->adaPenarikanProses)
+        <div class="rounded-2xl border border-blue-200 bg-blue-50 p-8 text-center shadow-sm dark:border-blue-800 dark:bg-blue-950/60 mt-2">
+            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 dark:bg-blue-900/50">
+                <svg class="size-7 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3 class="text-base font-bold text-blue-900 dark:text-blue-200">Sedang Diproses</h3>
+            <p class="mt-1 text-xs text-blue-700 dark:text-blue-400">Anda tidak bisa mengajukan penarikan baru karena masih ada pengajuan yang sedang diproses admin.</p>
+        </div>
+    @elseif($this->saldoSekarang <= 0)
         <div class="rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900 mt-2">
             <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800">
                 <svg class="size-7 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -123,9 +136,27 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     
                     <div>
                         <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Jumlah Penarikan (Rp)</label>
-                        <input wire:model="jumlah" type="number" min="1" max="{{ $this->saldoSekarang }}" required
-                            class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
-                            placeholder="Contoh: 500000">
+                        <input type="text" inputmode="numeric" required
+                            x-data="{ 
+                                init() {
+                                    this.$el.value = $wire.jumlah ? parseInt($wire.jumlah).toLocaleString('id-ID') : '';
+                                },
+                                format(e) {
+                                    let num = e.target.value.replace(/[^0-9]/g, '');
+                                    if(num !== '') {
+                                        let parsed = parseInt(num, 10);
+                                        if (parsed > {{ $this->saldoSekarang }}) parsed = {{ $this->saldoSekarang }};
+                                        e.target.value = parsed.toLocaleString('id-ID');
+                                        $wire.jumlah = parsed;
+                                    } else {
+                                        e.target.value = '';
+                                        $wire.jumlah = 0;
+                                    }
+                                }
+                            }"
+                            @input="format"
+                            class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-semibold tracking-wider text-indigo-700 dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-indigo-300 focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                            placeholder="Contoh: 5.000.000">
                         @error('jumlah') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 

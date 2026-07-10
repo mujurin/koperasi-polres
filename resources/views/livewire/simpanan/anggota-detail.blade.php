@@ -190,7 +190,7 @@ new #[Layout('components.layouts.app')] class extends Component {
             @php
                 $totalPokok = $member->simpananPokok?->jumlah ?? 0;
                 $totalWajib = $member->simpananWajib->sum('jumlah');
-                $totalTarik = $member->penarikan->sum('jumlah');
+                $totalTarik = $member->totalPenarikan();
             @endphp
 
             <div class="rounded-xl border border-blue-100 bg-blue-50 p-3 dark:border-blue-800/40 dark:bg-blue-950/40">
@@ -198,7 +198,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                     <flux:icon name="building-library" class="size-3" /> Pokok
                 </p>
                 <p class="font-bold text-blue-900 dark:text-blue-100 text-sm">Rp
-                    {{ number_format($totalPokok, 0, ',', '.') }}</p>
+                    {{ number_format($totalPokok, 0, ',', '.') }}
+                </p>
             </div>
             <div
                 class="rounded-xl border border-emerald-100 bg-emerald-50 p-3 dark:border-emerald-800/40 dark:bg-emerald-950/40">
@@ -206,14 +207,16 @@ new #[Layout('components.layouts.app')] class extends Component {
                     <flux:icon name="calendar-days" class="size-3" /> Wajib
                 </p>
                 <p class="font-bold text-emerald-900 dark:text-emerald-100 text-sm">Rp
-                    {{ number_format($totalWajib, 0, ',', '.') }}</p>
+                    {{ number_format($totalWajib, 0, ',', '.') }}
+                </p>
             </div>
             <div class="rounded-xl border border-rose-100 bg-rose-50 p-3 dark:border-rose-800/40 dark:bg-rose-950/40">
                 <p class="text-xs text-rose-600 dark:text-rose-400 mb-1 flex items-center gap-1">
                     <flux:icon name="arrow-up-tray" class="size-3" /> Tarik
                 </p>
                 <p class="font-bold text-rose-900 dark:text-rose-100 text-sm">Rp
-                    {{ number_format($totalTarik, 0, ',', '.') }}</p>
+                    {{ number_format($totalTarik, 0, ',', '.') }}
+                </p>
             </div>
             <div
                 class="rounded-xl border border-violet-100 bg-violet-50 p-3 dark:border-violet-800/40 dark:bg-violet-950/40">
@@ -221,7 +224,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                     <flux:icon name="wallet" class="size-3" /> Saldo
                 </p>
                 <p class="font-bold text-violet-900 dark:text-violet-100 text-sm">Rp
-                    {{ number_format($this->saldo, 0, ',', '.') }}</p>
+                    {{ number_format($this->saldo, 0, ',', '.') }}
+                </p>
             </div>
         </div>
     </div>
@@ -267,17 +271,20 @@ new #[Layout('components.layouts.app')] class extends Component {
                         class="rounded-xl border border-blue-100 dark:border-blue-800/40 bg-blue-50 dark:bg-blue-950/30 p-3">
                         <p class="text-xs text-blue-600 dark:text-blue-400 mb-1">Jumlah</p>
                         <p class="font-bold text-blue-900 dark:text-blue-100">Rp
-                            {{ number_format($this->existingPokok->jumlah, 0, ',', '.') }}</p>
+                            {{ number_format($this->existingPokok->jumlah, 0, ',', '.') }}
+                        </p>
                     </div>
                     <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/40 p-3">
                         <p class="text-xs text-zinc-500 mb-1">Tanggal</p>
                         <p class="font-semibold text-zinc-800 dark:text-zinc-200 text-sm">
-                            {{ $this->existingPokok->tanggal->format('d M Y') }}</p>
+                            {{ $this->existingPokok->tanggal->format('d M Y') }}
+                        </p>
                     </div>
                     <div class="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/40 p-3">
                         <p class="text-xs text-zinc-500 mb-1">Keterangan</p>
                         <p class="font-medium text-zinc-700 dark:text-zinc-300 text-sm">
-                            {{ $this->existingPokok->keterangan ?: '—' }}</p>
+                            {{ $this->existingPokok->keterangan ?: '—' }}
+                        </p>
                     </div>
                 </div>
             @else
@@ -478,6 +485,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
                                     Tanggal</th>
                                 <th
+                                    class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                                    Aksi</th>
+                                <th
                                     class="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">
                                     Jumlah</th>
                                 <th
@@ -498,17 +508,30 @@ new #[Layout('components.layouts.app')] class extends Component {
                                                 class="text-xs font-medium text-zinc-700 dark:text-zinc-300">{{ $item->tanggal->format('d M Y') }}</span>
                                         </div>
                                     </td>
+                                    <td class="px-4 py-2.5 text-center">
+                                        @if($item->status === 'disetujui')
+                                            <a href="{{ route('penarikan.kwitansi', $item->id) }}" target="_blank"
+                                                class="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-2 py-1 text-[10px] font-semibold text-indigo-700 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 transition-colors">
+                                                <flux:icon name="printer" class="size-3" />
+                                                Cetak
+                                            </a>
+                                        @else
+                                            <span class="text-[10px] text-zinc-400">Belum disetujui</span>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2.5 text-right text-xs font-semibold text-rose-600 dark:text-rose-400">Rp
-                                        {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                                        {{ number_format($item->jumlah, 0, ',', '.') }}
+                                    </td>
                                     <td class="px-4 py-2.5 text-xs text-zinc-500">{{ $item->keterangan ?: '—' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr class="bg-zinc-50 dark:bg-zinc-800/30 border-t-2 border-zinc-200 dark:border-zinc-700">
-                                <td class="px-4 py-2.5 text-xs font-semibold text-zinc-500">Total Ditarik</td>
+                                <td class="px-4 py-2.5 text-xs font-semibold text-zinc-500">Total Ditarik (Disetujui)</td>
                                 <td class="px-4 py-2.5 text-right text-sm font-bold text-rose-700 dark:text-rose-300">Rp
-                                    {{ number_format($this->riwayatTarik->sum('jumlah'), 0, ',', '.') }}</td>
+                                    {{ number_format($member->totalPenarikan(), 0, ',', '.') }}
+                                </td>
                                 <td></td>
                             </tr>
                         </tfoot>

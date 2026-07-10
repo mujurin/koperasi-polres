@@ -11,8 +11,8 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         $user = Auth::user();
         $totalPokok = $user->simpananPokok?->jumlah ?? 0;
         $totalWajib = $user->simpananWajib()->sum('jumlah');
-        $totalTarik = $user->penarikan()->sum('jumlah');
-        $saldo = ($totalPokok + $totalWajib) - $totalTarik;
+        $totalTarik = $user->totalPenarikan();
+        $saldo = $user->saldoAkhir();
         $hasPokok = $user->simpananPokok !== null;
 
         return compact('totalPokok', 'totalWajib', 'totalTarik', 'saldo', 'hasPokok');

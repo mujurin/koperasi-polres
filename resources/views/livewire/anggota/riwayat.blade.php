@@ -12,7 +12,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         $user = Auth::user();
 
         $totalWajib = $user->simpananWajib()->sum('jumlah');
-        $totalTarik = $user->penarikan()->sum('jumlah');
+        $totalTarik = $user->totalPenarikan();
 
         $riwayatWajib = $user->simpananWajib()
             ->orderByDesc('tahun')

@@ -13,8 +13,8 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
         $totalPokok = $user->simpananPokok?->jumlah ?? 0;
         $totalWajib = $user->simpananWajib()->sum('jumlah');
-        $totalTarik = $user->penarikan()->sum('jumlah');
-        $saldo = ($totalPokok + $totalWajib) - $totalTarik;
+        $totalTarik = $user->totalPenarikan();
+        $saldo = $user->saldoAkhir();
 
         $riwayatTarik = $user->penarikan()
             ->orderByDesc('tanggal')

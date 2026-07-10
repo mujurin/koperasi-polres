@@ -68,6 +68,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                     'is_kompensasi' => false,
                     'kompensasi_month' => null,
                     'acc_month' => null,
+                    'max_valid_month' => 12,
                     'current_month' => Carbon::now()->month
                 ];
             }
@@ -77,8 +78,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                 $rekapBulan[$userId]['kompensasi_month'] = Carbon::parse($pinjaman->updated_at)->month;
             }
 
-            if ($pinjaman->status === 'disetujui' && $pinjaman->updated_at) {
-                $pencairanDate = Carbon::parse($pinjaman->updated_at)->startOfMonth();
+            if ($pinjaman->status === 'disetujui' && $pinjaman->created_at) {
+                $pencairanDate = Carbon::parse($pinjaman->created_at)->startOfMonth();
                 $currentDate = $now->copy()->startOfMonth();
                 
                 if ($pencairanDate->year < $this->year) {
@@ -87,6 +88,15 @@ new #[Layout('components.layouts.app')] class extends Component {
                     $rekapBulan[$userId]['acc_month'] = $pencairanDate->month;
                 } else {
                     $rekapBulan[$userId]['acc_month'] = 12; // future loan in selected year
+                }
+                
+                $endDate = $pencairanDate->copy()->addMonths((int) $pinjaman->tenor);
+                if ($endDate->year < $this->year) {
+                    $rekapBulan[$userId]['max_valid_month'] = 0;
+                } elseif ($endDate->year == $this->year) {
+                    $rekapBulan[$userId]['max_valid_month'] = $endDate->month;
+                } else {
+                    $rekapBulan[$userId]['max_valid_month'] = 12;
                 }
                 
                 $expectedMonths = $pencairanDate->diffInMonths($currentDate);
@@ -112,11 +122,11 @@ new #[Layout('components.layouts.app')] class extends Component {
             $includePinjaman = false;
             if ($this->filter === 'semua') {
                 $includePinjaman = true;
-            } elseif ($this->filter === 'tahun' && Carbon::parse($pinjaman->updated_at)->year == $this->year) {
+            } elseif ($this->filter === 'tahun' && Carbon::parse($pinjaman->created_at)->year == $this->year) {
                 $includePinjaman = true;
-            } elseif ($this->filter === 'bulan' && Carbon::parse($pinjaman->updated_at)->isCurrentMonth()) {
+            } elseif ($this->filter === 'bulan' && Carbon::parse($pinjaman->created_at)->isCurrentMonth()) {
                 $includePinjaman = true;
-            } elseif ($this->filter === 'minggu' && Carbon::parse($pinjaman->updated_at)->isCurrentWeek()) {
+            } elseif ($this->filter === 'minggu' && Carbon::parse($pinjaman->created_at)->isCurrentWeek()) {
                 $includePinjaman = true;
             }
 
@@ -398,7 +408,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     @else
                                         @if(isset($row['is_kompensasi']) && $row['is_kompensasi'] && $i <= $row['kompensasi_month'])
                                             <div class="text-center text-[8px] font-bold text-amber-500/80 uppercase tracking-widest">Kompensasi</div>
-                                        @elseif(isset($row['acc_month']) && $i > $row['acc_month'] && $i <= $row['current_month'])
+                                        @elseif(isset($row['acc_month']) && $i > $row['acc_month'] && $i <= $row['current_month'] && $i <= ($row['max_valid_month'] ?? 12))
                                             <div class="flex items-center justify-center w-full h-full">
                                                 <div class="inline-flex rounded bg-rose-100 px-1.5 py-0.5 text-[7.5px] font-bold text-rose-700 uppercase tracking-widest dark:bg-rose-900/40 dark:text-rose-400 shadow-sm">Nunggak</div>
                                             </div>

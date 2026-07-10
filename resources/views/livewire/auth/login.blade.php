@@ -125,7 +125,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header title="PRIMKOPPOL LOTARA" description="Masukkan NRP dan password untuk masuk" />
+    <x-auth-header title="PRIMKOPPOL LOTARA" description='"Rencanakanlah Kebutuhan Anda dengan Seksama"' />
+    <p class="-mt-4 text-center text-xs text-zinc-500 dark:text-zinc-400">Silakan masukkan NRP dan password untuk masuk.</p>
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
