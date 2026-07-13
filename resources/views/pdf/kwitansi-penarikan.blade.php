@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html translate="no">
 
 <head>
+    <meta name="google" content="notranslate">
     <meta charset="utf-8">
     <title>Kwitansi Penarikan Saldo</title>
     <style>

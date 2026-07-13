@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="id" class="">
+<html lang="id" class="" translate="no">
 
 <head>
+    <meta name="google" content="notranslate">
     <meta charset="utf-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">

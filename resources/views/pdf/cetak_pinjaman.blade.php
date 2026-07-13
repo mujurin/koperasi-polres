@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" translate="no">
 
 <head>
+    <meta name="google" content="notranslate">
     <meta charset="UTF-8">
     <title>Surat Persetujuan Pinjaman</title>
     <style>

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" translate="no">
 
 <head>
+    <meta name="google" content="notranslate">
     @include('partials.head')
     <style>
         @page {
