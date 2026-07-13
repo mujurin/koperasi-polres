@@ -16,6 +16,10 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     public string $jenis_permohonan = 'Biasa';
     public bool $saved = false;
     public bool $hasActiveRequest = false;
+    
+    // WA Setup verification
+    public bool $needsWaSetup = false;
+    public string $no_wa_input = '';
 
     // Simulation properties
     public float $biaya_administrasi = 0;
@@ -38,6 +42,10 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
     public function mount()
     {
+        if (empty(Auth::user()->no_wa)) {
+            $this->needsWaSetup = true;
+        }
+
         $pendingLoan = Auth::user()->pinjaman()->whereIn('status', ['proses', 'ditunda'])->first();
         if ($pendingLoan) {
             $this->hasActiveRequest = true;
@@ -102,6 +110,24 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         }
 
         $this->hitungSimulasi();
+    }
+
+    public function saveWa()
+    {
+        $this->validate([
+            'no_wa_input' => 'required|numeric|min_digits:10|max_digits:15',
+        ], [
+            'no_wa_input.required' => 'Nomor WhatsApp wajib diisi.',
+            'no_wa_input.numeric' => 'Hanya masukkan angka (contoh: 0812...).',
+            'no_wa_input.min_digits' => 'Nomor tidak valid (minimal 10 digit).',
+            'no_wa_input.max_digits' => 'Nomor kepanjangan (maksimal 15 digit).',
+        ]);
+
+        $user = Auth::user();
+        $user->no_wa = $this->no_wa_input;
+        $user->save();
+
+        $this->needsWaSetup = false;
     }
 
     public function updated($property)
@@ -258,7 +284,32 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     @endif
 
     {{-- Form Request & Simulasi --}}
-    @if($hasActiveRequest && !$saved)
+    @if($needsWaSetup)
+        <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5 mt-2 shadow-sm dark:bg-blue-950/40 dark:border-blue-800/50 flex flex-col gap-4">
+            <div class="flex items-start gap-4">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-blue-900 dark:text-blue-100">Setup Nomor WhatsApp</h3>
+                    <p class="text-xs text-blue-700 dark:text-blue-300 mt-1">Sebelum melanjutkan permohonan pinjaman, kami perlu mencatat nomor WhatsApp Anda agar admin bisa menghubungi Anda nanti.</p>
+                </div>
+            </div>
+            <form wire:submit.prevent="saveWa" class="flex flex-col gap-3 mt-1">
+                <div>
+                    <input wire:model="no_wa_input" type="tel" x-mask="08999999999999" placeholder="Contoh: 081234567890"
+                        class="w-full rounded-xl border-zinc-200 bg-white px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
+                    @error('no_wa_input') <span class="text-[10px] text-red-500 mt-1 block font-medium">{{ $message }}</span> @enderror
+                </div>
+                <button type="submit"
+                    class="w-full rounded-xl bg-zinc-900 dark:bg-white px-4 py-3 text-sm font-bold text-white dark:text-zinc-900 shadow hover:bg-zinc-800 dark:hover:bg-zinc-100 active:scale-[0.98] transition-all">
+                    Simpan dan Lanjutkan
+                </button>
+            </form>
+        </div>
+    @elseif($hasActiveRequest && !$saved)
         <div class="rounded-2xl border {{ $statusRequestSaya === 'ditunda' ? 'border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/40' : 'border-orange-200 bg-orange-50 dark:border-orange-800/50 dark:bg-orange-950/40' }} p-5 mt-2 shadow-sm">
             <div class="flex items-start justify-between gap-4">
                 <div class="flex items-start gap-3">

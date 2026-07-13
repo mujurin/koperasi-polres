@@ -6,13 +6,18 @@
     // Statistik Pinjaman
     $aktifPinjamanCount = \App\Models\Pinjaman::where('status', 'disetujui')->distinct()->count('user_id');
 
-    $activePinjamans = \App\Models\Pinjaman::whereIn('status', ['disetujui', 'lunas'])->with(['angsurans' => function ($q) {
-        $q->where('status_pembayaran', 'lunas');
-    }])->get();
+    $activePinjamans = \App\Models\Pinjaman::whereIn('status', ['disetujui', 'lunas'])->with([
+        'angsurans' => function ($q) {
+            $q->where('status_pembayaran', 'lunas');
+        }
+    ])->get();
 
     $totalTerealisasi = 0;
     $totalPokok = 0;
     $totalJasa = 0;
+
+    $orangNunggak = [];
+    $totalTunggakanNominal = 0;
 
     foreach ($activePinjamans as $pinjaman) {
         $totalTerealisasi += $pinjaman->jumlah_ajuan;
@@ -23,14 +28,33 @@
             $totalPokok += $pokok;
             $totalJasa += $jasa;
         }
+
+        // Tunggakan Calculation Engine (Identical to Rekap view)
+        $pencairanDate = \Carbon\Carbon::parse($pinjaman->created_at)->startOfMonth();
+        $currentDate = now()->startOfMonth();
+        $expectedMonths = $pencairanDate->diffInMonths($currentDate);
+        $expectedMonths = min($expectedMonths, $pinjaman->tenor);
+        $lunasCount = $pinjaman->angsurans->count();
+
+        if ($expectedMonths > $lunasCount) {
+            $missedMonths = $expectedMonths - $lunasCount;
+            $pokokBulan = $pinjaman->jumlah_ajuan / $pinjaman->tenor;
+            $jasaBulan = $pinjaman->jumlah_ajuan * 0.01;
+
+            $nominalTunggakan = $missedMonths * ($pokokBulan + $jasaBulan);
+            $totalTunggakanNominal += $nominalTunggakan;
+            $orangNunggak[] = $pinjaman->user_id;
+        }
     }
+
+    $jumlahOrangNunggak = count(array_unique($orangNunggak));
 @endphp
 
 <x-layouts.app>
     <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
         <div>
             <h1 class="text-2xl font-bold text-zinc-900 dark:text-white">Dashboard Admin</h1>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400">Selamat datang di panel administrasi Koperasi Polres.
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Selamat datang di panel administrasi PRIMKOPPOL LOTARA.
             </p>
         </div>
 
@@ -50,10 +74,13 @@
                             class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                             <flux:icon name="users" class="size-6 text-indigo-600 dark:text-indigo-400" />
                         </div>
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Total</span>
+                        <span
+                            class="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Total</span>
                     </div>
                     <div>
-                        <h3 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">{{ $totalAnggota }}</h3>
+                        <h3 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+                            {{ $totalAnggota }}
+                        </h3>
                         <p class="text-sm text-zinc-500 dark:text-zinc-400 font-medium mt-1">Total Anggota Koperasi</p>
                     </div>
                 </div>
@@ -65,7 +92,8 @@
                             class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                             <flux:icon name="banknotes" class="size-6 text-emerald-600 dark:text-emerald-400" />
                         </div>
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">Simpanan</span>
+                        <span
+                            class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">Simpanan</span>
                     </div>
                     <div>
                         <h3 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
@@ -83,12 +111,14 @@
                             <flux:icon name="clock" class="size-6 text-orange-600 dark:text-orange-400" />
                         </div>
                         @if($antrianPinjaman > 0)
-                            <span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300 animate-pulse">
+                            <span
+                                class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300 animate-pulse">
                                 <span class="size-1.5 rounded-full bg-orange-500"></span>
                                 Perlu Review
                             </span>
                         @else
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Aman</span>
+                            <span
+                                class="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Aman</span>
                         @endif
                     </div>
                     <div>
@@ -109,15 +139,17 @@
                         <flux:icon name="chart-bar" class="size-4 text-blue-500" />
                         Statistik & Performa Pinjaman
                     </h2>
-                    <p class="text-xs text-zinc-500 dark:text-zinc-400">Akuntabilitas realisasi pinjaman, setoran masuk, dan pendapatan koperasi.</p>
+                    <p class="text-xs text-zinc-500 dark:text-zinc-400">Akuntabilitas realisasi pinjaman, setoran masuk,
+                        dan pendapatan koperasi.</p>
                 </div>
-                <a wire:navigate href="{{ route('pinjaman.rekap') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors self-start sm:self-auto">
+                <a wire:navigate href="{{ route('pinjaman.rekap') }}"
+                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors self-start sm:self-auto">
                     Lihat Rekap Lengkap
                     <flux:icon name="arrow-right" class="size-3" />
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {{-- 1. Anggota Aktif Pinjam --}}
                 <div
                     class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-50/50 via-white to-white border border-violet-200/80 dark:from-violet-950/20 dark:via-zinc-900 dark:to-zinc-900 dark:border-violet-900/50 p-6 flex flex-col justify-between shadow-sm transition-all duration-300 hover:shadow-md hover:border-violet-300 dark:hover:border-violet-700">
@@ -130,14 +162,17 @@
                                 class="w-10 h-10 bg-violet-100 dark:bg-violet-900/50 rounded-xl flex items-center justify-center text-violet-600 dark:text-violet-400 transition-transform duration-300 group-hover:scale-110">
                                 <flux:icon name="users" class="size-5" />
                             </div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-violet-100/80 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300">Aktif</span>
+                            <span
+                                class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-violet-100/80 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300">Aktif</span>
                         </div>
                         <h3 class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-2">
-                            {{ $aktifPinjamanCount }} <span class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Orang</span>
+                            {{ $aktifPinjamanCount }} <span
+                                class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Orang</span>
                         </h3>
                         <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mt-1">Peminjam Aktif</p>
                     </div>
-                    <div class="relative z-10 mt-3 pt-3 border-t border-violet-100 dark:border-violet-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
+                    <div
+                        class="relative z-10 mt-3 pt-3 border-t border-violet-100 dark:border-violet-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
                         <flux:icon name="information-circle" class="mr-1.5 size-3.5 text-violet-500 shrink-0" />
                         <span>Sedang memiliki pinjaman berjalan</span>
                     </div>
@@ -155,14 +190,16 @@
                                 class="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 transition-transform duration-300 group-hover:scale-110">
                                 <flux:icon name="arrow-up-right" class="size-5" />
                             </div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100/80 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">Realisasi</span>
+                            <span
+                                class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100/80 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">Realisasi</span>
                         </div>
                         <h3 class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-2">
                             Rp {{ number_format($totalTerealisasi, 0, ',', '.') }}
                         </h3>
                         <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mt-1">Total Terealisasi</p>
                     </div>
-                    <div class="relative z-10 mt-3 pt-3 border-t border-blue-100 dark:border-blue-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
+                    <div
+                        class="relative z-10 mt-3 pt-3 border-t border-blue-100 dark:border-blue-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
                         <flux:icon name="information-circle" class="mr-1.5 size-3.5 text-blue-500 shrink-0" />
                         <span>Total nominal disetujui / dipinjamkan</span>
                     </div>
@@ -180,41 +217,74 @@
                                 class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 transition-transform duration-300 group-hover:scale-110">
                                 <flux:icon name="arrow-down-tray" class="size-5" />
                             </div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100/80 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">Pokok</span>
+                            <span
+                                class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100/80 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">Pokok</span>
                         </div>
                         <h3 class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-2">
                             Rp {{ number_format($totalPokok, 0, ',', '.') }}
                         </h3>
                         <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mt-1">Pokok Setoran Masuk</p>
                     </div>
-                    <div class="relative z-10 mt-3 pt-3 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
+                    <div
+                        class="relative z-10 mt-3 pt-3 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
                         <flux:icon name="information-circle" class="mr-1.5 size-3.5 text-emerald-500 shrink-0" />
                         <span>Porsi pengembalian pokok piutang</span>
                     </div>
                 </div>
 
-                {{-- 4. Pendapatan Jasa --}}
+                {{-- 5. Anggota Nunggak --}}
                 <div
-                    class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50/50 via-white to-white border border-amber-200/80 dark:from-amber-950/20 dark:via-zinc-900 dark:to-zinc-900 dark:border-amber-900/50 p-6 flex flex-col justify-between shadow-sm transition-all duration-300 hover:shadow-md hover:border-amber-300 dark:hover:border-amber-700">
+                    class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50/50 via-white to-white border border-rose-200/80 dark:from-rose-950/20 dark:via-zinc-900 dark:to-zinc-900 dark:border-rose-900/50 p-6 flex flex-col justify-between shadow-sm transition-all duration-300 hover:shadow-md hover:border-rose-300 dark:hover:border-rose-700">
                     <div class="absolute right-0 top-0 -mr-4 -mt-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <flux:icon name="chart-bar" class="size-28 text-amber-600 dark:text-amber-400" />
+                        <flux:icon name="exclamation-triangle" class="size-28 text-rose-600 dark:text-rose-400" />
                     </div>
                     <div class="relative z-10">
                         <div class="flex items-center justify-between mb-4">
                             <div
-                                class="w-10 h-10 bg-amber-100 dark:bg-amber-900/50 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400 transition-transform duration-300 group-hover:scale-110">
-                                <flux:icon name="arrow-trending-up" class="size-5" />
+                                class="w-10 h-10 bg-rose-100 dark:bg-rose-900/50 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400 transition-transform duration-300 group-hover:scale-110">
+                                <flux:icon name="user-minus" class="size-5" />
                             </div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">Jasa 1%</span>
+                            <span
+                                class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-100/80 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300">Darurat</span>
                         </div>
                         <h3 class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-2">
-                            Rp {{ number_format($totalJasa, 0, ',', '.') }}
+                            {{ $jumlahOrangNunggak }} <span
+                                class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Orang</span>
                         </h3>
-                        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mt-1">Pendapatan Jasa</p>
+                        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mt-1">Anggota Nunggak</p>
                     </div>
-                    <div class="relative z-10 mt-3 pt-3 border-t border-amber-100 dark:border-amber-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
-                        <flux:icon name="information-circle" class="mr-1.5 size-3.5 text-amber-500 shrink-0" />
-                        <span>Akumulasi jasa angsuran lunas</span>
+                    <div
+                        class="relative z-10 mt-3 pt-3 border-t border-rose-100 dark:border-rose-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
+                        <flux:icon name="information-circle" class="mr-1.5 size-3.5 text-rose-500 shrink-0" />
+                        <span>Tertinggal bayar bulan berjalan</span>
+                    </div>
+                </div>
+
+                {{-- 6. Total Tunggakan --}}
+                <div
+                    class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-50/50 via-white to-white border border-red-200/80 dark:from-red-950/20 dark:via-zinc-900 dark:to-zinc-900 dark:border-red-900/50 p-6 flex flex-col justify-between shadow-sm transition-all duration-300 hover:shadow-md hover:border-red-300 dark:hover:border-red-700">
+                    <div class="absolute right-0 top-0 -mr-4 -mt-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <flux:icon name="banknotes" class="size-28 text-red-600 dark:text-red-400" />
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="w-10 h-10 bg-red-100 dark:bg-red-900/50 rounded-xl flex items-center justify-center text-red-600 dark:text-red-400 transition-transform duration-300 group-hover:scale-110">
+                                <flux:icon name="arrow-trending-down" class="size-5" />
+                            </div>
+                            <span
+                                class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-red-100/80 dark:bg-red-900/40 text-red-700 dark:text-red-300">Nilai
+                                Macet</span>
+                        </div>
+                        <h3 class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-2">
+                            Rp {{ number_format($totalTunggakanNominal, 0, ',', '.') }}
+                        </h3>
+                        <p class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mt-1">Total Tunggakan</p>
+                    </div>
+                    <div
+                        class="relative z-10 mt-3 pt-3 border-t border-red-100 dark:border-red-900/30 flex items-center text-xs text-zinc-500 dark:text-zinc-400">
+                        <flux:icon name="information-circle" class="mr-1.5 size-3.5 text-red-500 shrink-0" />
+                        <span>Estimasi nominal Pokok + Jasa tertunggak</span>
                     </div>
                 </div>
             </div>

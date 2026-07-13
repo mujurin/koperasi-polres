@@ -15,7 +15,7 @@ Route::get('/.well-known/assetlinks.json', function () {
                 'namespace' => 'android_app',
                 'package_name' => 'com.siapklu.koperasi.twa',
                 'sha256_cert_fingerprints' => [
-                    'AF:59:39:9F:3C:45:B7:39:1D:DF:ED:03:4D:AA:D7:4B:A9:85:CB:6E:87:1C:E1:8C:16:95:01:BD:6B:84:C0:1F'
+                    'A3:B5:F9:93:78:DA:E7:BB:C4:14:8D:DA:56:15:A5:85:57:88:D4:AC:BC:92:FC:09:6E:1E:58:FD:CB:24:0D:FB'
                 ],
             ],
         ],
@@ -51,15 +51,19 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('simpanan/wajib', 'simpanan.simpanan-wajib')->name('simpanan.wajib');
     Volt::route('simpanan/penarikan', 'simpanan.penarikan')->name('simpanan.penarikan');
     Volt::route('simpanan/anggota/{user}', 'simpanan.anggota-detail')->name('simpanan.anggota.detail');
+    Route::get('simpanan/penarikan/{penarikan}/kwitansi', [\App\Http\Controllers\PenarikanKwitansiController::class, 'download'])->name('penarikan.kwitansi');
 
     // Pinjaman Module (Admin area)
     Volt::route('pinjaman/antrian', 'pinjaman.antrian')->name('pinjaman.antrian');
+    Route::get('pinjaman/rekap/download', [App\Http\Controllers\PdfController::class, 'rekapPdf'])->name('pinjaman.rekap.download');
     Volt::route('pinjaman/rekap', 'pinjaman.rekap')->name('pinjaman.rekap');
     Volt::route('pinjaman/rekap/download', 'pinjaman.rekap-pdf')->name('pinjaman.rekap.download');
     Volt::route('pinjaman/review/{pinjaman}', 'pinjaman.review')->name('pinjaman.review');
-    Volt::route('pinjaman/cetak/{pinjaman}', 'pinjaman.cetak')->name('pinjaman.cetak');
+    Volt::route('pinjaman/cetak/{pinjaman}', 'pinjaman.cetak')->name('pinjaman.cetak'); // Keep for legacy/fallback
+    Route::get('pinjaman/cetak/{pinjaman}/download', [App\Http\Controllers\PdfController::class, 'cetakPdf'])->name('pinjaman.cetak.download');
     Volt::route('pinjaman/daftar', 'pinjaman.index')->name('pinjaman.index');
     Volt::route('pinjaman/{pinjaman}/rincian', 'pinjaman.show')->name('pinjaman.show');
+    Volt::route('pinjaman/tarik-setoran', 'pinjaman.tarik-setoran')->name('pinjaman.tarik-setoran');
 
     // Laporan & Akuntansi (Admin area)
     Volt::route('laporan/neraca-saldo', 'laporan.neraca-saldo')->name('laporan.neraca-saldo');

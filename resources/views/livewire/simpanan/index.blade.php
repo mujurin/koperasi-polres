@@ -41,7 +41,7 @@ new #[Layout('components.layouts.app')] class extends Component {
         // ── Akumulasi SEMUA ANGGOTA ──────────────────────────────
         $globalPokok = SimpananPokok::sum('jumlah');
         $globalWajib = SimpananWajib::sum('jumlah');
-        $globalTarik = Penarikan::sum('jumlah');
+        $globalTarik = Penarikan::where('status', 'disetujui')->sum('jumlah');
         $globalSaldo = ($globalPokok + $globalWajib) - $globalTarik;
 
         // ── Daftar Anggota ───────────────────────────────────────
@@ -210,8 +210,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                             @php
                                 $pokok = $u->simpananPokok?->jumlah ?? 0;
                                 $wajib = $u->simpananWajib->sum('jumlah');
-                                $tarik = $u->penarikan->sum('jumlah');
-                                $saldo = ($pokok + $wajib) - $tarik;
+                                $tarik = $u->totalPenarikan();
+                                $saldo = $u->saldoAkhir();
                             @endphp
                             <tr class="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40 transition-colors">
                                 <td class="px-5 py-3 text-zinc-400 text-xs">{{ $anggotaPaginator->firstItem() + $i }}</td>

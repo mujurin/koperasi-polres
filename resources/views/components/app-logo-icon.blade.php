@@ -1,1 +1,1 @@
-<img src="https://siapklu.com/guest/tribrata.png" {{ $attributes }} alt="Logo Tribrata" />
+<img src="/logo.png" {{ $attributes }} alt="Logo Koperasi" />

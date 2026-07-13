@@ -24,6 +24,12 @@ new #[Layout('components.layouts.app')] class extends Component {
     public $jasaTunggakan = 0;
     public $tunggakanBulan = 0;
     public $isKompensasi = false;
+    
+    public $sisaPinjamanSaatPengajuan = 0;
+    public $simulasiDiterimaSaatPengajuan = 0;
+    public $selisihBulan = 0;
+    public $opsiPencairan = 'saat_ini'; // 'saat_ini' atau 'saat_pengajuan'
+    public $abaikanAturanLimit = false;
 
     public $riwayatGaji = [];
 
@@ -61,8 +67,8 @@ new #[Layout('components.layouts.app')] class extends Component {
 
         $this->isFirstProses = ($this->pinjaman->id === $this->firstProsesId);
 
-        $this->formJumlahAjuan = $this->pinjaman->jumlah_ajuan;
-        $this->formTenor = $this->pinjaman->tenor;
+        $this->formJumlahAjuan = (int) $this->pinjaman->jumlah_ajuan;
+        $this->formTenor = (int) $this->pinjaman->tenor;
         $this->selectedUser = $this->pinjaman->user?->name ?? 'User Dihapus';
         $this->sisaPinjaman = 0;
         $pinjamanAktif = $this->pinjaman->user?->pinjaman()
@@ -79,6 +85,16 @@ new #[Layout('components.layouts.app')] class extends Component {
             $totalKewajiban = $pinjamanAktif->angsuran_perbulan * $pinjamanAktif->tenor;
 
             $this->sisaPinjaman = max(0, $totalKewajiban - $totalTerbayar);
+            
+            $totalTerbayarSaatPengajuan = \App\Models\Angsuran::where('pinjaman_id', $pinjamanAktif->id)
+                ->where('status_pembayaran', 'Lunas')
+                ->where('tanggal_bayar', '<=', $this->pinjaman->created_at)
+                ->sum('jumlah_bayar');
+                
+            $this->sisaPinjamanSaatPengajuan = max(0, $totalKewajiban - $totalTerbayarSaatPengajuan);
+
+            $this->selisihBulan = max(0, (\Carbon\Carbon::now()->year - $this->pinjaman->created_at->year) * 12
+                + (\Carbon\Carbon::now()->month - $this->pinjaman->created_at->month));
             $this->pinaltiKompensasi = $pinjamanAktif->jumlah_ajuan * 0.01;
             $this->pinjamanLamaAjuan = (float) $pinjamanAktif->jumlah_ajuan;
 
@@ -123,6 +139,12 @@ new #[Layout('components.layouts.app')] class extends Component {
             $this->hitungSimulasi();
         }
     }
+    
+    public function setOpsiPencairan($opsi)
+    {
+        $this->opsiPencairan = $opsi;
+        $this->hitungSimulasi();
+    }
 
     public function hitungSimulasi()
     {
@@ -141,12 +163,16 @@ new #[Layout('components.layouts.app')] class extends Component {
                     $this->simulasiAngsuran = 0;
                     $this->simulasiPokok = 0;
                     $this->simulasiJasa = 0;
+                    $this->simulasiDiterimaSaatPengajuan = 0;
                 } else {
                     $this->simulasiBiaya = $jumlah * 0.01;
-                    $this->simulasiDiterima = $nilaiKompensasi - $this->simulasiBiaya;
                     $this->simulasiPokok = $jumlah / $tenor;
                     $this->simulasiJasa = $jumlah * 0.01;
                     $this->simulasiAngsuran = $this->simulasiPokok + $this->simulasiJasa;
+                    
+                    $nilaiKompensasiSaatPengajuan = $jumlah - $this->sisaPinjamanSaatPengajuan - $this->pinaltiKompensasi - $this->jasaTunggakan;
+                    $this->simulasiDiterimaSaatPengajuan = $nilaiKompensasiSaatPengajuan > 0 ? $nilaiKompensasiSaatPengajuan - $this->simulasiBiaya : 0;
+                    $this->simulasiDiterima = $this->opsiPencairan === 'saat_pengajuan' ? $this->simulasiDiterimaSaatPengajuan : ($nilaiKompensasi - $this->simulasiBiaya);
                 }
             } else {
                 $this->isKompensasi = false;
@@ -172,15 +198,17 @@ new #[Layout('components.layouts.app')] class extends Component {
             'formTenor' => 'required|integer|min:1|max:120',
         ]);
 
-        if ($this->isKompensasi && $this->formJumlahAjuan <= ($this->sisaPinjaman + $this->pinaltiKompensasi + $this->jasaTunggakan)) {
-            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, ajuan harus lebih besar dari sisa hutang, pinalti, & tunggakan (Rp ' . number_format($this->sisaPinjaman + $this->pinaltiKompensasi + $this->jasaTunggakan, 0, ',', '.') . ').');
+        $sisaDipakai = $this->opsiPencairan === 'saat_pengajuan' ? $this->sisaPinjamanSaatPengajuan : $this->sisaPinjaman;
+
+        if ($this->isKompensasi && $this->formJumlahAjuan <= ($sisaDipakai + $this->pinaltiKompensasi + $this->jasaTunggakan)) {
+            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, ajuan harus lebih besar dari sisa hutang, pinalti, & tunggakan (Rp ' . number_format($sisaDipakai + $this->pinaltiKompensasi + $this->jasaTunggakan, 0, ',', '.') . ').');
             return;
         }
 
         $this->hitungSimulasi();
 
-        if ($this->isKompensasi && $this->simulasiDiterima > $this->pinjamanLamaAjuan) {
-            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, bersih yang diterima (Rp ' . number_format($this->simulasiDiterima, 0, ',', '.') . ') tidak boleh melebihi jumlah pinjaman sebelumnya (Rp ' . number_format($this->pinjamanLamaAjuan, 0, ',', '.') . ').');
+        if (!$this->abaikanAturanLimit && $this->isKompensasi && $this->simulasiDiterima > $this->pinjamanLamaAjuan) {
+            $this->addError('formJumlahAjuan', 'Untuk Kompensasi, bersih yang diterima tidak boleh melebihi jumlah pinjaman sebelumnya (Rp ' . number_format($this->pinjamanLamaAjuan, 0, ',', '.') . '). Beri centang persetujuan di bawah form jika Anda bertindak di luar aturan tetap.');
             return;
         }
 
@@ -205,11 +233,13 @@ new #[Layout('components.layouts.app')] class extends Component {
                 ->latest()
                 ->first();
 
-            if ($pinjamanAktif && $this->sisaPinjaman > 0) {
+            $sisaDipakai = $this->opsiPencairan === 'saat_pengajuan' ? $this->sisaPinjamanSaatPengajuan : $this->sisaPinjaman;
+
+            if ($pinjamanAktif && $sisaDipakai > 0) {
                 \App\Models\Angsuran::create([
                     'pinjaman_id' => $pinjamanAktif->id,
                     'angsuran_ke' => 999, // Special identifier for Kompensasi early payoff
-                    'jumlah_bayar' => $this->sisaPinjaman + $this->pinaltiKompensasi + $this->jasaTunggakan,
+                    'jumlah_bayar' => $sisaDipakai + $this->pinaltiKompensasi + $this->jasaTunggakan,
                     'tanggal_bayar' => now(),
                     'status_pembayaran' => 'Lunas'
                 ]);
@@ -221,7 +251,11 @@ new #[Layout('components.layouts.app')] class extends Component {
             }
         }
 
-        return redirect()->route('pinjaman.cetak', $this->pinjaman->id);
+        // Pass download URL via session so the next page can trigger it seamlessly
+        // without race conditions from slow server PDF generation
+        session()->flash('download_pdf', route('pinjaman.cetak.download', $this->pinjaman->id));
+        
+        return redirect()->route('pinjaman.antrian');
     }
 
     public function konfirmasiTolak()
@@ -389,10 +423,74 @@ new #[Layout('components.layouts.app')] class extends Component {
                                 Anggota masih memiliki permohonan pinjaman aktif. Sisa pinjaman sebelumnya akan otomatis
                                 dilunasi dari pinjaman baru ini.
                             </p>
+                            
+                            @if($selisihBulan > 0)
+                                <div class="mt-4 bg-white/60 dark:bg-zinc-900/50 rounded-xl p-4 border border-orange-200 dark:border-orange-800/40">
+                                    <p class="text-xs font-bold text-orange-800 dark:text-orange-300 mb-3 flex items-center justify-between">
+                                        <span>Perbandingan Estimasi Pengajuan vs Realisasi</span>
+                                        <span class="bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-400 px-2 py-0.5 rounded shadow-sm">Masa Tunggu: {{ $selisihBulan }} Bulan</span>
+                                    </p>
+                                    <div class="grid grid-cols-2 gap-4 text-xs">
+                                        <div class="space-y-2 p-3 rounded-lg border transition-colors cursor-pointer {!! $opsiPencairan === 'saat_pengajuan' ? 'bg-orange-100 border-orange-300 dark:bg-orange-900/50 dark:border-orange-700/60 shadow-inner' : 'bg-white/40 border-transparent dark:bg-zinc-800/20 hover:bg-orange-50/50' !!}"
+                                            wire:click="setOpsiPencairan('saat_pengajuan')">
+                                            <div class="flex items-center justify-between">
+                                                <div class="text-zinc-600 dark:text-zinc-400 font-medium whitespace-nowrap">Saat Pengajuan</div>
+                                                @if($opsiPencairan === 'saat_pengajuan')
+                                                    <flux:icon name="check-circle" variant="solid" class="size-4 text-orange-600 dark:text-orange-400" />
+                                                @endif
+                                            </div>
+                                            <div class="text-[10px] text-zinc-500 mb-2">({{ $pinjaman->created_at->translatedFormat('F Y') }})</div>
+                                            
+                                            <div class="flex flex-col pt-1">
+                                                <span class="text-[10px] text-zinc-500">Sisa Hutang:</span>
+                                                <span class="font-semibold text-zinc-700 dark:text-zinc-300">Rp {{ number_format($sisaPinjamanSaatPengajuan, 0, ',', '.') }}</span>
+                                            </div>
+                                            <div class="flex flex-col pt-1 mt-1 border-t border-orange-200/60 dark:border-orange-800/30">
+                                                <span class="text-[10px] text-emerald-600/80 dark:text-emerald-500/80">Estimasi Bersih:</span>
+                                                <span class="font-bold text-emerald-600 dark:text-emerald-400">Rp {{ number_format($simulasiDiterimaSaatPengajuan, 0, ',', '.') }}</span>
+                                            </div>
+                                            @if($opsiPencairan !== 'saat_pengajuan')
+                                                <div class="mt-2 text-center">
+                                                    <button type="button" class="text-[10px] bg-orange-200 text-orange-800 px-2 py-1 rounded w-full hover:bg-orange-300 transition-colors dark:bg-orange-800 dark:text-orange-200 uppercase font-bold tracking-tight">Pilih Ini</button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="space-y-2 p-3 rounded-lg border transition-colors cursor-pointer {!! $opsiPencairan === 'saat_ini' ? 'bg-emerald-50 border-emerald-300 shadow-inner dark:bg-emerald-900/40 dark:border-emerald-700/50' : 'bg-white border-emerald-100 shadow-sm dark:border-emerald-900/30 dark:bg-zinc-800 hover:bg-emerald-50/30' !!}"
+                                            wire:click="setOpsiPencairan('saat_ini')">
+                                            <div class="flex items-center justify-between">
+                                                <div class="text-emerald-700 dark:text-emerald-400 font-medium">Saat Ini</div>
+                                                @if($opsiPencairan === 'saat_ini')
+                                                    <flux:icon name="check-circle" variant="solid" class="size-4 text-emerald-600 dark:text-emerald-400" />
+                                                @endif
+                                            </div>
+                                            <div class="text-[10px] text-zinc-500 mb-2">({{ now()->translatedFormat('F Y') }})</div>
+                                            
+                                            <div class="flex flex-col pt-1">
+                                                <span class="text-[10px] text-zinc-500">Sisa Hutang:</span>
+                                                <span class="font-semibold text-zinc-700 dark:text-zinc-300">Rp {{ number_format($sisaPinjaman, 0, ',', '.') }}</span>
+                                            </div>
+                                            <div class="flex flex-col pt-1 mt-1 border-t border-emerald-200/60 dark:border-emerald-900/40">
+                                                <span class="text-[10px] text-emerald-600/80 dark:text-emerald-500/80">Estimasi Bersih:</span>
+                                                <span class="font-bold text-emerald-600 dark:text-emerald-400">Rp {{ number_format($simulasiDiterima, 0, ',', '.') }}</span>
+                                            </div>
+                                            @if($opsiPencairan !== 'saat_ini')
+                                                <div class="mt-2 text-center">
+                                                    <button type="button" class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded w-full hover:bg-emerald-200 transition-colors uppercase font-bold tracking-tight">Pilih Ini</button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-[10px] text-orange-600/90 dark:text-orange-500/90 italic leading-relaxed">
+                                        * Estimasi penerimaan realisasi saat ini lebih besar karena anggota tetap membayarkan angsuran selama masa tunggu dari {{ $pinjaman->created_at->translatedFormat('F') }} hingga {{ now()->translatedFormat('F') }}, sehingga sisa hutang telah menyusut.
+                                    </p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
-            @elseif(count($riwayatGaji) > 0)
+            @endif
+            
+            @if(count($riwayatGaji) > 0)
                 <div
                     class="mb-5 rounded-2xl bg-white shadow-sm border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 overflow-hidden">
                     <div
@@ -445,18 +543,14 @@ new #[Layout('components.layouts.app')] class extends Component {
                         <div>
                             <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Jumlah
                                 Persetujuan (Rp) <span class="text-rose-500">*</span></label>
-                            <div x-data="{
+                            <div wire:ignore x-data="{
                                 display: '',
                                 timeout: null,
                                 init() {
                                     this.display = this.format($wire.formJumlahAjuan);
-                                    this.$watch('$wire.formJumlahAjuan', val => {
-                                        if(!val) this.display = '';
-                                    });
                                 },
                                 format(v) {
-                                    let val = String(v||'').split('.')[0];
-                                    let num = val.replace(/[^0-9]/g, '');
+                                    let num = String(v||'').replace(/[^0-9]/g, '');
                                     return num ? new Intl.NumberFormat('id-ID').format(num) : '';
                                 },
                                 updateVal(e) {
@@ -464,7 +558,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     clearTimeout(this.timeout);
                                     this.timeout = setTimeout(() => {
                                         $wire.set('formJumlahAjuan', this.display.replace(/[^0-9]/g, ''));
-                                    }, 500);
+                                    }, 600);
                                 }
                             }">
                                 <input x-model="display" @input="updateVal" type="text" inputmode="numeric" required
@@ -474,9 +568,14 @@ new #[Layout('components.layouts.app')] class extends Component {
                             @error('formJumlahAjuan') <span
                             class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                             @if($isKompensasi && $simulasiDiterima > $pinjamanLamaAjuan)
-                                <span class="text-[10px] text-red-500 mt-1 block">Untuk Kompensasi, bersih yang diterima (Rp
-                                    {{ number_format($simulasiDiterima, 0, ',', '.') }}) tidak boleh melebihi jumlah
-                                    pinjaman sebelumnya (Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}).</span>
+                                <div class="mt-2 p-3 rounded-xl bg-red-50 border border-red-200 dark:bg-red-950/20 dark:border-red-900/50">
+                                    <span class="text-[11px] text-red-600 dark:text-red-400 block mb-2 font-medium">Batas Maksimal Terlampaui: Bersih yang diterima (Rp {{ number_format($simulasiDiterima, 0, ',', '.') }}) melebihi jumlah pinjaman sebelumnya (Rp {{ number_format($pinjamanLamaAjuan, 0, ',', '.') }}). Aturan koperasi menolak ini namun admin sistem bisa mengabaikannya.</span>
+                                    
+                                    <label class="flex items-start gap-2 cursor-pointer mt-1.5 p-1">
+                                        <input type="checkbox" wire:model="abaikanAturanLimit" class="mt-0.5 rounded text-red-600 focus:ring-red-500 border-red-300 shadow-sm dark:border-red-900/60 dark:bg-zinc-950 bg-white">
+                                        <span class="text-[10px] text-red-800 dark:text-red-300 font-semibold leading-snug">Ya, abaikan peringatan ini. Lanjutkan pencairan dengan nominal tersebut.</span>
+                                    </label>
+                                </div>
                             @endif
                         </div>
 
@@ -505,9 +604,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                                 <div
                                     class="flex justify-between items-center bg-orange-50/50 dark:bg-orange-950/20 p-2 rounded-lg border border-orange-100 dark:border-orange-900/50 mb-1">
                                     <span class="text-[11px] font-semibold text-orange-800 dark:text-orange-400">Sisa Pokok
-                                        Hutang</span>
+                                        Hutang @if($selisihBulan > 0)({{ $opsiPencairan === 'saat_pengajuan' ? 'Saat Pgjukan' : 'Saat Ini' }})@endif</span>
                                     <span class="text-xs font-semibold text-zinc-900 dark:text-zinc-200">- Rp
-                                        {{ number_format($sisaPinjaman, 0, ',', '.') }}</span>
+                                        {{ number_format($opsiPencairan === 'saat_pengajuan' ? $sisaPinjamanSaatPengajuan : $sisaPinjaman, 0, ',', '.') }}</span>
                                 </div>
                                 <div
                                     class="flex justify-between items-center bg-orange-50/50 dark:bg-orange-950/20 p-2 rounded-lg border border-orange-100 dark:border-orange-900/50 mb-2">

@@ -5,14 +5,13 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE pinjaman MODIFY COLUMN status ENUM('proses', 'disetujui', 'ditolak', 'ditunda') DEFAULT 'proses'");
+        DB::statement("ALTER TABLE pinjaman MODIFY COLUMN status ENUM('proses', 'disetujui', 'ditolak', 'ditunda', 'lunas') DEFAULT 'proses'");
     }
 
     /**
@@ -20,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE pinjaman MODIFY COLUMN status ENUM('proses', 'disetujui', 'ditolak') DEFAULT 'proses'");
+        DB::statement("ALTER TABLE pinjaman MODIFY COLUMN status ENUM('proses', 'disetujui', 'ditolak', 'lunas') DEFAULT 'proses'");
     }
 };

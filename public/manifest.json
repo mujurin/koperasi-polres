@@ -1,7 +1,8 @@
 {
-    "name": "PRIMKOPPOL LOTARA",
+    "name": "PRIMKOPPOL LOTARA\nRencanakanlah Segala Kebutuhan Anda",
     "short_name": "PRIMKOPPOL",
     "description": "Primer Koperasi Kepolisian Resort Lombok Utara",
+    "scope": "/",
     "start_url": "/anggota",
     "display": "standalone",
     "background_color": "#ffffff",

@@ -68,6 +68,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                     'is_kompensasi' => false,
                     'kompensasi_month' => null,
                     'acc_month' => null,
+                    'max_valid_month' => 12,
                     'current_month' => Carbon::now()->month
                 ];
             }
@@ -77,8 +78,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                 $rekapBulan[$userId]['kompensasi_month'] = Carbon::parse($pinjaman->updated_at)->month;
             }
 
-            if ($pinjaman->status === 'disetujui' && $pinjaman->updated_at) {
-                $pencairanDate = Carbon::parse($pinjaman->updated_at)->startOfMonth();
+            if ($pinjaman->status === 'disetujui' && $pinjaman->created_at) {
+                $pencairanDate = Carbon::parse($pinjaman->created_at)->startOfMonth();
                 $currentDate = $now->copy()->startOfMonth();
                 
                 if ($pencairanDate->year < $this->year) {
@@ -87,6 +88,15 @@ new #[Layout('components.layouts.app')] class extends Component {
                     $rekapBulan[$userId]['acc_month'] = $pencairanDate->month;
                 } else {
                     $rekapBulan[$userId]['acc_month'] = 12; // future loan in selected year
+                }
+                
+                $endDate = $pencairanDate->copy()->addMonths((int) $pinjaman->tenor);
+                if ($endDate->year < $this->year) {
+                    $rekapBulan[$userId]['max_valid_month'] = 0;
+                } elseif ($endDate->year == $this->year) {
+                    $rekapBulan[$userId]['max_valid_month'] = $endDate->month;
+                } else {
+                    $rekapBulan[$userId]['max_valid_month'] = 12;
                 }
                 
                 $expectedMonths = $pencairanDate->diffInMonths($currentDate);
@@ -112,11 +122,11 @@ new #[Layout('components.layouts.app')] class extends Component {
             $includePinjaman = false;
             if ($this->filter === 'semua') {
                 $includePinjaman = true;
-            } elseif ($this->filter === 'tahun' && Carbon::parse($pinjaman->updated_at)->year == $this->year) {
+            } elseif ($this->filter === 'tahun' && Carbon::parse($pinjaman->created_at)->year == $this->year) {
                 $includePinjaman = true;
-            } elseif ($this->filter === 'bulan' && Carbon::parse($pinjaman->updated_at)->isCurrentMonth()) {
+            } elseif ($this->filter === 'bulan' && Carbon::parse($pinjaman->created_at)->isCurrentMonth()) {
                 $includePinjaman = true;
-            } elseif ($this->filter === 'minggu' && Carbon::parse($pinjaman->updated_at)->isCurrentWeek()) {
+            } elseif ($this->filter === 'minggu' && Carbon::parse($pinjaman->created_at)->isCurrentWeek()) {
                 $includePinjaman = true;
             }
 
@@ -184,7 +194,14 @@ new #[Layout('components.layouts.app')] class extends Component {
                 jasa.</p>
         </div>
 
-        {{-- Custom Tabs Filter --}}
+        <div class="flex items-center gap-2">
+            <a href="{{ route('pinjaman.rekap.download') }}?year={{ $year }}&filter={{ $filter }}" target="_blank"
+                class="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-black shadow-sm hover:bg-red-500 transition-all cursor-pointer mr-2">
+                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                PDF
+            </a>
+            
+            {{-- Custom Tabs Filter --}}
         <div class="inline-flex rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800 self-start sm:self-auto shrink-0 shadow-sm">
             <button wire:click="setFilter('minggu')"
                 class="rounded-md px-3 py-1.5 text-xs font-semibold {{ $filter === 'minggu' ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200' }} transition-all">
@@ -203,6 +220,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                 Semua Waktu
             </button>
         </div>
+    </div>
     </div>
 
     {{-- Cards --}}
@@ -390,7 +408,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     @else
                                         @if(isset($row['is_kompensasi']) && $row['is_kompensasi'] && $i <= $row['kompensasi_month'])
                                             <div class="text-center text-[8px] font-bold text-amber-500/80 uppercase tracking-widest">Kompensasi</div>
-                                        @elseif(isset($row['acc_month']) && $i > $row['acc_month'] && $i <= $row['current_month'])
+                                        @elseif(isset($row['acc_month']) && $i > $row['acc_month'] && $i <= $row['current_month'] && $i <= ($row['max_valid_month'] ?? 12))
                                             <div class="flex items-center justify-center w-full h-full">
                                                 <div class="inline-flex rounded bg-rose-100 px-1.5 py-0.5 text-[7.5px] font-bold text-rose-700 uppercase tracking-widest dark:bg-rose-900/40 dark:text-rose-400 shadow-sm">Nunggak</div>
                                             </div>

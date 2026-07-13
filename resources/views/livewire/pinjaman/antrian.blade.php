@@ -190,4 +190,11 @@ new #[Layout('components.layouts.app')] class extends Component {
         @endif
     </div>
 
+    @if(session()->has('download_pdf'))
+        <script>
+            setTimeout(() => {
+                window.location.href = "{!! session('download_pdf') !!}";
+            }, 800);
+        </script>
+    @endif
 </div>
