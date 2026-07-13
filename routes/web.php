@@ -55,10 +55,15 @@ Route::middleware(['auth'])->group(function () {
     // Pinjaman Module (Admin area)
     Volt::route('pinjaman/antrian', 'pinjaman.antrian')->name('pinjaman.antrian');
     Volt::route('pinjaman/rekap', 'pinjaman.rekap')->name('pinjaman.rekap');
+    Volt::route('pinjaman/rekap/download', 'pinjaman.rekap-pdf')->name('pinjaman.rekap.download');
     Volt::route('pinjaman/review/{pinjaman}', 'pinjaman.review')->name('pinjaman.review');
     Volt::route('pinjaman/cetak/{pinjaman}', 'pinjaman.cetak')->name('pinjaman.cetak');
     Volt::route('pinjaman/daftar', 'pinjaman.index')->name('pinjaman.index');
     Volt::route('pinjaman/{pinjaman}/rincian', 'pinjaman.show')->name('pinjaman.show');
+
+    // Laporan & Akuntansi (Admin area)
+    Volt::route('laporan/neraca-saldo', 'laporan.neraca-saldo')->name('laporan.neraca-saldo');
+    Volt::route('laporan/laba-rugi', 'laporan.laba-rugi')->name('laporan.laba-rugi');
 
     // Admin Tools
     Volt::route('admin/dummy-angsuran', 'admin.dummy-angsuran')->name('admin.dummy-angsuran');
