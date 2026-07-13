@@ -50,6 +50,17 @@
                 </flux:navlist.item>
             </flux:navlist.group>
 
+            <flux:navlist.group heading="Laporan & Akuntansi" class="grid mt-4">
+                <flux:navlist.item icon="scale" href="{{ route('laporan.neraca-saldo') }}"
+                    :current="request()->routeIs('laporan.neraca-saldo')" wire:navigate>
+                    Neraca Saldo
+                </flux:navlist.item>
+                <flux:navlist.item icon="document-chart-bar" href="{{ route('laporan.laba-rugi') }}"
+                    :current="request()->routeIs('laporan.laba-rugi')" wire:navigate>
+                    Laba Rugi (PHU)
+                </flux:navlist.item>
+            </flux:navlist.group>
+
             <flux:navlist.group heading="Alat Admin" class="grid mt-4">
                 <flux:navlist.item icon="wrench-screwdriver" href="{{ route('admin.dummy-angsuran') }}"
                     :current="request()->routeIs('admin.dummy-angsuran')" wire:navigate>
