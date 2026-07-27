@@ -13,6 +13,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
     public string $jumlah_ajuan = '';
     public string $tenor = '';
     public string $keterangan = '';
+    public string $sub_keterangan = '';
     public string $jenis_permohonan = 'Biasa';
     public bool $saved = false;
     public bool $hasActiveRequest = false;
@@ -138,8 +139,19 @@ new #[Layout('components.layouts.anggota')] class extends Component {
         if ($property === 'jenis_permohonan') {
             if ($this->jenis_permohonan === 'Urgent') {
                 $this->keterangan = 'Keluarga Meninggal';
+                $this->sub_keterangan = 'Orang Tua';
             } else {
                 $this->keterangan = '';
+                $this->sub_keterangan = '';
+            }
+        }
+        if ($property === 'keterangan' && $this->jenis_permohonan === 'Urgent') {
+            if ($this->keterangan === 'Keluarga Meninggal') {
+                $this->sub_keterangan = 'Orang Tua';
+            } elseif ($this->keterangan === 'Keluarga Opname') {
+                $this->sub_keterangan = 'Istri';
+            } elseif ($this->keterangan === 'Pendidikan') {
+                $this->sub_keterangan = 'DIKBANGSPES';
             }
         }
     }
@@ -202,12 +214,30 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
         $this->validate([
             'jumlah_ajuan' => 'required|numeric|min:1',
-            'tenor' => 'required|integer|min:1|max:120',
+            'tenor' => 'required|integer|min:1|max:' . ($this->type === 'baru' ? 36 : 120),
             'jenis_permohonan' => 'required|in:Biasa,Urgent',
             'keterangan' => 'nullable|string|max:255',
+        ], [
+            'tenor.max' => 'Maksimal pengajuan ' . ($this->type === 'baru' ? '36' : '120') . ' bulan.',
         ]);
 
         $this->hitungSimulasi();
+
+        if ($this->jenis_permohonan === 'Urgent' && $this->keterangan === 'Pendidikan') {
+            $limitPendidikan = 0;
+            if ($this->sub_keterangan === 'Pelatihan') {
+                $limitPendidikan = 2000000;
+            } elseif ($this->sub_keterangan === 'DIKBANGSPES') {
+                $limitPendidikan = 10000000;
+            } elseif ($this->sub_keterangan === 'Pendidikan PAG') {
+                $limitPendidikan = 15000000;
+            }
+
+            if ($limitPendidikan > 0 && (float)$this->jumlah_ajuan > $limitPendidikan) {
+                $this->addError('jumlah_ajuan', 'Maksimal Pengajuan Pinjaman untuk ' . ($this->sub_keterangan === 'Pendidikan PAG' ? 'PAG' : $this->sub_keterangan) . ' adalah Rp ' . number_format($limitPendidikan, 0, ',', '.') . '.');
+                return;
+            }
+        }
 
         if ($this->sisaPinjaman > 0) {
             if ((float) $this->jumlah_ajuan > 60000000) {
@@ -233,13 +263,14 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             'angsuran_perbulan' => $this->angsuran_perbulan,
             'status' => 'proses',
             'jenis_permohonan' => $this->jenis_permohonan,
-            'keterangan' => $this->keterangan,
+            'keterangan' => $this->jenis_permohonan === 'Urgent' ? $this->keterangan . ' (' . $this->sub_keterangan . ')' : $this->keterangan,
         ]);
 
         $this->saved = true;
         // Reset form
         $this->jumlah_ajuan = '';
         $this->keterangan = '';
+        $this->sub_keterangan = '';
         $this->hasActiveRequest = true;
         $this->hitungSimulasi();
     }
@@ -410,6 +441,17 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                         @endif
                     </div>
                     @error('jumlah_ajuan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    @if($jenis_permohonan === 'Urgent' && $keterangan === 'Pendidikan' && (float)($jumlah_ajuan ?: 0) > 0)
+                        @php
+                            $limitPend = 0;
+                            if($sub_keterangan === 'Pelatihan') $limitPend = 2000000;
+                            elseif($sub_keterangan === 'DIKBANGSPES') $limitPend = 10000000;
+                            elseif($sub_keterangan === 'Pendidikan PAG') $limitPend = 15000000;
+                        @endphp
+                        @if($limitPend > 0 && (float)$jumlah_ajuan > $limitPend && !$errors->has('jumlah_ajuan'))
+                            <span class="text-[10px] text-red-500 mt-1 block">Maksimal Pengajuan Pinjaman untuk {{ $sub_keterangan === 'Pendidikan PAG' ? 'PAG' : $sub_keterangan }} adalah Rp {{ number_format($limitPend, 0, ',', '.') }}.</span>
+                        @endif
+                    @endif
                     @if($sisaPinjaman > 0 && (float)($jumlah_ajuan ?: 0) > 0 && (float)$jumlah_ajuan <= ($sisaPinjaman + $pinaltiKompensasi + $jasaTunggakan))
                         <span class="text-[10px] text-red-500 mt-1 block">Untuk layanan Kompensasi, pengajuan baru harus lebih besar dari tanggungan berjalan (Sisa pokok + Pinalti Jasa + Jasa Tunggakan).</span>
                     @elseif($sisaPinjaman > 0 && (float)($jumlah_ajuan ?: 0) > 60000000)
@@ -422,10 +464,13 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Tenor (Bulan)</label>
-                        <input wire:model.live.debounce.500ms="tenor" type="number" min="1" max="120"
+                        <input wire:model.live.debounce.500ms="tenor" type="number" min="1" max="{{ $type === 'baru' ? 36 : 120 }}"
                             class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                             placeholder="Contoh: 12">
                         @error('tenor') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                        @if($type === 'baru' && (int)$tenor > 36 && !$errors->has('tenor'))
+                            <span class="text-[10px] text-red-500 mt-1 block">Maksimal pengajuan 36 bulan</span>
+                        @endif
                     </div>
 
                     <div>
@@ -441,11 +486,30 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                 <div>
                     <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Keterangan / Tujuan Pinjaman</label>
                     @if($jenis_permohonan === 'Urgent')
-                        <select wire:model="keterangan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
+                        <select wire:model.live="keterangan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
                             <option value="Keluarga Meninggal">Keluarga Meninggal</option>
                             <option value="Keluarga Opname">Keluarga Opname</option>
-                            <option value="Pendidikan Polri">Pendidikan Polri</option>
+                            <option value="Pendidikan">Pendidikan</option>
                         </select>
+                        <div class="mt-4">
+                            <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Detail Keterangan</label>
+                            <select wire:model.live="sub_keterangan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
+                            @if($keterangan === 'Keluarga Meninggal')
+                                <option value="Orang Tua">Orang Tua</option>
+                                <option value="Istri">Istri</option>
+                                <option value="Anak">Anak</option>
+                            @elseif($keterangan === 'Keluarga Opname')
+                                <option value="Istri">Istri</option>
+                                <option value="Anak">Anak</option>
+                                <option value="Anggota">Anggota</option>
+                            @elseif($keterangan === 'Pendidikan')
+                                <option value="DIKBANGSPES">DIKBANGSPES</option>
+                                <option value="Pelatihan">Pelatihan</option>
+                                <option value="Pendidikan PAG">Pendidikan PAG</option>
+                            @endif
+                            </select>
+                            @error('sub_keterangan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                        </div>
                     @else
                         <input wire:model="keterangan" type="text"
                             class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
