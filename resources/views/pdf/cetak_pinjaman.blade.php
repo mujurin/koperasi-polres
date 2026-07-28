@@ -234,19 +234,29 @@
         </tr>
     </table>
 
-    <table class="signature-table">
+        <table class="signature-table">
         <tr>
-            <td>
-                <p>Tanda Tangan Pemohon,</p>
+            <td style="vertical-align: top;">
+                <p style="margin: 0; margin-bottom: 5px;">BENDAHARA PRIMKOPPOL</p>
                 <div class="signature-space"></div>
-                <p class="signature-name">({{ $pinjaman->user->name }})</p>
-                <p class="signature-nrp">NRP: {{ $pinjaman->user->nrp }}</p>
+                <p class="signature-name" style="text-transform: uppercase;">PANDE NYOMAN SUASTIKA</p>
+                <p class="signature-nrp">NRP 86071388</p>
             </td>
-            <td>
-                <p>Disetujui Oleh,</p>
+            <td style="vertical-align: top;">
+                <p style="margin: 0;">Gangga, {{ now()->translatedFormat('j F Y') }}</p>
+                <p style="margin: 0; margin-bottom: 5px;">Yang mengajukan</p>
+                <div class="signature-space" style="height: 60px;"></div>
+                <p class="signature-name" style="text-transform: uppercase;">{{ $pinjaman->user->name }}</p>
+                <p class="signature-nrp">NRP {{ $pinjaman->user->nrp }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding-top: 30px;">
+                <p style="margin: 0;">Mengetahui;</p>
+                <p style="margin: 0; margin-bottom: 5px;">KETUA PRIMKOPPOL</p>
                 <div class="signature-space"></div>
-                <p class="signature-name">(Pengurus Koperasi Polres)</p>
-                <p class="signature-nrp">Cap & Tanda Tangan</p>
+                <p class="signature-name" style="text-transform: uppercase;">I MADE SUKADANA</p>
+                <p class="signature-nrp">NRP 79060072</p>
             </td>
         </tr>
     </table>
