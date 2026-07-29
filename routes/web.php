@@ -95,6 +95,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
+    // Anggota Module
+    Route::get('/data-anggota', \App\Livewire\Anggota\Index::class)->name('anggota.index');
+
     // Simpanan Module (Admin area)
     Volt::route('simpanan', 'simpanan.index')->name('simpanan.index');
     Volt::route('simpanan/pokok', 'simpanan.simpanan-pokok')->name('simpanan.pokok');

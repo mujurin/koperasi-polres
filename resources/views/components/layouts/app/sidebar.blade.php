@@ -18,6 +18,9 @@
             <flux:navlist.group heading="Platform" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                     wire:navigate>Dashboard</flux:navlist.item>
+                
+                <flux:navlist.item icon="users" :href="route('anggota.index')" :current="request()->routeIs('anggota.index')"
+                    wire:navigate>Anggota</flux:navlist.item>
             </flux:navlist.group>
 
             <flux:navlist.group heading="Simpanan Koperasi" class="grid mt-4">

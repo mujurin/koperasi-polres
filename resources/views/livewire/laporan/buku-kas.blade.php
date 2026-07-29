@@ -16,31 +16,85 @@ new #[Layout('components.layouts.app')] class extends Component {
     use WithPagination;
 
     public string $selectedYear;
-    public string $selectedMonth = 'semua';
+    public string $selectedMonth;
     public int $perPage = 15;
+
+    public string $formTanggal = '';
+    public string $formJenis = 'pendapatan_lain';
+    public string $formKategori = '';
+    public string $formNominal = '';
+    public string $formKeterangan = '';
 
     public function mount()
     {
         TransaksiOperasional::ensureTableExists();
         $this->selectedYear = (string) date('Y');
+        $this->selectedMonth = (string) date('n');
+        $this->formTanggal = date('Y-m-d');
     }
 
-    public function updatingSelectedYear(): void
+    public function simpanTransaksi()
+    {
+        $this->validate([
+            'formTanggal' => 'required|date',
+            'formJenis' => 'required|in:beban,pendapatan_lain',
+            'formKategori' => 'required|string|max:255',
+            'formNominal' => 'required|numeric|min:1',
+            'formKeterangan' => 'nullable|string',
+        ]);
+
+        TransaksiOperasional::create([
+            'tanggal' => $this->formTanggal,
+            'jenis' => $this->formJenis,
+            'kategori' => $this->formKategori,
+            'nominal' => $this->formNominal,
+            'keterangan' => $this->formKeterangan,
+        ]);
+
+        $this->reset(['formKategori', 'formNominal', 'formKeterangan']);
+        $this->formJenis = 'pendapatan_lain';
+        $this->formTanggal = date('Y-m-d');
+
+        \Flux::modal('modal-tambah-kas')->close();
+        \Flux::toast('Data kas berhasil ditambahkan');
+    }
+
+    public function filterData(): void
     {
         $this->resetPage();
     }
 
-    public function updatingSelectedMonth(): void
+    public function downloadExcel()
     {
-        $this->resetPage();
+        $data = $this->getEntries();
+        
+        $filename = 'Buku_Kas_' . $this->selectedYear;
+        if ($this->selectedMonth !== 'semua') {
+            $filename .= '_' . \Carbon\Carbon::create()->month((int)$this->selectedMonth)->translatedFormat('F');
+        }
+        $filename .= '.csv';
+
+        return response()->streamDownload(function () use ($data) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['No', 'Tanggal', 'Uraian', 'Pemasukan', 'Pengeluaran', 'Saldo']);
+            
+            foreach ($data['entries'] as $index => $entry) {
+                fputcsv($file, [
+                    $index + 1,
+                    $entry['tanggal'],
+                    $entry['uraian'],
+                    $entry['pemasukan'],
+                    $entry['pengeluaran'],
+                    $entry['saldo']
+                ]);
+            }
+            fputcsv($file, ['', '', 'Total', $data['totalPemasukan'], $data['totalPengeluaran'], $data['saldoAkhir']]);
+            fclose($file);
+        }, $filename, ['Content-Type' => 'text/csv']);
     }
 
-    public function setMonth(string $month)
-    {
-        $this->selectedMonth = $month;
-    }
-
-    public function with(): array
+    private function getEntries(): array
     {
         TransaksiOperasional::ensureTableExists();
         $year = (int) $this->selectedYear;
@@ -234,6 +288,14 @@ new #[Layout('components.layouts.app')] class extends Component {
         $totalPemasukan = array_sum(array_column($entries, 'pemasukan'));
         $totalPengeluaran = array_sum(array_column($entries, 'pengeluaran'));
         $saldoAkhir = $runningBalance;
+        
+        return compact('entries', 'years', 'totalPemasukan', 'totalPengeluaran', 'saldoAkhir');
+    }
+
+    public function with(): array
+    {
+        $data = $this->getEntries();
+        $entries = $data['entries'];
 
         $page = max(1, (int) ($this->page ?? request()->query('page', 1)));
         $paginatedEntries = new LengthAwarePaginator(
@@ -244,10 +306,7 @@ new #[Layout('components.layouts.app')] class extends Component {
             ['path' => url()->current()]
         );
 
-        return array_merge(
-            compact('years', 'totalPemasukan', 'totalPengeluaran', 'saldoAkhir'),
-            ['entries' => $paginatedEntries]
-        );
+        return array_merge($data, ['entries' => $paginatedEntries]);
     }
 }; ?>
 
@@ -263,32 +322,54 @@ new #[Layout('components.layouts.app')] class extends Component {
             </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-            <div class="inline-flex rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800 shadow-inner">
-                <button wire:click="setMonth('semua')"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all {{ $selectedMonth === 'semua' ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200' }}">
-                    Semua Bulan
+        <div class="flex flex-wrap items-center gap-2">
+            <flux:modal.trigger name="modal-tambah-kas">
+                <button
+                    class="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900/50 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 shadow-sm transition-colors">
+                    <flux:icon name="plus" class="size-4 text-indigo-600 dark:text-indigo-400" />
+                    <span>Tambah Kas</span>
                 </button>
-                @foreach(range(1, 12) as $month)
-                    <button wire:click="setMonth('{{ $month }}')"
-                        class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all {{ $selectedMonth === (string)$month ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200' }}">
-                        {{ str_pad($month, 2, '0', STR_PAD_LEFT) }}
-                    </button>
-                @endforeach
-            </div>
+            </flux:modal.trigger>
 
-            <select wire:model.live="selectedYear"
+            <select wire:model="selectedMonth"
+                class="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-800 outline-none transition-colors focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
+                <option value="semua">Semua Bulan</option>
+                @foreach(range(1, 12) as $m)
+                    <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}</option>
+                @endforeach
+            </select>
+
+            <select wire:model="selectedYear"
                 class="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-800 outline-none transition-colors focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
                 @foreach($years as $yearOption)
                     <option value="{{ $yearOption }}">{{ $yearOption }}</option>
                 @endforeach
             </select>
 
-            <a href="{{ route('laporan.buku-kas.download') }}?year={{ $selectedYear }}&month={{ $selectedMonth }}"
-                class="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700/80 shadow-sm transition-colors"
-                download="Buku_Kas_{{ $selectedYear }}_{{ $selectedMonth === 'semua' ? 'semua' : $selectedMonth }}.pdf">
-                <flux:icon name="arrow-down-tray" class="size-4 text-zinc-500" /> Unduh PDF Buku Kas
-            </a>
+            <button wire:click="filterData" wire:loading.attr="disabled" wire:target="filterData"
+                class="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700/80 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg wire:loading.remove wire:target="filterData" class="size-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                </svg>
+                <svg wire:loading wire:target="filterData" class="size-4 animate-spin text-zinc-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span wire:loading.remove wire:target="filterData">Filter</span>
+                <span wire:loading wire:target="filterData">Memproses...</span>
+            </button>
+
+            <button wire:click="downloadExcel" wire:loading.attr="disabled" wire:target="downloadExcel"
+                class="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900/50 dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <flux:icon wire:loading.remove wire:target="downloadExcel" name="table-cells" class="size-4 text-emerald-600 dark:text-emerald-400" />
+                <svg wire:loading wire:target="downloadExcel" class="size-4 animate-spin text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span wire:loading.remove wire:target="downloadExcel">Unduh Excel</span>
+                <span wire:loading wire:target="downloadExcel">Memproses...</span>
+            </button>
+
         </div>
     </div>
 
@@ -343,4 +424,53 @@ new #[Layout('components.layouts.app')] class extends Component {
             {{ $entries->links() }}
         </div>
     @endif
+    
+    <flux:modal name="modal-tambah-kas" class="md:w-[32rem]">
+        <form wire:submit="simpanTransaksi" class="space-y-6">
+            <div>
+                <flux:heading size="lg">Tambah Kas Manual</flux:heading>
+                <flux:subheading>Input pendapatan atau pengeluaran yang tidak terotomatisasi di sistem.</flux:subheading>
+            </div>
+
+            <div class="space-y-4">
+                <flux:input type="date" wire:model="formTanggal" label="Tanggal" />
+                
+                <flux:radio.group wire:model.live="formJenis" label="Jenis Transaksi">
+                    <flux:radio value="pendapatan_lain" label="Pemasukan" />
+                    <flux:radio value="beban" label="Pengeluaran" />
+                </flux:radio.group>
+
+                <flux:input wire:model="formKategori" label="Kategori / Uraian Singkat" placeholder="Contoh: Pembelian ATK" />
+
+                <div x-data="{
+                    raw: $wire.entangle('formNominal'),
+                    display: '',
+                    init() {
+                        this.$watch('raw', val => this.format(val));
+                        this.format(this.raw);
+                    },
+                    format(val) {
+                        let num = String(val||'').replace(/[^0-9]/g, '');
+                        this.display = num ? new Intl.NumberFormat('id-ID').format(num) : '';
+                    },
+                    updateVal(e) {
+                        let num = e.target.value.replace(/[^0-9]/g, '');
+                        this.raw = num;
+                        this.display = num ? new Intl.NumberFormat('id-ID').format(num) : '';
+                    }
+                }">
+                    <flux:input x-model="display" @input="updateVal" type="text" inputmode="numeric" label="Nominal (Rp)" placeholder="Contoh: 150.000" />
+                </div>
+
+                <flux:textarea wire:model="formKeterangan" label="Keterangan Lengkap (Opsional)" rows="3" placeholder="Tambahkan catatan jika perlu..." />
+            </div>
+
+            <div class="flex gap-2 justify-end">
+                <flux:modal.close>
+                    <flux:button variant="ghost">Batal</flux:button>
+                </flux:modal.close>
+                <flux:button type="submit" variant="primary">Simpan Transaksi</flux:button>
+            </div>
+        </form>
+    </flux:modal>
 </div>

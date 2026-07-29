@@ -122,6 +122,9 @@ class PdfController extends Controller
 
     public function rekapPdf(Request $request)
     {
+        ini_set('memory_limit', '1024M');
+        ini_set('max_execution_time', 300);
+
         $year = $request->query('year', date('Y'));
         $filter = $request->query('filter', 'semua');
 
@@ -275,6 +278,9 @@ class PdfController extends Controller
 
     public function bukuKasPdf(Request $request)
     {
+        ini_set('memory_limit', '1024M');
+        ini_set('max_execution_time', 300);
+
         $year = (int) $request->query('year', date('Y'));
         $month = $request->query('month', 'semua');
         $monthNumber = $month !== 'semua' ? (int) $month : null;
@@ -480,11 +486,7 @@ class PdfController extends Controller
             'saldoAkhir'
         ))->setPaper('a4', 'portrait');
 
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, $filename, [
-            'Content-Type' => 'application/pdf',
-        ]);
+        return $pdf->download($filename);
     }
 
     public function rekapSimpanan()
