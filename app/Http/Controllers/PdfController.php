@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Pinjaman;
 use App\Models\Angsuran;
+use App\Models\SimpananPokok;
+use App\Models\SimpananWajib;
+use App\Models\Penarikan;
+use App\Models\TransaksiOperasional;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -76,6 +80,22 @@ class PdfController extends Controller
             $simulasiAngsuran = $simulasiPokok + $simulasiJasa;
         }
 
+        $approvalDate = Carbon::parse($pinjaman->updated_at ?? $pinjaman->created_at)->startOfMonth();
+        $paidMonths = min($pinjaman->tenor, max(0, $approvalDate->diffInMonths(Carbon::now()) + 1));
+
+        $monthlySchedule = collect(range(0, max(0, $paidMonths - 1)))->map(function ($index) use ($approvalDate, $pinjaman) {
+            return [
+                'label' => $approvalDate->copy()->addMonths($index)->translatedFormat('M Y'),
+                'amount' => $pinjaman->angsuran_perbulan,
+            ];
+        })->toArray();
+
+        $totalPokokMasuk = round($simulasiPokok * $paidMonths);
+        $totalJasaMasuk = round($simulasiJasa * $paidMonths);
+        $sisaPokok = max(0, $pinjaman->jumlah_ajuan - $totalPokokMasuk);
+        $sisaJasa = max(0, ($simulasiJasa * $pinjaman->tenor) - $totalJasaMasuk);
+        $sisaPinjamanBalance = $sisaPokok + $sisaJasa;
+
         $data = [
             'pinjaman' => $pinjaman,
             'isKompensasi' => $isKompensasi,
@@ -88,10 +108,16 @@ class PdfController extends Controller
             'pinaltiKompensasi' => $pinaltiKompensasi,
             'jasaTunggakan' => $jasaTunggakan,
             'tunggakanBulan' => $tunggakanBulan,
+            'monthlySchedule' => $monthlySchedule,
+            'totalPokokMasuk' => $totalPokokMasuk,
+            'totalJasaMasuk' => $totalJasaMasuk,
+            'sisaPokok' => $sisaPokok,
+            'sisaJasa' => $sisaJasa,
+            'sisaPinjamanBalance' => $sisaPinjamanBalance,
         ];
 
         $pdf = Pdf::loadView('pdf.cetak_pinjaman', $data);
-        return $pdf->download("Surat-Persetujuan-Pinjaman-{$pinjaman->id}.pdf");
+        return $pdf->download("Surat-Riwayat-Pinjaman-{$pinjaman->id}.pdf");
     }
 
     public function rekapPdf(Request $request)
@@ -243,6 +269,255 @@ class PdfController extends Controller
             $filename .= "_" . ucfirst($filter);
         }
         $filename .= ".pdf";
+
+        return $pdf->download($filename);
+    }
+
+    public function bukuKasPdf(Request $request)
+    {
+        $year = (int) $request->query('year', date('Y'));
+        $month = $request->query('month', 'semua');
+        $monthNumber = $month !== 'semua' ? (int) $month : null;
+
+        $entries = [];
+        $makeEntry = function (string $tanggal, string $uraian, float $pemasukan, float $pengeluaran, int $priority, int $period = 0, string $detail = '') {
+            return [
+                'tanggal' => $tanggal,
+                'uraian' => $uraian,
+                'pemasukan' => $pemasukan,
+                'pengeluaran' => $pengeluaran,
+                'priority' => $priority,
+                'period' => $period,
+                'detail' => $detail,
+            ];
+        };
+        $queryYear = fn ($query, $column) => $query->when($year, fn ($q) => $q->whereYear($column, $year));
+        $queryMonth = fn ($query, $column) => $query->when($monthNumber, fn ($q) => $q->whereMonth($column, $monthNumber));
+
+        $simpananPokok = $queryYear(SimpananPokok::query(), 'tanggal');
+        if ($monthNumber) {
+            $simpananPokok = $queryMonth($simpananPokok, 'tanggal');
+        }
+        foreach ($simpananPokok->orderBy('tanggal')->get() as $item) {
+            $entries[] = $makeEntry(
+                $item->tanggal->format('Y-m-d'),
+                'Simpanan Pokok dari ' . optional($item->user)->name,
+                (float) $item->jumlah,
+                0,
+                2,
+                0,
+                optional($item->user)->name
+            );
+        }
+
+        $simpananWajib = SimpananWajib::query();
+        if ($year) {
+            $simpananWajib->whereYear('created_at', $year);
+        }
+        if ($monthNumber) {
+            $simpananWajib->whereMonth('created_at', $monthNumber);
+        }
+        foreach ($simpananWajib->orderBy('created_at')->get() as $item) {
+            $date = $item->created_at ? Carbon::parse($item->created_at)->format('Y-m-d') : date('Y-m-d');
+            $period = ($item->tahun * 100) + $item->bulan;
+            $entries[] = $makeEntry(
+                $date,
+                'Simpanan Wajib ' . $item->bulan . '/' . $item->tahun . ' oleh ' . optional($item->user)->name,
+                (float) $item->jumlah,
+                0,
+                3,
+                $period,
+                optional($item->user)->name
+            );
+        }
+
+        $angsurans = Angsuran::with('pinjaman.user')->where('status_pembayaran', 'lunas');
+        if ($year) {
+            $angsurans->whereYear('tanggal_bayar', $year);
+        }
+        if ($monthNumber) {
+            $angsurans->whereMonth('tanggal_bayar', $monthNumber);
+        }
+        foreach ($angsurans->orderBy('tanggal_bayar')->get() as $item) {
+            $entries[] = $makeEntry(
+                Carbon::parse($item->tanggal_bayar)->format('Y-m-d'),
+                'Pembayaran Angsuran oleh ' . optional($item->pinjaman->user)->name,
+                (float) $item->jumlah_bayar,
+                0,
+                1,
+                Carbon::parse($item->tanggal_bayar)->format('Ymd'),
+                optional($item->pinjaman->user)->name
+            );
+        }
+
+        $pendapatanLain = TransaksiOperasional::where('jenis', 'pendapatan_lain');
+        if ($year) {
+            $pendapatanLain->whereYear('tanggal', $year);
+        }
+        if ($monthNumber) {
+            $pendapatanLain->whereMonth('tanggal', $monthNumber);
+        }
+        foreach ($pendapatanLain->orderBy('tanggal')->get() as $item) {
+            $entries[] = $makeEntry(
+                $item->tanggal->format('Y-m-d'),
+                'Pendapatan: ' . $item->kategori,
+                (float) $item->nominal,
+                0,
+                4,
+                Carbon::parse($item->tanggal)->format('Ymd'),
+                $item->kategori
+            );
+        }
+
+        $pinjamanDisetujui = Pinjaman::whereIn('status', ['disetujui', 'lunas']);
+        if ($year) {
+            $pinjamanDisetujui->whereYear('updated_at', $year);
+        }
+        if ($monthNumber) {
+            $pinjamanDisetujui->whereMonth('updated_at', $monthNumber);
+        }
+        foreach ($pinjamanDisetujui->orderBy('updated_at')->get() as $item) {
+            $entries[] = $makeEntry(
+                Carbon::parse($item->updated_at)->format('Y-m-d'),
+                'Pencairan Pinjaman untuk ' . optional($item->user)->name,
+                0,
+                (float) $item->jumlah_diterima,
+                5,
+                Carbon::parse($item->updated_at)->format('Ymd'),
+                optional($item->user)->name
+            );
+        }
+
+        $penarikan = Penarikan::where('status', 'disetujui');
+        if ($year) {
+            $penarikan->whereYear('tanggal', $year);
+        }
+        if ($monthNumber) {
+            $penarikan->whereMonth('tanggal', $monthNumber);
+        }
+        foreach ($penarikan->orderBy('tanggal')->get() as $item) {
+            $entries[] = $makeEntry(
+                $item->tanggal->format('Y-m-d'),
+                'Penarikan oleh ' . optional($item->user)->name,
+                0,
+                (float) $item->jumlah,
+                6,
+                Carbon::parse($item->tanggal)->format('Ymd'),
+                optional($item->user)->name
+            );
+        }
+
+        $bebanOperasional = TransaksiOperasional::where('jenis', 'beban');
+        if ($year) {
+            $bebanOperasional->whereYear('tanggal', $year);
+        }
+        if ($monthNumber) {
+            $bebanOperasional->whereMonth('tanggal', $monthNumber);
+        }
+        foreach ($bebanOperasional->orderBy('tanggal')->get() as $item) {
+            $entries[] = $makeEntry(
+                $item->tanggal->format('Y-m-d'),
+                'Beban: ' . $item->kategori,
+                0,
+                (float) $item->nominal,
+                7,
+                Carbon::parse($item->tanggal)->format('Ymd'),
+                $item->kategori
+            );
+        }
+
+        usort($entries, function ($a, $b) {
+            if ($a['tanggal'] !== $b['tanggal']) {
+                return $a['tanggal'] < $b['tanggal'] ? -1 : 1;
+            }
+            if ($a['priority'] !== $b['priority']) {
+                return $a['priority'] < $b['priority'] ? -1 : 1;
+            }
+            if ($a['period'] !== $b['period']) {
+                return $a['period'] < $b['period'] ? -1 : 1;
+            }
+            return strcmp($a['uraian'] . ' ' . $a['detail'], $b['uraian'] . ' ' . $b['detail']);
+        });
+
+        $runningBalance = 0;
+        foreach ($entries as $index => $entry) {
+            $runningBalance += $entry['pemasukan'] - $entry['pengeluaran'];
+            $entries[$index]['saldo'] = $runningBalance;
+        }
+
+        $totalPemasukan = array_sum(array_column($entries, 'pemasukan'));
+        $totalPengeluaran = array_sum(array_column($entries, 'pengeluaran'));
+        $saldoAkhir = $runningBalance;
+
+        $bulanLabels = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        $monthLabel = $monthNumber ? ($bulanLabels[$monthNumber] ?? 'Unknown') : 'Semua Bulan';
+        $filename = 'Buku_Kas_' . $year;
+        if ($monthNumber) {
+            $filename .= '_' . $monthLabel;
+        }
+        $filename .= '.pdf';
+
+        $pdf = Pdf::loadView('pdf.buku_kas', compact(
+            'entries',
+            'year',
+            'monthLabel',
+            'totalPemasukan',
+            'totalPengeluaran',
+            'saldoAkhir'
+        ))->setPaper('a4', 'portrait');
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+    public function rekapSimpanan()
+    {
+        $user = auth()->user();
+        $user->load(['simpananPokok', 'simpananWajib', 'penarikan']);
+
+        $totalPokok = $user->simpananPokok?->jumlah ?? 0;
+        $totalWajib = $user->simpananWajib->sum('jumlah');
+        $totalPenarikan = $user->penarikan()->where('status', 'disetujui')->sum('jumlah');
+        $saldo = $user->totalSimpanan() - $totalPenarikan;
+
+        $riwayatWajib = $user->simpananWajib()
+            ->orderByDesc('tahun')
+            ->orderByDesc('bulan')
+            ->get();
+
+        $penarikan = $user->penarikan()
+            ->where('status', 'disetujui')
+            ->orderByDesc('tanggal')
+            ->get();
+
+        $filename = 'Rekap_Simpanan_' . $user->nrp . '_' . now()->format('Ymd') . '.pdf';
+
+        $pdf = Pdf::loadView('pdf.rekap_simpanan', compact(
+            'user',
+            'totalPokok',
+            'totalWajib',
+            'totalPenarikan',
+            'saldo',
+            'riwayatWajib',
+            'penarikan'
+        ));
 
         return $pdf->download($filename);
     }

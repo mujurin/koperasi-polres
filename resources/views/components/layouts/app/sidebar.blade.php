@@ -51,14 +51,17 @@
                 </flux:navlist.item>
             </flux:navlist.group>
 
-            <flux:navlist.group heading="Laporan & Akuntansi" class="grid mt-4">
-                <flux:navlist.item icon="scale" href="{{ route('laporan.neraca-saldo') }}"
-                    :current="request()->routeIs('laporan.neraca-saldo')" wire:navigate>
-                    Neraca Saldo
+            <flux:navlist.group heading="Laporan" class="grid mt-4">
+                <flux:navlist.item icon="scale" href="{{ route('laporan.buku-kas') }}"
+                    :current="request()->routeIs('laporan.buku-kas')" wire:navigate>
+                    Buku Kas
                 </flux:navlist.item>
-                <flux:navlist.item icon="document-chart-bar" href="{{ route('laporan.laba-rugi') }}"
-                    :current="request()->routeIs('laporan.laba-rugi')" wire:navigate>
-                    Laba Rugi (PHU)
+            </flux:navlist.group>
+
+            <flux:navlist.group heading="Aset" class="grid mt-4">
+                <flux:navlist.item icon="archive-box" href="{{ route('admin.aset-inventaris') }}"
+                    :current="request()->routeIs('admin.aset-inventaris')" wire:navigate>
+                    Aset & Data Inventaris
                 </flux:navlist.item>
             </flux:navlist.group>
 

@@ -4,7 +4,7 @@
 <head>
     <meta name="google" content="notranslate">
     <meta charset="UTF-8">
-    <title>Surat Persetujuan Pinjaman</title>
+    <title>DATA PINJAMAN</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -146,12 +146,12 @@
 <body>
 
     <div class="header">
-        <h1>Surat Persetujuan Pinjaman</h1>
+        <h1>SURAT RIWAYAT PINJAMAN</h1>
         <h2>Koperasi Polres Lombok Utara</h2>
-        <p>Tanggal Berlaku: {{ now()->format('d F Y') }}</p>
+        <p>Tanggal Cetak: {{ now()->format('d F Y') }}</p>
     </div>
 
-    <div class="section-title">Data Pemohon</div>
+    <div class="section-title">DATA ANGGOTA</div>
     <table>
         <tr>
             <td class="label">Nama Lengkap</td>
@@ -178,9 +178,9 @@
         </tr>
     </table>
 
-    <div class="section-title">Rincian Persetujuan</div>
+    <div class="section-title">PENGAJUAN</div>
     <div class="amount-box">
-        <div class="amount-title">Total Pinjaman: Rp {{ number_format($pinjaman->jumlah_ajuan, 0, ',', '.') }}</div>
+        <div class="amount-title">Total pengajuan: Rp {{ number_format($pinjaman->jumlah_ajuan, 0, ',', '.') }}</div>
 
         <table>
             @if($isKompensasi)
@@ -214,27 +214,47 @@
         </table>
     </div>
 
-    <div class="section-title">Skema Kewajiban Cicilan</div>
+    <div class="section-title">SETORAN PERBULAN</div>
+    <table>
+        @foreach($monthlySchedule as $row)
+            <tr>
+                <td class="label">{{ $row['label'] }}</td>
+                <td class="text-right">: Rp {{ number_format($row['amount'], 0, ',', '.') }}</td>
+            </tr>
+        @endforeach
+    </table>
+
+    <div class="section-title">Rekap Setoran</div>
     <table>
         <tr>
-            <td class="label">Tenor Cicilan</td>
-            <td>: <strong>{{ $pinjaman->tenor }} Bulan</strong></td>
+            <td class="label">TOTAL POKOK TERBAYAR</td>
+            <td class="text-right">: Rp {{ number_format($totalPokokMasuk, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td class="label">Jasa Pinjaman (1%) / Bln</td>
-            <td>: Rp {{ number_format($simulasiJasa, 0, ',', '.') }}</td>
+            <td class="label">TOTAL JASA TERBAYAR</td>
+            <td class="text-right">: Rp {{ number_format($totalJasaMasuk, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td class="label">Pokok Angsuran / Bln</td>
-            <td>: Rp {{ number_format($simulasiPokok, 0, ',', '.') }}</td>
+            <td colspan="2" style="border-top: 1px solid #333; padding: 0; line-height: 0;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="label">POKOK TERHUTANG</td>
+            <td class="text-right">: Rp {{ number_format($sisaPokok, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td class="label">JASA TERHUTANG</td>
+            <td class="text-right">: Rp {{ number_format($sisaJasa, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="border-top: 1px solid #333; padding: 0; line-height: 0;">&nbsp;</td>
         </tr>
         <tr class="bg-gray">
-            <td class="label" style="text-transform: uppercase;">Angsuran Bulanan</td>
-            <td>: Rp {{ number_format($simulasiAngsuran, 0, ',', '.') }}</td>
+            <td class="label" style="text-transform: uppercase;">Sisa pinjaman</td>
+            <td class="text-right">: Rp {{ number_format($sisaPinjamanBalance, 0, ',', '.') }}</td>
         </tr>
     </table>
 
-        <table class="signature-table">
+    <table class="signature-table">
         <tr>
             <td style="vertical-align: top;">
                 <p style="margin: 0; margin-bottom: 5px;">BENDAHARA PRIMKOPPOL</p>
