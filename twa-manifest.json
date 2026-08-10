@@ -17,11 +17,11 @@
   "maskableIconUrl": "https://koperasi.siapklu.com/icon-512x512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "/Applications/XAMPP/xamppfiles/htdocs/koperasi-polres/android.keystore",
+    "path": "C:\\laragon\\www\\koperasi-polres\\android.keystore",
     "alias": "android"
   },
-  "appVersionName": "2",
-  "appVersionCode": 2,
+  "appVersionName": "3",
+  "appVersionCode": 3,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://koperasi.siapklu.com/manifest.json",
@@ -43,5 +43,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "2"
+  "appVersion": "3"
 }

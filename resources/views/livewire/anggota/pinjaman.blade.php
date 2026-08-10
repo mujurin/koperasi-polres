@@ -43,6 +43,11 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 
     public function mount()
     {
+        if ($this->type === 'primer') {
+            $this->jenis_permohonan = 'Handphone';
+            $this->keterangan = 'Handphone';
+        }
+
         if (empty(Auth::user()->no_wa)) {
             $this->needsWaSetup = true;
         }
@@ -137,12 +142,22 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             $this->hitungSimulasi();
         }
         if ($property === 'jenis_permohonan') {
-            if ($this->jenis_permohonan === 'Urgent') {
-                $this->keterangan = 'Keluarga Meninggal';
-                $this->sub_keterangan = 'Orang Tua';
+            if ($this->type === 'primer') {
+                if (in_array($this->jenis_permohonan, ['Handphone', 'Motor'])) {
+                    $this->keterangan = $this->jenis_permohonan;
+                    $this->sub_keterangan = '';
+                } else {
+                    $this->keterangan = '';
+                    $this->sub_keterangan = '';
+                }
             } else {
-                $this->keterangan = '';
-                $this->sub_keterangan = '';
+                if ($this->jenis_permohonan === 'Urgent') {
+                    $this->keterangan = 'Keluarga Meninggal';
+                    $this->sub_keterangan = 'Orang Tua';
+                } else {
+                    $this->keterangan = '';
+                    $this->sub_keterangan = '';
+                }
             }
         }
         if ($property === 'keterangan' && $this->jenis_permohonan === 'Urgent') {
@@ -212,13 +227,17 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             return;
         }
 
+        $aturanJenis = $this->type === 'primer' ? 'required|in:Handphone,Motor,Barang Lain' : 'required|in:Biasa,Urgent';
+        $aturanKeterangan = ($this->type === 'primer' && $this->jenis_permohonan === 'Barang Lain') ? 'required|string|max:255' : 'nullable|string|max:255';
+
         $this->validate([
             'jumlah_ajuan' => 'required|numeric|min:1',
-            'tenor' => 'required|integer|min:1|max:' . ($this->type === 'baru' ? 36 : 120),
-            'jenis_permohonan' => 'required|in:Biasa,Urgent',
-            'keterangan' => 'nullable|string|max:255',
+            'tenor' => 'required|integer|min:1|max:' . (in_array($this->type, ['baru', 'primer']) ? 36 : 120),
+            'jenis_permohonan' => $aturanJenis,
+            'keterangan' => $aturanKeterangan,
         ], [
-            'tenor.max' => 'Maksimal pengajuan ' . ($this->type === 'baru' ? '36' : '120') . ' bulan.',
+            'tenor.max' => 'Maksimal pengajuan ' . (in_array($this->type, ['baru', 'primer']) ? '36' : '120') . ' bulan.',
+            'keterangan.required' => 'Keterangan / Tujuan Pinjaman wajib diisi untuk Barang Lain.',
         ]);
 
         $this->hitungSimulasi();
@@ -287,7 +306,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
             </svg>
         </a>
         <div>
-            <h1 class="text-xl font-bold text-zinc-900 dark:text-white leading-tight">Pinjaman {{ $type === 'kompensasi' ? '(Kompensasi)' : 'Baru' }}</h1>
+            <h1 class="text-xl font-bold text-zinc-900 dark:text-white leading-tight">Pinjaman {{ $type === 'kompensasi' ? '(Kompensasi)' : ($type === 'primer' ? 'Primer' : 'Baru') }}</h1>
             <p class="text-xs text-zinc-500 dark:text-zinc-400">Pengajuan Pinjaman Koperasi</p>
         </div>
     </div>
@@ -464,25 +483,44 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Tenor (Bulan)</label>
-                        <input wire:model.live.debounce.500ms="tenor" type="number" min="1" max="{{ $type === 'baru' ? 36 : 120 }}"
+                        <input wire:model.live.debounce.500ms="tenor" type="number" min="1" max="{{ in_array($type, ['baru', 'primer']) ? 36 : 120 }}"
                             class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                             placeholder="Contoh: 12">
                         @error('tenor') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
-                        @if($type === 'baru' && (int)$tenor > 36 && !$errors->has('tenor'))
+                        @if(in_array($type, ['baru', 'primer']) && (int)$tenor > 36 && !$errors->has('tenor'))
                             <span class="text-[10px] text-red-500 mt-1 block">Maksimal pengajuan 36 bulan</span>
                         @endif
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Jenis Permohonan</label>
+                        @if($type === 'primer')
+                        <select wire:model.live="jenis_permohonan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
+                            <option value="Handphone">Handphone</option>
+                            <option value="Motor">Motor</option>
+                            <option value="Barang Lain">Barang Lain</option>
+                        </select>
+                        @else
                         <select wire:model.live="jenis_permohonan" class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors">
                             <option value="Biasa">Biasa</option>
                             <option value="Urgent">Urgent</option>
                         </select>
+                        @endif
                         @error('jenis_permohonan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
 
+                @if($type === 'primer')
+                    @if($jenis_permohonan === 'Barang Lain')
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Keterangan / Tujuan Pinjaman</label>
+                        <input wire:model="keterangan" type="text"
+                            class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                            placeholder="Contoh: Kulkas Samsung">
+                        @error('keterangan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    @endif
+                @else
                 <div>
                     <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Keterangan / Tujuan Pinjaman</label>
                     @if($jenis_permohonan === 'Urgent')
@@ -517,6 +555,7 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                     @endif
                     @error('keterangan') <span class="text-[10px] text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
+                @endif
 
                 {{-- Simulasi Card --}}
                 <div class="mt-2 rounded-xl bg-indigo-50/50 border border-indigo-100 p-4 dark:bg-indigo-950/20 dark:border-indigo-900/50">

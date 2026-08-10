@@ -109,6 +109,10 @@ new class extends Component {
                     if (!$bulan || !$tahun || $jumlah <= 0)
                         continue;
 
+                    if ($jumlah > 100000) {
+                        $jumlah = 100000;
+                    }
+
                     // Cek duplikasi Simpanan Wajib (berdasarkan user_id, bulan, tahun)
                     $wajibExists = SimpananWajib::where('user_id', $user->id)
                         ->where('bulan', $bulan)
