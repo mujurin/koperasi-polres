@@ -22,8 +22,14 @@ new #[Layout('components.layouts.anggota')] class extends Component {
 <div class="flex flex-col gap-4 p-4">
 
     {{-- Header --}}
-    <div>
-        <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Rekap Simpanan</p>
+    <div class="flex items-center justify-between gap-3">
+        <div>
+            <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Rekap Simpanan</p>
+        </div>
+        <a href="{{ route('anggota.simpanan.download') }}" target="_blank" rel="noopener"
+            class="inline-flex items-center justify-center rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 text-xs font-semibold px-3 py-2 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all">
+            Unduh PDF
+        </a>
     </div>
 
     {{-- Saldo card --}}

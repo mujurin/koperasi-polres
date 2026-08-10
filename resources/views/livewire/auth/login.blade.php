@@ -31,6 +31,19 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $this->ensureIsNotRateLimited();
 
+        // 0. Cek Status Anggota (Jika bukan Admin)
+        $user = User::where('nrp', $this->nrp)->first();
+        if (!$user || !$user->isAdmin()) {
+            $anggota = \App\Models\Anggota::where('nip', $this->nrp)->first();
+            
+            if (!$anggota || !$anggota->is_active) {
+                RateLimiter::hit($this->throttleKey());
+                throw ValidationException::withMessages([
+                    'nrp' => 'Akun Koperasi Anda belum terdaftar atau sedang dinonaktifkan oleh Admin.',
+                ]);
+            }
+        }
+
         // 1. Coba login lokal dulu (untuk admin & user yang sudah ada di DB)
         if (Auth::attempt(['nrp' => $this->nrp, 'password' => $this->password], $this->remember)) {
             RateLimiter::clear($this->throttleKey());

@@ -16,6 +16,13 @@ new #[Layout('components.layouts.print')] class extends Component {
     public $pinaltiKompensasi = 0;
     public $jasaTunggakan = 0;
     public $tunggakanBulan = 0;
+    public $monthlySchedule = [];
+    public $totalPokokMasuk = 0;
+    public $totalJasaMasuk = 0;
+    public $sisaPinjamanBalance = 0;
+    public $sisaPokok = 0;
+    public $sisaJasa = 0;
+    public $paidMonths = 0;
     public $isKompensasi = false;
 
     public function mount(Pinjaman $pinjaman)
@@ -75,6 +82,20 @@ new #[Layout('components.layouts.print')] class extends Component {
             $this->simulasiJasa = $jumlah * 0.01;
             $this->simulasiAngsuran = $this->simulasiPokok + $this->simulasiJasa;
         }
+
+        $approvalDate = \Carbon\Carbon::parse($this->pinjaman->updated_at ?? $this->pinjaman->created_at)->startOfMonth();
+        $this->paidMonths = min($tenor, max(0, $approvalDate->diffInMonths(\Carbon\Carbon::now()) + 1));
+
+        $this->monthlySchedule = collect(range(0, max(0, $this->paidMonths - 1)))->map(fn($index) => [
+            'label' => $approvalDate->copy()->addMonths($index)->translatedFormat('M Y'),
+            'amount' => $this->pinjaman->angsuran_perbulan,
+        ])->toArray();
+
+        $this->totalPokokMasuk = round($this->simulasiPokok * $this->paidMonths);
+        $this->totalJasaMasuk = round($this->simulasiJasa * $this->paidMonths);
+        $this->sisaPokok = max(0, $this->pinjaman->jumlah_ajuan - $this->totalPokokMasuk);
+        $this->sisaJasa = max(0, ($this->simulasiJasa * $tenor) - $this->totalJasaMasuk);
+        $this->sisaPinjamanBalance = $this->sisaPokok + $this->sisaJasa;
     }
 }; ?>
 
@@ -85,37 +106,21 @@ new #[Layout('components.layouts.print')] class extends Component {
 }">
     <!-- Header -->
     <div class="text-center pb-8 border-b-2 border-zinc-900 mb-8">
-        <h1 class="text-3xl font-black uppercase tracking-wider mb-2">Surat Persetujuan Pinjaman</h1>
-        <h2 class="text-lg font-bold">Koperasi Polres Lombok Utara</h2>
-        <p class="text-sm">Tanggal Berlaku: {{ now()->format('d F Y') }}</p>
+        <h1 class="text-3xl font-black uppercase tracking-wider mb-2">DATA PINJAMAN</h1>
     </div>
 
     <!-- Identitas Pemohon -->
     <div class="mb-10">
-        <h3 class="font-bold text-lg border-b border-zinc-300 pb-2 mb-4 uppercase tracking-wide">Data Pemohon</h3>
+        <h3 class="font-bold text-lg border-b border-zinc-300 pb-2 mb-4 uppercase tracking-wide">DATA ANGGOTA</h3>
         <table class="w-full text-sm">
             <tbody>
                 <tr>
-                    <td class="py-2 w-1/3 font-semibold">Nama Lengkap</td>
+                    <td class="py-2 w-1/3 font-semibold">Nama</td>
                     <td class="py-2 w-2/3">: <span class="font-bold">{{ $pinjaman->user->name }}</span></td>
                 </tr>
                 <tr>
                     <td class="py-2 font-semibold">NRP</td>
                     <td class="py-2">: {{ $pinjaman->user->nrp }}</td>
-                </tr>
-                <tr>
-                    <td class="py-2 font-semibold">No. Pinjaman</td>
-                    <td class="py-2">: PNK-{{ str_pad($pinjaman->id, 5, '0', STR_PAD_LEFT) }}</td>
-                </tr>
-                <tr>
-                    <td class="py-2 font-semibold">Tipe Pengajuan</td>
-                    <td class="py-2">: <span
-                            class="font-extrabold uppercase {{ $isKompensasi ? 'text-orange-600' : 'text-indigo-600' }}">{{ $isKompensasi ? 'Kompensasi' : 'Pengajuan Baru' }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-2 font-semibold">Tanggal Persetujuan</td>
-                    <td class="py-2">: {{ $pinjaman->updated_at->format('d/m/Y H:i') }}</td>
                 </tr>
             </tbody>
         </table>
@@ -123,47 +128,39 @@ new #[Layout('components.layouts.print')] class extends Component {
 
     <!-- Rincian Pinjaman -->
     <div class="mb-10">
-        <h3 class="font-bold text-lg border-b border-zinc-300 pb-2 mb-4 uppercase tracking-wide">Rincian Persetujuan
-        </h3>
+        <h3 class="font-bold text-lg border-b border-zinc-300 pb-2 mb-4 uppercase tracking-wide">PINJAMAN</h3>
 
         <div class="bg-zinc-50 p-6 rounded-lg border border-zinc-200">
-            <h4 class="font-extrabold text-xl text-center mb-6">Total Pinjaman: Rp
+            <h4 class="font-extrabold text-xl text-center mb-6">Total pengajuan: Rp
                 {{ number_format($pinjaman->jumlah_ajuan, 0, ',', '.') }}
             </h4>
 
             <table class="w-full text-sm">
                 <tbody>
+                    <tr>
+                        <td class="py-3 font-semibold">Jangka waktu</td>
+                        <td class="py-3 text-right">: {{ $pinjaman->tenor }} bulan</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 font-semibold">Setoran per bulan</td>
+                        <td class="py-3 text-right">: Rp {{ number_format($pinjaman->angsuran_perbulan, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 font-semibold">Pokok pinjaman</td>
+                        <td class="py-3 text-right">: Rp {{ number_format($simulasiPokok, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 font-semibold">Jasa Pinjaman</td>
+                        <td class="py-3 text-right">: Rp {{ number_format($simulasiJasa, 0, ',', '.') }}</td>
+                    </tr>
                     @if($isKompensasi)
                         <tr>
-                            <td class="py-3 font-semibold">Sisa Pokok Hutang</td>
-                            <td class="py-3 text-right text-rose-600 font-semibold">- Rp
-                                {{ number_format($sisaPinjaman, 0, ',', '.') }}
-                            </td>
+                            <td class="py-3 font-semibold">Potongan Administrasi</td>
+                            <td class="py-3 text-right">: Rp {{ number_format($simulasiBiaya, 0, ',', '.') }}</td>
                         </tr>
                         <tr>
-                            <td class="py-3 font-semibold">Jasa Pinalti (1x)</td>
-                            <td class="py-3 text-right text-rose-600 font-semibold">- Rp
-                                {{ number_format($pinaltiKompensasi, 0, ',', '.') }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-3 font-semibold">Potongan Administrasi (1%)</td>
-                            <td class="py-3 text-right text-rose-600 font-semibold">- Rp
-                                {{ number_format($simulasiBiaya, 0, ',', '.') }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-3 font-semibold">Jasa Tunggakan ({{ $tunggakanBulan }} Bulan)</td>
-                            <td class="py-3 text-right text-rose-600 font-semibold">- Rp
-                                {{ number_format($jasaTunggakan, 0, ',', '.') }}
-                            </td>
-                        </tr>
-                    @else
-                        <tr>
-                            <td class="py-3 font-semibold">Potongan Administrasi (1%)</td>
-                            <td class="py-3 text-right text-rose-600 font-semibold">- Rp
-                                {{ number_format($simulasiBiaya, 0, ',', '.') }}
-                            </td>
+                            <td class="py-3 font-semibold">Jasa Tunggakan</td>
+                            <td class="py-3 text-right">: Rp {{ number_format($jasaTunggakan, 0, ',', '.') }}</td>
                         </tr>
                     @endif
                     <tr class="border-t-2 border-zinc-900">
@@ -177,59 +174,100 @@ new #[Layout('components.layouts.print')] class extends Component {
         </div>
     </div>
 
-    <!-- Skema Angsuran -->
-    <div class="mb-12">
-        <h3 class="font-bold text-lg border-b border-zinc-300 pb-2 mb-4 uppercase tracking-wide">Skema Kewajiban Cicilan
-        </h3>
+    <!-- Setoran Perbulan -->
+    <div>
+        <h3 class="font-bold text-lg border-b border-zinc-300 pb-2 mb-4 uppercase tracking-wide">SETORAN PERBULAN</h3>
         <table class="w-full text-sm">
             <tbody>
-                <tr>
-                    <td class="py-2 w-1/3 font-semibold">Tenor Cicilan</td>
-                    <td class="py-2 w-2/3">: <span class="font-bold">{{ $pinjaman->tenor }} Bulan</span></td>
-                </tr>
-                <tr>
-                    <td class="py-2 font-semibold">Jasa Pinjaman (1%) / Bln</td>
-                    <td class="py-2">: Rp {{ number_format($simulasiJasa, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td class="py-2 font-semibold">Pokok Angsuran / Bln</td>
-                    <td class="py-2">: Rp {{ number_format($simulasiPokok, 0, ',', '.') }}</td>
-                </tr>
-                <tr class="bg-zinc-100 font-bold text-base">
-                    <td class="py-4 px-2 font-bold uppercase tracking-wider">Angsuran Bulanan</td>
-                    <td class="py-4 px-2">: Rp {{ number_format($pinjaman->angsuran_perbulan, 0, ',', '.') }}</td>
-                </tr>
+                @forelse($monthlySchedule as $row)
+                    <tr>
+                        <td class="py-2 font-semibold">{{ $row['label'] }}</td>
+                        <td class="py-2 text-right">: Rp {{ number_format($row['amount'], 0, ',', '.') }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="2" class="py-2">Belum ada periode setoran.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
-    </div>
 
-    <!-- Tanda Tangan -->
-    <div class="mt-16 pt-8 break-inside-avoid">
-        <div class="flex justify-between items-end">
-            <div class="text-center">
-                <p class="font-semibold">Tanda Tangan Pemohon,</p>
-                <div class="h-28"></div>
-                <p class="font-bold border-b border-zinc-900 pb-1">({{ $pinjaman->user->name }})</p>
-                <p class="text-xs mt-1">NRP: {{ $pinjaman->user->nrp }}</p>
-            </div>
-            <div class="text-center">
-                <p class="font-semibold">Disetujui Oleh,</p>
-                <div class="h-28"></div>
-                <p class="font-bold border-b border-zinc-900 pb-1">(Pengurus Koperasi Polres)</p>
-                <p class="text-xs mt-1">Cap & Tanda Tangan</p>
-            </div>
+        <div class="mt-6 text-sm">
+            <table class="w-full text-sm">
+                <tbody>
+                    <tr>
+                        <td class="py-2 font-semibold">TOTAL POKOK MASUK</td>
+                        <td class="py-2 text-right">: Rp {{ number_format($totalPokokMasuk, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 font-semibold">TOTAL JASA MASUK</td>
+                        <td class="py-2 text-right">: Rp {{ number_format($totalJasaMasuk, 0, ',', '.') }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-8 text-center text-xl font-bold">
+            Sisa pinjaman Rp {{ number_format($sisaPinjamanBalance, 0, ',', '.') }}
+        </div>
+        <div class="mt-2 text-sm">
+            <table class="w-full text-sm">
+                <tbody>
+                    <tr>
+                        <td class="py-2 font-semibold">POKOK</td>
+                        <td class="py-2 text-right">: Rp {{ number_format($sisaPokok, 0, ',', '.') }} (AKUMULASI TOTAL SISA POKOK PINJAMAN)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 font-semibold">JASA</td>
+                        <td class="py-2 text-right">: Rp {{ number_format($sisaJasa, 0, ',', '.') }} (AKUMULASI TOTAL SISA JASA PINJAMAN)</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="mt-16 text-center text-xs text-zinc-500 italic print:bottom-0 print:absolute print:w-full">
-        * Surat ini dicetak secara otomatis dan sah sebagai bukti mutasi persetujuan pinjaman Koperasi Polres Lombok
-        Utara.
-    </div>
+    <!-- Tanda Tangan -->
+    <div class="mt-12 pt-4 break-inside-avoid text-sm">
+        <!-- Header Jabatan & Tanggal -->
+        <div class="flex justify-between items-baseline">
+            <div class="text-left">
+                <p class="font-semibold uppercase tracking-wide">Bendahara Primkoppol</p>
+            </div>
+            <div class="text-right">
+                <p class="font-semibold uppercase tracking-wide">Gangga, {{ now()->translatedFormat('j F Y') }}</p>
+                <p class="mt-1">Yang mengajukan</p>
+            </div>
+        </div>
 
-    <div class="mt-8 text-center print:hidden">
-        <button onclick="window.print()"
-            class="px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg mr-2 hover:bg-indigo-700">Cetak PDF</button>
-        <a wire:navigate href="{{ route('pinjaman.antrian') }}"
-            class="px-6 py-2 bg-zinc-200 text-zinc-800 font-bold rounded-lg hover:bg-zinc-300">Kembali</a>
+        <!-- Spacer / Ruang Kosong Tanda Tangan (24 = 6rem / ~96px) -->
+        <div class="h-24"></div>
+
+        <!-- Nama Pemohon & Bendahara -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="text-left">
+                <p class="font-bold uppercase text-lg">Pande Nyoman Suastika</p>
+                <p class="text-xs mt-1">NRP 86071388</p>
+            </div>
+            <div class="text-right">
+                <p class="font-bold uppercase text-lg">{{ $pinjaman->user->name }}</p>
+                <p class="text-xs mt-1">NRP {{ $pinjaman->user->nrp }}</p>
+            </div>
+        </div>
+
+        <!-- Mengetahui Ketua Primkoppol -->
+        <div class="mt-12 text-center">
+            <p class="font-semibold">Mengetahui;</p>
+            <p class="font-bold uppercase">Ketua Primkoppol</p>
+            
+            <!-- Spacer / Ruang Kosong Tanda Tangan Ketua -->
+            <div class="h-24"></div>
+
+            <p class="font-bold text-lg uppercase">I Made Sukadana</p>
+            <p class="text-xs mt-1">NRP 79060072</p>
+        </div>
+    </div>
+    <div class="h-24"></div>
+    <div class="mt-14 text-center text-xs text-zinc-500 italic print:bottom-0 print:absolute print:w-full">
+        * Surat ini dicetak secara otomatis dan sah sebagai bukti mutasi persetujuan pinjaman Koperasi.
     </div>
 </div>

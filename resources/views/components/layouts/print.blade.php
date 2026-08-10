@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" translate="no">
+<html lang="id" translate="no">
 
 <head>
     <meta name="google" content="notranslate">

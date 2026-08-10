@@ -22,6 +22,56 @@ Route::get('/.well-known/assetlinks.json', function () {
     ]);
 });
 
+Route::get('storage/{path}', function ($path) {
+    $storageRoot = storage_path('app/public');
+    $filePath = realpath($storageRoot . DIRECTORY_SEPARATOR . $path);
+
+    if (! $filePath || ! str_starts_with($filePath, $storageRoot) || ! is_file($filePath)) {
+        abort(404);
+    }
+
+    return response()->file($filePath);
+})->where('path', '.*')->name('storage.file');
+
+Route::get('/symlink', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+
+    if (file_exists($link) || is_link($link)) {
+        return response()->json([
+            'status' => 'exists',
+            'message' => 'Public storage link already exists.',
+            'link' => $link,
+            'target' => realpath($link) ?: $target,
+        ]);
+    }
+
+    if (! file_exists($target)) {
+        mkdir($target, 0755, true);
+    }
+
+    if (! function_exists('symlink')) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Symlink is not available on this server.',
+        ], 500);
+    }
+
+    if (! @symlink($target, $link)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to create public/storage symlink. Check file permissions and server settings.',
+        ], 500);
+    }
+
+    return response()->json([
+        'status' => 'created',
+        'message' => 'Public storage symlink created successfully.',
+        'link' => $link,
+        'target' => $target,
+    ]);
+});
+
 Route::get('/', function () {
     if (auth()->check()) {
         return auth()->user()->isAdmin()
@@ -45,6 +95,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
+    // Anggota Module
+    Route::get('/data-anggota', \App\Livewire\Anggota\Index::class)->name('anggota.index');
+
     // Simpanan Module (Admin area)
     Volt::route('simpanan', 'simpanan.index')->name('simpanan.index');
     Volt::route('simpanan/pokok', 'simpanan.simpanan-pokok')->name('simpanan.pokok');
@@ -65,17 +118,21 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('pinjaman/{pinjaman}/rincian', 'pinjaman.show')->name('pinjaman.show');
     Volt::route('pinjaman/tarik-setoran', 'pinjaman.tarik-setoran')->name('pinjaman.tarik-setoran');
 
-    // Laporan & Akuntansi (Admin area)
+    // Laporan (Admin area)
     Volt::route('laporan/neraca-saldo', 'laporan.neraca-saldo')->name('laporan.neraca-saldo');
     Volt::route('laporan/laba-rugi', 'laporan.laba-rugi')->name('laporan.laba-rugi');
+    Volt::route('laporan/buku-kas', 'laporan.buku-kas')->name('laporan.buku-kas');
+    Route::get('laporan/buku-kas/download', [App\Http\Controllers\PdfController::class, 'bukuKasPdf'])->name('laporan.buku-kas.download');
 
     // Admin Tools
     Volt::route('admin/dummy-angsuran', 'admin.dummy-angsuran')->name('admin.dummy-angsuran');
     Volt::route('admin/reset-data', 'admin.reset-data')->name('admin.reset-data');
+    Volt::route('admin/aset-inventaris', 'admin.aset-inventaris')->name('admin.aset-inventaris');
 
     // Anggota (Member PWA area)
     Volt::route('anggota', 'anggota.dashboard')->name('anggota.dashboard');
     Volt::route('anggota/simpanan', 'anggota.simpanan')->name('anggota.simpanan');
+    Route::get('anggota/simpanan/download', [App\Http\Controllers\PdfController::class, 'rekapSimpanan'])->name('anggota.simpanan.download');
     Volt::route('anggota/riwayat-setoran', 'anggota.riwayat-setoran')->name('anggota.riwayat-setoran');
     Volt::route('anggota/riwayat', 'anggota.riwayat')->name('anggota.riwayat');
     Volt::route('anggota/penarikan', 'anggota.penarikan')->name('anggota.penarikan');

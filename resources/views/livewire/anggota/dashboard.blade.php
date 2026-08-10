@@ -175,6 +175,16 @@ new #[Layout('components.layouts.anggota')] class extends Component {
                                         <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Pengajuan baru sekaligus melunasi sisa pinjaman lama Anda.</p>
                                     </div>
                                 </a>
+                                
+                                <a href="{{ route('anggota.pinjaman', ['type' => 'primer']) }}" wire:navigate class="group flex items-start gap-4 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 dark:hover:border-emerald-500 bg-white dark:bg-zinc-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all text-left w-full active:scale-[0.98]">
+                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                    </div>
+                                    <div class="flex-1 mt-0.5">
+                                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Primer</h4>
+                                        <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">Pengajuan pinjaman Primer (Handphone, Motor, Barang Lain).</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
