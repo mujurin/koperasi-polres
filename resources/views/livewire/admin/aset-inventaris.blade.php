@@ -14,7 +14,9 @@ new #[Layout('components.layouts.app')] class extends Component
     public string $tanggal_perolehan = '';
     public string $nama_barang = '';
     public $foto;
+    public string $foto_path = ''; // optional just in case
     public int $jumlah_barang = 1;
+    public string $satuan = 'Unit';
     public string $no_register = '';
     public int $harga = 0;
     public string $hargaFormatted = '0';
@@ -32,6 +34,7 @@ new #[Layout('components.layouts.app')] class extends Component
             'nama_barang' => 'required|string|max:255',
             'foto' => 'nullable|image|max:2048',
             'jumlah_barang' => 'required|integer|min:1',
+            'satuan' => 'required|string|max:255',
             'no_register' => [
                 'required',
                 'string',
@@ -55,6 +58,7 @@ new #[Layout('components.layouts.app')] class extends Component
         $this->nama_barang = '';
         $this->foto = null;
         $this->jumlah_barang = 1;
+        $this->satuan = 'Unit';
         $this->no_register = '';
         $this->harga = 0;
         $this->hargaFormatted = $this->formatCurrency($this->harga);
@@ -74,6 +78,7 @@ new #[Layout('components.layouts.app')] class extends Component
         $this->tanggal_perolehan = $aset->tanggal_perolehan->format('Y-m-d');
         $this->nama_barang = $aset->nama_barang;
         $this->jumlah_barang = $aset->jumlah_barang;
+        $this->satuan = $aset->satuan ?? 'Unit';
         $this->no_register = $aset->no_register;
         $this->harga = $aset->harga;
         $this->hargaFormatted = $this->formatCurrency($aset->harga);
@@ -97,6 +102,7 @@ new #[Layout('components.layouts.app')] class extends Component
             'tanggal_perolehan' => $this->tanggal_perolehan,
             'nama_barang' => $this->nama_barang,
             'jumlah_barang' => $this->jumlah_barang,
+            'satuan' => $this->satuan,
             'no_register' => $this->no_register,
             'harga' => $this->harga,
             'keadaan' => $this->keadaan,
@@ -157,6 +163,7 @@ new #[Layout('components.layouts.app')] class extends Component
         $this->tanggal_perolehan = $aset->tanggal_perolehan->format('Y-m-d');
         $this->nama_barang = $aset->nama_barang;
         $this->jumlah_barang = $aset->jumlah_barang;
+        $this->satuan = $aset->satuan ?? 'Unit';
         $this->no_register = $aset->no_register;
         $this->harga = $aset->harga;
         $this->keadaan = $aset->keadaan;
@@ -240,7 +247,7 @@ new #[Layout('components.layouts.app')] class extends Component
                             </div>
                         </div>
                         <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                            <div class="text-sm text-zinc-700 dark:text-zinc-300">Jumlah: {{ $item->jumlah_barang }}</div>
+                            <div class="text-sm text-zinc-700 dark:text-zinc-300">Jumlah: {{ $item->jumlah_barang }} {{ $item->satuan }}</div>
                             <div class="text-sm text-zinc-700 dark:text-zinc-300">Harga: Rp {{ number_format($item->harga, 0, ',', '.') }}</div>
                             <div class="text-sm text-zinc-700 dark:text-zinc-300">Keadaan: {{ $item->keadaan }}</div>
                         </div>
@@ -288,14 +295,28 @@ new #[Layout('components.layouts.app')] class extends Component
                     @endif
                 </div>
 
-                <div class="grid gap-4 sm:grid-cols-2">
+                <div class="grid gap-4 sm:grid-cols-3">
                     <div>
-                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Jumlah Barang / Aset</label>
+                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Jumlah Barang</label>
                         <input type="number" wire:model="jumlah_barang" min="1" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
                         @error('jumlah_barang') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">No Register Aset / Inventaris</label>
+                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Satuan</label>
+                        <input type="text" wire:model="satuan" list="satuan-list" placeholder="Contoh: Unit, Are" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
+                        <datalist id="satuan-list">
+                            <option value="Unit"></option>
+                            <option value="Buah"></option>
+                            <option value="Set"></option>
+                            <option value="Are"></option>
+                            <option value="Meter Persegi"></option>
+                            <option value="Lantai"></option>
+                            <option value="Titik"></option>
+                        </datalist>
+                        @error('satuan') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">No Register Aset</label>
                         <input type="text" wire:model="no_register" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
                         @error('no_register') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                     </div>
