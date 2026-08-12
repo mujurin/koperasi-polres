@@ -99,6 +99,17 @@ new class extends Component {
                 ]
             );
 
+            // Cek dan Simpan Simpanan Pokok
+            $pokokExists = \App\Models\SimpananPokok::where('user_id', $user->id)->exists();
+            if (!$pokokExists) {
+                \App\Models\SimpananPokok::create([
+                    'user_id' => $user->id,
+                    'jumlah' => 100000,
+                    'tanggal' => now()->toDateString(),
+                    'keterangan' => 'Hasil Sinkronisasi API',
+                ]);
+            }
+
             $simpananList = $anggota['simpanan_wajib'] ?? [];
             if (is_array($simpananList)) {
                 foreach ($simpananList as $simpanan) {
