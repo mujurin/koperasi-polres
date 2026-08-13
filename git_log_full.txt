@@ -1,0 +1,1622 @@
+commit 103c40cef8203455e805364578fc1366bcf7101d
+Merge: f3ca9b0 e7f0b02
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:59:00 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit f3ca9b04a30a18d31a4b84e4ab1a701247dbdec9
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:58:32 2026 +0800
+
+    chore: add Gradle file lock for build cache consistency
+
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+
+commit e7f0b02598c56e3caba2957c6728ff3006f3ecc2
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:57:54 2026 +0800
+
+    chore: update Gradle cache and build metadata files
+
+M	.gradle/8.11.1/checksums/checksums.lock
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	.gradle/buildOutputCleanup/buildOutputCleanup.lock
+
+commit a692a33783eba16347a69552588e14bb4882c714
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:57:43 2026 +0800
+
+    chore: update Gradle build output and cache metadata files
+
+M	.gradle/8.11.1/checksums/checksums.lock
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	.gradle/buildOutputCleanup/buildOutputCleanup.lock
+
+commit 8c1d9d365c2a8393be1526ab35a29cf8f9173219
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:57:21 2026 +0800
+
+    feat: add satuan field to asets table and sync initial pokok savings during user synchronization
+
+A	database/migrations/2026_08_10_010000_add_satuan_to_asets_table.php
+M	resources/views/livewire/admin/aset-inventaris.blade.php
+M	resources/views/livewire/admin/sync-simpanan.blade.php
+
+commit 72ebe5e9f83e3212c5e750c002dada9563aa1021
+Merge: 7638aa6 ef72486
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Aug 10 19:15:21 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 7638aa607853d76d4d96a3a9329a21df56a06d70
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Aug 10 19:14:42 2026 +0800
+
+    chore: update build configuration file paths in Gradle problem report
+
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	build/reports/problems/problems-report.html
+
+commit ef724866bcd36a299e50618b9bccc07a1d40afbd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Aug 10 17:03:24 2026 +0800
+
+    feat: add member dashboard and index views and update application icons
+
+M	.gradle/8.11.1/executionHistory/executionHistory.bin
+M	.gradle/8.11.1/executionHistory/executionHistory.lock
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	.gradle/buildOutputCleanup/buildOutputCleanup.lock
+M	.gradle/buildOutputCleanup/outputFiles.bin
+M	.gradle/file-system.probe
+A	APK/KoperasiPolres.apk
+A	APK/KoperasiPolres.apk.idsig
+A	apk_certs.txt
+D	app/Http/Controllers/Auth/VerifyEmailController.php
+D	app/Http/Controllers/Controller.php
+D	app/Http/Controllers/PdfController.php
+D	app/Http/Controllers/PenarikanKwitansiController.php
+D	app/Http/Livewire/Admin/AsetInventaris.php
+D	app/Livewire/Actions/Logout.php
+D	app/Livewire/Anggota/Index.php
+D	app/Models/Anggota.php
+D	app/Models/Angsuran.php
+D	app/Models/Aset.php
+D	app/Models/Penarikan.php
+D	app/Models/Pinjaman.php
+D	app/Models/SimpananPokok.php
+D	app/Models/SimpananWajib.php
+D	app/Models/TransaksiOperasional.php
+D	app/Models/User.php
+D	app/Providers/AppServiceProvider.php
+D	app/Providers/VoltServiceProvider.php
+M	app/build.gradle
+D	app/build/intermediates/bundle_dependency_report/release/configureReleaseDependencies/dependencies.pb
+D	app/build/intermediates/bundle_ide_model/release/produceReleaseBundleIdeListingFile/output-metadata.json
+D	app/build/intermediates/bundle_ide_redirect_file/release/createReleaseBundleListingFileRedirect/redirect.txt
+D	app/build/intermediates/bundle_manifest/release/processApplicationManifestReleaseForBundle/AndroidManifest.xml
+M	app/build/intermediates/dex_metadata_directory/release/compileReleaseArtProfile/0/.dm
+M	app/build/intermediates/dex_metadata_directory/release/compileReleaseArtProfile/1/.dm
+M	app/build/intermediates/incremental/mergeReleaseAssets/merger.xml
+M	app/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml
+M	app/build/intermediates/incremental/mergeReleaseShaders/merger.xml
+M	app/build/intermediates/incremental/packageRelease/tmp/release/dex-renamer-state.txt
+M	app/build/intermediates/incremental/packageRelease/tmp/release/zip-cache/androidResources
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Or4q_OluGv8mN6ln4sMgVR7l4xY=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/0x1m_fvOB+YXZTxI3o0znrfZfPo=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/w3H1P8CIBrHN3D50r2IOLq0IVoQ=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/2I1_1HBplIjFInd2XhUrJYIhSMU=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/YVsl2bzBTDZSCbsD027d5Hxq4GI=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/2Ne3uMRBNlHdVazYH2OyZNvyA1c=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/xphVh2PB39bxIp2PO2bt3+QnR18=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/41D6G5aVBPyyrILPcNkFamNkzOg=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/kF4sOLdYHiIwOJpJ5VIG9HHbjIM=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/6Affqg9Rx1Uww5PYBZsc9FV450Q=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/CCzn7Rn9NqWLkuGUOEErZiGgf0A=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/6AjJwFwEmbrMKk7eQoBd1MmK76U=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/XV97cx78yAsC7nBT9r7x_DPDRYo=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Aazr_juMnKe4Do8YuEHVZLYqcHA=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/KL5F2+LTJL61FNEnt5R_XdQeXzY=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ApNkJLn1tjFXZrjfsxQVzAcVqGk=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/dARzy1RjZg2w4XD92Krv_sG+Fn4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/BkD5tFDgk6_cnATjcTSYuqHt1oY=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/TwHn05fvXJoTBb3v4kzGpluAQso=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/DaxLdLHq3SLIIh39EdfQGe8XTyU=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/XsOSXNhfT5K5rjlmwt8UJ77KHC4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/EM51IyoKG9A4fa7dPKTZd9+uol8=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ujNC1o6c8D2KX9cx7j3fe3GlTwo=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/G8XZ8rSQtOzd9KeV0h0fWtNyjzA=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Bsemca8FIJ6Y5F0bK27Sg27RXSk=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/I4W4izhRXHs3sjyJ1sR5e6jF4iY=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Sf2HrkDcbgR8AXp80GsV+wbW0RM=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/J3JNoI6N9V2Dt_tt4LE7D_QIqQY=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/coGHKg3ES7r_qlpAADGH1ZTvGi8=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/J9mGHnxXhHagxrwARB83+2sS2Jg=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/DUQiTSTBDwr8fLnxobsSFzB0+ZE=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/JJjm1VEc5yRfpjCMdkxZs9kpqiY=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/SOSb3K0CHEss921eP2gFb2wuvGs=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/KZHAYilhndJiOsDbRjPwse0Us7Y=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/WRWao9GoQBAkuD7K9E4a1PPYm2w=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/LkKF3EbCRyk1jESbCGGOzv59dr8=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ddv0gCqgULMcDc7gb7XFchwZ9CM=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/M+jnLy7hFPnzhgW46vLvKRNEOOw=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/5SXKNeE8mE0qk2kkjmMyK6e+l58=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/NWcuA9vrJ2ZTveR8PLS+nliYe_Y=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Nxky7kWL5jLH5+TvMoIwqRnSNdo=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Oezcd6L78qVxW0mkRMYNc0erTpk=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/5u7oobhYJVGcRuzCbteJ2gfyp_8=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/P5U5kUfYyRIQQkcNIsgW_x2Lkh0=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ISJumgX401PfvAUowRB+MCieYhE=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/PV4w601T3ipHOZhkGJuSxvh7+C8=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/uFalTYbWgKyhVejplQmfgIMZblc=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/T13dx8ZXP6KfRWw5QncSY18rWlc=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/l1I83OBMLBHIaxVOe3hw4aq+swk=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/TB8OqDwbzQysZH7Dw66auE9paM8=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/PFBEJxmIjUNoCFlkA+kesytLGF4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/UPzFjyUtDfFo7_mEsBekaRL6_ow=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/DyYSir0OkfC6m3QE8dlI7DvxBF4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/WEEcG7F0feI_7ZDVzOXn2O4YP3I=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/BSi2mHTqRtchdBM5Eoo2XJB7aVA=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Xv4ikdColniPYG+CTxpcg2ZfHn0=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/dGbIlJvMZSIAIVCVrG8sWqsedb8=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/YSUOUO1_Oia5ccNSV+HzBuXEuAc=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/fYsFdBi1eRksNHXP+_gCNcJ3BnU=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/bhN5FQmE8yqCPM60BgKElVqEM7k=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/cyiClazuqdAJT10769MR8rc0joo=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/cwn0f2Jl3i179XsuXk7jzRdcBYc=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/jUt2K_i2BzpkXJG5Nry2VzVgNyA=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/d1E5F4OU1rRPogEZnGftHm5hAYc=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/exBIYhZ+QdmZ40OWvSUu_r0FPSw=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/dWTzGS03oKq3Q5Qm5gEsgJI3rXA=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/WHk2W1aZ5nMdLJacLa+3o8x6yl0=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/eD8M5WZxum0l9U3LkGxeWTVc3NA=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/eAcP_kqZhIMVXnY1oFyRZgPUNPc=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/eaSl0ePSgMrBGTJUQtvjZCktQKk=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/I6hQosGZnj8Bsb4eMCx4iTJ57gw=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/fD1V15vDnUGYAu66MmDno4dXrFo=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/d1aY4e9cJ41fBrJjvL2W8FUn9ac=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/fIvsO8K5nvsb1pNSQyqLEfgi1WE=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ON7xNialxf8_iORAN1GnKU2SeaY=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/hc7iUyZfd8V8kCa_VhYQSMrcG9I=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/NulTahRvmCZbaNQ+JWR3P5vKDJ4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/iLwVH4Bw5QSlkUaz6xmIIcLh3O4=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/UolqWpSttD03q3Sf8J8S0tHLDZ4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/jDMxnYdF2HyL_eHTEViTLVBFZRg=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/LvhrVgNmbNUVSPjhmKe_c8qi8YU=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/kKHY8P18O8QAznP56ODiY6wH9cw=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/9hmdeOI9AfEpzZFGgXQe_3+3LtI=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ltYAiTsDmgDltG2+F8GkKTquNaE=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/l_ercFerR9XU2eO6FlcWVR_XCnw=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/mSbNHnBnAs3q9iboo9x1x3L0yw0=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/nnlFWqosDEN21wwiFcZeYSyAUqs=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/oO9E8om7kRkBcCmHx7+soy36ufY=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/JQ9g2H42cKMQ0OzZ72MWaabIIkQ=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/pIDiemAONkndeWAzGuCZ7Vx4hP8=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/2vMYjl9UQol0uv696gmOIaH0n+U=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/pbXQHkM4yxRP4R_SisCo+n2PSAg=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/SxX88X3l_cuXlhG8vEHxnRuzQis=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/pd_3sHKGBPMZdP1LnxAEBzgns08=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/kPjTicUDq1yQ0iulYEMHzBkaBxU=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/sJueHaWTrKZgAfq__4w2yvHMg5o=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/qEaQd8AS3Vbe0EkvSy9SBSJHzrw=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/utaCRcrlBQz8GitQnkRwENZDblE=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/vdohMWcxpfIWutrXMfCp_s49pMc=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/vdIbhKgVlzBDQOyylVrsqFsFwaM=
+R100	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/H5QoB5K3yskZGk+RaEQyTk7RRi4=	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/xmljewL_k9dUuqRpzBGbRrp05vg=
+M	app/build/intermediates/incremental/release/mergeReleaseResources/compile-file-map.properties
+M	app/build/intermediates/incremental/release/mergeReleaseResources/merger.xml
+M	app/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties
+M	app/build/intermediates/incremental/release/packageReleaseResources/merger.xml
+D	app/build/intermediates/intermediary_bundle/release/packageReleaseBundle/intermediary-bundle.aab
+M	app/build/intermediates/linked_resources_binary_format/release/processReleaseResources/linked-resources-binary-format-release.ap_
+M	app/build/intermediates/linked_resources_binary_format/release/processReleaseResources/output-metadata.json
+D	app/build/intermediates/linked_resources_for_bundle_proto_format/release/bundleReleaseResources/linked-resources-for-bundle-proto-format.ap_
+M	app/build/intermediates/manifest_merge_blame_file/release/processReleaseMainManifest/manifest-merger-blame-release-report.txt
+M	app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml
+M	app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
+M	app/build/intermediates/merged_manifests/release/processReleaseManifest/output-metadata.json
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-anydpi_shortcut_legacy_background.xml.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-hdpi_ic_notification_icon.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-hdpi_splash.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-mdpi_ic_notification_icon.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-mdpi_splash.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xhdpi_ic_notification_icon.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xhdpi_splash.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxhdpi_ic_notification_icon.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxhdpi_splash.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxxhdpi_ic_notification_icon.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxxhdpi_splash.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-anydpi-v26_ic_launcher.xml.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-hdpi_ic_launcher.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-hdpi_ic_maskable.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-mdpi_ic_launcher.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-mdpi_ic_maskable.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xhdpi_ic_launcher.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xhdpi_ic_maskable.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxhdpi_ic_launcher.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxhdpi_ic_maskable.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxxhdpi_ic_launcher.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxxhdpi_ic_maskable.png.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/raw_web_app_manifest.json.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-af_values-af.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-am_values-am.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ar_values-ar.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-as_values-as.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-az_values-az.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-b+sr+Latn_values-b+sr+Latn.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-be_values-be.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-bg_values-bg.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-bn_values-bn.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-bs_values-bs.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ca_values-ca.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-cs_values-cs.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-da_values-da.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-de_values-de.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-el_values-el.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rAU_values-en-rAU.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rCA_values-en-rCA.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rGB_values-en-rGB.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rIN_values-en-rIN.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rXC_values-en-rXC.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-es-rUS_values-es-rUS.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-es_values-es.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-et_values-et.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-eu_values-eu.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fa_values-fa.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fi_values-fi.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fr-rCA_values-fr-rCA.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fr_values-fr.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-gl_values-gl.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-gu_values-gu.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-h720dp-v13_values-h720dp-v13.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hdpi-v4_values-hdpi-v4.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hi_values-hi.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hr_values-hr.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hu_values-hu.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hy_values-hy.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-in_values-in.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-is_values-is.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-it_values-it.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-iw_values-iw.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ja_values-ja.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ka_values-ka.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-kk_values-kk.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-km_values-km.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-kn_values-kn.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ko_values-ko.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ky_values-ky.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-land_values-land.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-large-v4_values-large-v4.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ldltr-v21_values-ldltr-v21.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-lo_values-lo.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-lt_values-lt.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-lv_values-lv.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-mk_values-mk.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ml_values-ml.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-mn_values-mn.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-mr_values-mr.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ms_values-ms.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-my_values-my.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-nb_values-nb.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ne_values-ne.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-night-v8_values-night-v8.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-nl_values-nl.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-or_values-or.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pa_values-pa.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pl_values-pl.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-port_values-port.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pt-rBR_values-pt-rBR.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pt-rPT_values-pt-rPT.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pt_values-pt.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ro_values-ro.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ru_values-ru.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-si_values-si.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sk_values-sk.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sl_values-sl.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sq_values-sq.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sr_values-sr.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sv_values-sv.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sw600dp-v13_values-sw600dp-v13.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sw_values-sw.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ta_values-ta.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-te_values-te.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-th_values-th.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-tl_values-tl.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-tr_values-tr.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-uk_values-uk.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ur_values-ur.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-uz_values-uz.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v16_values-v16.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v17_values-v17.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v18_values-v18.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v21_values-v21.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v22_values-v22.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v23_values-v23.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v24_values-v24.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v25_values-v25.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v26_values-v26.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v28_values-v28.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-vi_values-vi.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-watch-v20_values-watch-v20.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-watch-v21_values-watch-v21.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-xlarge-v4_values-xlarge-v4.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zh-rCN_values-zh-rCN.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zh-rHK_values-zh-rHK.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zh-rTW_values-zh-rTW.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zu_values-zu.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/values_values.arsc.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/xml_filepaths.xml.flat
+M	app/build/intermediates/merged_res/release/mergeReleaseResources/xml_shortcuts.xml.flat
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/mergeReleaseResources.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-af.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-am.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ar.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-as.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-az.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-b+sr+Latn.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-be.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-bg.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-bn.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-bs.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ca.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-cs.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-da.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-de.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-el.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rAU.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rCA.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rGB.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rIN.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rXC.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-es-rUS.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-es.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-et.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-eu.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fa.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fi.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fr-rCA.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fr.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-gl.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-gu.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-h720dp-v13.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hdpi-v4.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hi.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hr.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hu.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hy.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-in.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-is.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-it.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-iw.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ja.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ka.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-kk.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-km.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-kn.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ko.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ky.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-land.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-large-v4.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ldltr-v21.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-lo.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-lt.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-lv.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-mk.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ml.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-mn.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-mr.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ms.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-my.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-nb.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ne.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-night-v8.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-nl.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-or.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pa.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pl.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-port.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pt-rBR.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pt-rPT.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pt.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ro.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ru.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-si.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sk.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sl.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sq.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sr.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sv.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sw.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sw600dp-v13.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ta.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-te.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-th.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-tl.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-tr.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-uk.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ur.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-uz.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v16.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v17.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v18.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v21.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v22.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v23.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v24.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v25.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v26.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v28.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-vi.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-watch-v20.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-watch-v21.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-xlarge-v4.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zh-rCN.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zh-rHK.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zh-rTW.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zu.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values.json
+M	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/single/mergeReleaseResources.json
+D	app/build/intermediates/module_bundle/release/buildReleasePreBundle/base.zip
+M	app/build/intermediates/optimized_processed_res/release/optimizeReleaseResources/output-metadata.json
+M	app/build/intermediates/optimized_processed_res/release/optimizeReleaseResources/resources-release-optimize.ap_
+M	app/build/intermediates/packaged_manifests/release/processReleaseManifestForPackage/AndroidManifest.xml
+M	app/build/intermediates/packaged_manifests/release/processReleaseManifestForPackage/output-metadata.json
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-hdpi-v4/ic_notification_icon.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-hdpi-v4/splash.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-mdpi-v4/ic_notification_icon.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-mdpi-v4/splash.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xhdpi-v4/ic_notification_icon.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xhdpi-v4/splash.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxhdpi-v4/ic_notification_icon.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxhdpi-v4/splash.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxxhdpi-v4/ic_notification_icon.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxxhdpi-v4/splash.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-hdpi-v4/ic_launcher.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-hdpi-v4/ic_maskable.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-mdpi-v4/ic_launcher.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-mdpi-v4/ic_maskable.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xhdpi-v4/ic_launcher.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xhdpi-v4/ic_maskable.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxhdpi-v4/ic_launcher.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxhdpi-v4/ic_maskable.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxxhdpi-v4/ic_launcher.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxxhdpi-v4/ic_maskable.png
+M	app/build/intermediates/packaged_res/release/packageReleaseResources/raw/web_app_manifest.json
+M	app/build/intermediates/r8_metadata/release/minifyReleaseWithR8/r8-metadata.dat
+M	app/build/intermediates/sdk_dependency_data/release/sdkReleaseDependencyData/sdkDependencyData.pb
+M	app/build/intermediates/source_set_path_map/release/mapReleaseSourceSetPaths/file-map.txt
+M	app/build/intermediates/version_control_info_file/release/extractReleaseVersionControlInfo/version-control-info.textproto
+A	app/build/outputs/apk/release/app-release-aligned.apk
+M	app/build/outputs/apk/release/app-release-unsigned.apk
+M	app/build/outputs/apk/release/baselineProfiles/0/app-release-unsigned.dm
+M	app/build/outputs/apk/release/baselineProfiles/1/app-release-unsigned.dm
+M	app/build/outputs/apk/release/output-metadata.json
+D	app/build/outputs/bundle/release/app-release.aab
+M	app/build/outputs/logs/manifest-merger-release-report.txt
+M	app/build/outputs/mapping/release/configuration.txt
+M	app/build/outputs/mapping/release/seeds.txt
+M	app/build/tmp/compileReleaseJavaWithJavac/previous-compilation-data.bin
+M	app/src/main/res/drawable-hdpi/ic_notification_icon.png
+M	app/src/main/res/drawable-hdpi/splash.png
+M	app/src/main/res/drawable-mdpi/ic_notification_icon.png
+M	app/src/main/res/drawable-mdpi/splash.png
+M	app/src/main/res/drawable-xhdpi/ic_notification_icon.png
+M	app/src/main/res/drawable-xhdpi/splash.png
+M	app/src/main/res/drawable-xxhdpi/ic_notification_icon.png
+M	app/src/main/res/drawable-xxhdpi/splash.png
+M	app/src/main/res/drawable-xxxhdpi/ic_notification_icon.png
+M	app/src/main/res/drawable-xxxhdpi/splash.png
+M	app/src/main/res/mipmap-hdpi/ic_launcher.png
+M	app/src/main/res/mipmap-hdpi/ic_maskable.png
+M	app/src/main/res/mipmap-mdpi/ic_launcher.png
+M	app/src/main/res/mipmap-mdpi/ic_maskable.png
+M	app/src/main/res/mipmap-xhdpi/ic_launcher.png
+M	app/src/main/res/mipmap-xhdpi/ic_maskable.png
+M	app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+M	app/src/main/res/mipmap-xxhdpi/ic_maskable.png
+M	app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+M	app/src/main/res/mipmap-xxxhdpi/ic_maskable.png
+M	app/src/main/res/raw/web_app_manifest.json
+A	formatted_sha.txt
+A	gradle_build.log
+A	gradle_build_utf8.log
+A	headers.txt
+A	local.properties
+M	manifest-checksum.txt
+A	pass_key.txt
+M	public/.well-known/assetlinks.json
+A	pure_sha.txt
+M	resources/views/livewire/admin/sync-simpanan.blade.php
+M	resources/views/livewire/anggota/dashboard.blade.php
+M	resources/views/livewire/anggota/index.blade.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	store_icon.png
+M	twa-manifest.json
+
+commit bdb4f726b78901516f5bd5bd05b3889d16faa55f
+Author: mujurin <mujurakakom@gmail.com>
+Date:   Thu Jul 30 07:22:30 2026 +0800
+
+    feat: implement member management system and financial ledger reporting features
+
+M	app/Http/Controllers/PdfController.php
+A	app/Livewire/Anggota/Index.php
+A	app/Models/Anggota.php
+A	database/migrations/2026_07_30_064257_create_anggotas_table.php
+A	database/migrations/2026_07_30_071132_add_is_active_to_anggotas_table.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+A	resources/views/livewire/anggota/index.blade.php
+M	resources/views/livewire/auth/login.blade.php
+M	resources/views/livewire/laporan/buku-kas.blade.php
+M	routes/web.php
+
+commit 6cc8abb62d180cf4f95eee696fb0b8d4bb3f9d44
+Author: mujurin <mujurakakom@gmail.com>
+Date:   Wed Jul 29 15:02:56 2026 +0800
+
+    update bebrapa menu
+
+M	app/Http/Controllers/PdfController.php
+A	app/Http/Livewire/Admin/AsetInventaris.php
+A	app/Models/Aset.php
+A	database/migrations/2026_07_29_000001_create_asets_table.php
+M	resources/views/components/layouts/anggota.blade.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+M	resources/views/components/layouts/print.blade.php
+A	resources/views/livewire/admin/aset-inventaris.blade.php
+M	resources/views/livewire/anggota/riwayat-setoran.blade.php
+M	resources/views/livewire/anggota/simpanan.blade.php
+A	resources/views/livewire/laporan/buku-kas.blade.php
+M	resources/views/livewire/pinjaman/cetak.blade.php
+A	resources/views/pdf/buku_kas.blade.php
+M	resources/views/pdf/cetak_pinjaman.blade.php
+A	resources/views/pdf/rekap_simpanan.blade.php
+M	routes/web.php
+
+commit bb8040ed16ca6c2048d66b47777bb9d98bcf7dde
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jul 28 10:18:58 2026 +0800
+
+    feat: add PDF template for loan approval document printing
+
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	resources/views/pdf/cetak_pinjaman.blade.php
+
+commit 3d216cbf7f0f836c010f4fa4734d6f99e3e669ac
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 27 11:45:35 2026 +0800
+
+    chore: add Gradle fileHashes lock file for project build environment
+
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+
+commit 22b06026409ee2be556e322aef2e84f9812bd70d
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 27 11:45:28 2026 +0800
+
+    chore: add Gradle lock file and route list to project directory
+
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+A	route_list.txt
+
+commit 65787116182bb0198e49285301cb41b0be9423be
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 27 11:44:17 2026 +0800
+
+    update role pinjaman
+
+M	resources/views/livewire/anggota/pinjaman.blade.php
+
+commit 2be88d23cb10f2abe62943e091c0361ed21a67fb
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 16:05:34 2026 +0800
+
+    error pc kantor
+
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	build/reports/problems/problems-report.html
+M	resources/views/components/layouts/anggota.blade.php
+M	resources/views/components/layouts/app/header.blade.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+M	resources/views/components/layouts/auth/card.blade.php
+M	resources/views/components/layouts/auth/simple.blade.php
+M	resources/views/components/layouts/auth/split.blade.php
+M	resources/views/components/layouts/print.blade.php
+M	resources/views/pdf/cetak_pinjaman.blade.php
+M	resources/views/pdf/kwitansi-penarikan.blade.php
+M	resources/views/pdf/rekap_pinjaman.blade.php
+M	resources/views/welcome.blade.php
+
+commit aabc86d868c5925d325af78be959311f94871887
+Merge: 5750cea d516c5a
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:27:44 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 5750cea3242e1d912b3c34c284c4dc55d80f5a9b
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:27:27 2026 +0800
+
+    pc kantor
+
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+
+commit d516c5a4134611b671348953e036cedef8b57c2e
+Merge: 2c7fb6d 5a47177
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:23:42 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 2c7fb6d7d203ef58ac08b0741f2633ac57583f3c
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:22:16 2026 +0800
+
+    tambah menu neraca
+
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+D	app-release-signed.apk
+A	app/Models/TransaksiOperasional.php
+M	build/reports/problems/problems-report.html
+A	database/migrations/2026_07_13_000001_create_transaksi_operasional_table.php
+M	primkoppol lotara.apk
+M	resources/views/components/layouts/app/sidebar.blade.php
+A	resources/views/livewire/laporan/laba-rugi.blade.php
+A	resources/views/livewire/laporan/neraca-saldo.blade.php
+A	resources/views/livewire/pinjaman/rekap-pdf.blade.php
+M	routes/web.php
+
+commit 5a47177c8cc9dab8cc233e8a0d47488f8af7a759
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Fri Jul 10 11:07:15 2026 +0800
+
+    update tampilan pwa
+
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+A	app/Http/Controllers/PenarikanKwitansiController.php
+M	app/Models/User.php
+M	database/migrations/2026_06_29_021213_add_ditunda_status_to_pinjaman_table.php
+A	database/migrations/2026_07_10_024119_add_no_wa_to_users_table.php
+A	migrate_output.txt
+D	primkoppol lotara.apk
+M	public/.well-known/assetlinks.json
+M	public/favicon.png
+M	public/icon-192x192.png
+M	public/icon-512x512.png
+A	public/logo.png
+M	public/manifest.json
+M	resources/views/components/app-logo-icon.blade.php
+M	resources/views/components/layouts/anggota.blade.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+M	resources/views/dashboard.blade.php
+M	resources/views/livewire/anggota/dashboard.blade.php
+M	resources/views/livewire/anggota/penarikan.blade.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	resources/views/livewire/anggota/riwayat.blade.php
+M	resources/views/livewire/anggota/simpanan.blade.php
+M	resources/views/livewire/auth/login.blade.php
+M	resources/views/livewire/pinjaman/rekap.blade.php
+A	resources/views/livewire/pinjaman/tarik-setoran.blade.php
+M	resources/views/livewire/simpanan/anggota-detail.blade.php
+M	resources/views/livewire/simpanan/index.blade.php
+M	resources/views/partials/head.blade.php
+A	resources/views/pdf/kwitansi-penarikan.blade.php
+M	routes/web.php
+
+commit 879d87fe93f30d13c26241e15bf14cd73161a7bd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Jul 8 11:44:51 2026 +0800
+
+    cetak rekap dan detail antrian
+
+M	.gradle/8.11.1/checksums/checksums.lock
+M	.gradle/8.11.1/checksums/md5-checksums.bin
+M	.gradle/8.11.1/checksums/sha1-checksums.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+A	app/Http/Controllers/PdfController.php
+M	build/reports/problems/problems-report.html
+M	composer.json
+A	dummy.php
+A	dummy_check.php
+A	dummy_err.log
+A	dummy_log.txt
+A	dummy_restore.php
+A	dummy_test.log
+A	output.log
+M	resources/views/livewire/pinjaman/antrian.blade.php
+M	resources/views/livewire/pinjaman/rekap.blade.php
+M	resources/views/livewire/pinjaman/review.blade.php
+A	resources/views/pdf/cetak_pinjaman.blade.php
+A	resources/views/pdf/rekap_pinjaman.blade.php
+M	routes/web.php
+A	vendor.zip
+
+commit 31483bcd21b69e9c3d29c475c74d36d9926ec9d4
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:20:14 2026 +0800
+
+    update apk baru
+
+M	.gradle/8.11.1/executionHistory/executionHistory.bin
+M	.gradle/8.11.1/executionHistory/executionHistory.lock
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	.gradle/buildOutputCleanup/buildOutputCleanup.lock
+M	.gradle/file-system.probe
+M	app-release-bundle.aab
+A	app-release-signed.apk
+M	app-release-signed.apk.idsig
+M	app-release-unsigned-aligned.apk
+M	app/build/intermediates/incremental/packageRelease/tmp/release/dex-renamer-state.txt
+M	app/build/intermediates/intermediary_bundle/release/packageReleaseBundle/intermediary-bundle.aab
+M	app/build/intermediates/module_bundle/release/buildReleasePreBundle/base.zip
+M	app/build/intermediates/version_control_info_file/release/extractReleaseVersionControlInfo/version-control-info.textproto
+M	app/build/outputs/apk/release/app-release-unsigned.apk
+M	app/build/outputs/bundle/release/app-release.aab
+M	build/reports/problems/problems-report.html
+D	koperasi-polres.zip
+
+commit 708fdb9cbbbdb20c23667889c67fb862f5351490
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:13:25 2026 +0800
+
+    update dashboard
+
+M	resources/views/dashboard.blade.php
+
+commit 0668eac473e3bd5c754605e26af59168040c67d3
+Merge: 1b494a3 e938bdb
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:05:20 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 1b494a35b1a4ded46fed131e7baef015d84a29f9
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:05:16 2026 +0800
+
+    gradle update
+
+M	.gradle/8.11.1/fileHashes/fileHashes.bin
+M	.gradle/8.11.1/fileHashes/fileHashes.lock
+M	build/reports/problems/problems-report.html
+
+commit e938bdb31a757989d0c7f44e975422e6d68115e9
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 13:15:15 2026 +0800
+
+    update aturan kompensasi dan rekap pinjaman keseluruhan
+
+A	check_nunggak.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	resources/views/livewire/auth/login.blade.php
+M	resources/views/livewire/pinjaman/cetak.blade.php
+M	resources/views/livewire/pinjaman/index.blade.php
+A	resources/views/livewire/pinjaman/rekap.blade.php
+M	resources/views/livewire/pinjaman/review.blade.php
+M	routes/web.php
+
+commit 21f3ee74386c87eaa3da58dedb7fd5d4e75fb9a9
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 08:39:08 2026 +0800
+
+    Restore Laravel app directory deleted by Android APK generation
+
+A	app/Http/Controllers/Auth/VerifyEmailController.php
+A	app/Http/Controllers/Controller.php
+A	app/Livewire/Actions/Logout.php
+A	app/Models/Angsuran.php
+A	app/Models/Penarikan.php
+A	app/Models/Pinjaman.php
+A	app/Models/SimpananPokok.php
+A	app/Models/SimpananWajib.php
+A	app/Models/User.php
+A	app/Providers/AppServiceProvider.php
+A	app/Providers/VoltServiceProvider.php
+
+commit 36a3d784ae7a79a2acaa1466b5fc053d4c72a0ea
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jul 6 22:46:02 2026 +0800
+
+    generate APK
+
+A	.gradle/8.11.1/checksums/checksums.lock
+A	.gradle/8.11.1/checksums/md5-checksums.bin
+A	.gradle/8.11.1/checksums/sha1-checksums.bin
+A	.gradle/8.11.1/executionHistory/executionHistory.bin
+A	.gradle/8.11.1/executionHistory/executionHistory.lock
+A	.gradle/8.11.1/fileChanges/last-build.bin
+A	.gradle/8.11.1/fileHashes/fileHashes.bin
+A	.gradle/8.11.1/fileHashes/fileHashes.lock
+A	.gradle/8.11.1/fileHashes/resourceHashesCache.bin
+A	.gradle/8.11.1/gc.properties
+A	.gradle/buildOutputCleanup/buildOutputCleanup.lock
+A	.gradle/buildOutputCleanup/cache.properties
+A	.gradle/buildOutputCleanup/outputFiles.bin
+A	.gradle/file-system.probe
+A	.gradle/vcs-1/gc.properties
+A	android.keystore
+A	app-release-bundle.aab
+A	app-release-signed.apk.idsig
+A	app-release-unsigned-aligned.apk
+D	app/Http/Controllers/Auth/VerifyEmailController.php
+D	app/Http/Controllers/Controller.php
+D	app/Livewire/Actions/Logout.php
+D	app/Models/Angsuran.php
+D	app/Models/Penarikan.php
+D	app/Models/Pinjaman.php
+D	app/Models/SimpananPokok.php
+D	app/Models/SimpananWajib.php
+D	app/Models/User.php
+D	app/Providers/AppServiceProvider.php
+D	app/Providers/VoltServiceProvider.php
+A	app/build.gradle
+A	app/build/generated/res/resValues/release/values/gradleResValues.xml
+A	app/build/intermediates/aapt_proguard_file/release/processReleaseResources/aapt_rules.txt
+A	app/build/intermediates/annotation_processor_list/release/javaPreCompileRelease/annotationProcessors.json
+A	app/build/intermediates/apk_ide_redirect_file/release/createReleaseApkListingFileRedirect/redirect.txt
+A	app/build/intermediates/app_metadata/release/writeReleaseAppMetadata/app-metadata.properties
+A	app/build/intermediates/binary_art_profile/release/compileReleaseArtProfile/baseline.prof
+A	app/build/intermediates/binary_art_profile_metadata/release/compileReleaseArtProfile/baseline.profm
+A	app/build/intermediates/bundle_dependency_report/release/configureReleaseDependencies/dependencies.pb
+A	app/build/intermediates/bundle_ide_model/release/produceReleaseBundleIdeListingFile/output-metadata.json
+A	app/build/intermediates/bundle_ide_redirect_file/release/createReleaseBundleListingFileRedirect/redirect.txt
+A	app/build/intermediates/bundle_manifest/release/processApplicationManifestReleaseForBundle/AndroidManifest.xml
+A	app/build/intermediates/combined_art_profile/release/compileReleaseArtProfile/baseline-prof.txt
+A	app/build/intermediates/compatible_screen_manifest/release/createReleaseCompatibleScreenManifests/output-metadata.json
+A	app/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/release/processReleaseResources/R.jar
+A	app/build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.9.1
+A	app/build/intermediates/default_proguard_files/global/proguard-android.txt-8.9.1
+A	app/build/intermediates/default_proguard_files/global/proguard-defaults.txt-8.9.1
+A	app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+A	app/build/intermediates/dex_metadata_directory/release/compileReleaseArtProfile/0/.dm
+A	app/build/intermediates/dex_metadata_directory/release/compileReleaseArtProfile/1/.dm
+A	app/build/intermediates/dex_metadata_directory/release/compileReleaseArtProfile/dex-metadata-map.properties
+A	app/build/intermediates/incremental/mergeReleaseAssets/merger.xml
+A	app/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml
+A	app/build/intermediates/incremental/mergeReleaseShaders/merger.xml
+A	app/build/intermediates/incremental/packageRelease/tmp/release/dex-renamer-state.txt
+A	app/build/intermediates/incremental/packageRelease/tmp/release/zip-cache/androidResources
+A	app/build/intermediates/incremental/packageRelease/tmp/release/zip-cache/javaResources0
+A	app/build/intermediates/incremental/release-mergeJavaRes/merge-state
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/2vMYjl9UQol0uv696gmOIaH0n+U=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/5SXKNeE8mE0qk2kkjmMyK6e+l58=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/5u7oobhYJVGcRuzCbteJ2gfyp_8=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/9hmdeOI9AfEpzZFGgXQe_3+3LtI=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/BSi2mHTqRtchdBM5Eoo2XJB7aVA=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Bsemca8FIJ6Y5F0bK27Sg27RXSk=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/CCzn7Rn9NqWLkuGUOEErZiGgf0A=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/DUQiTSTBDwr8fLnxobsSFzB0+ZE=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/DyYSir0OkfC6m3QE8dlI7DvxBF4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/H5QoB5K3yskZGk+RaEQyTk7RRi4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/I6hQosGZnj8Bsb4eMCx4iTJ57gw=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ISJumgX401PfvAUowRB+MCieYhE=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/JQ9g2H42cKMQ0OzZ72MWaabIIkQ=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/KL5F2+LTJL61FNEnt5R_XdQeXzY=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/LvhrVgNmbNUVSPjhmKe_c8qi8YU=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/NulTahRvmCZbaNQ+JWR3P5vKDJ4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Nxky7kWL5jLH5+TvMoIwqRnSNdo=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ON7xNialxf8_iORAN1GnKU2SeaY=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Or4q_OluGv8mN6ln4sMgVR7l4xY=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/PFBEJxmIjUNoCFlkA+kesytLGF4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/SOSb3K0CHEss921eP2gFb2wuvGs=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/Sf2HrkDcbgR8AXp80GsV+wbW0RM=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/SxX88X3l_cuXlhG8vEHxnRuzQis=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/TwHn05fvXJoTBb3v4kzGpluAQso=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/UolqWpSttD03q3Sf8J8S0tHLDZ4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/WHk2W1aZ5nMdLJacLa+3o8x6yl0=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/WRWao9GoQBAkuD7K9E4a1PPYm2w=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/XV97cx78yAsC7nBT9r7x_DPDRYo=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/XsOSXNhfT5K5rjlmwt8UJ77KHC4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/YVsl2bzBTDZSCbsD027d5Hxq4GI=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/coGHKg3ES7r_qlpAADGH1ZTvGi8=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/cyiClazuqdAJT10769MR8rc0joo=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/d1aY4e9cJ41fBrJjvL2W8FUn9ac=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/dARzy1RjZg2w4XD92Krv_sG+Fn4=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/dGbIlJvMZSIAIVCVrG8sWqsedb8=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ddv0gCqgULMcDc7gb7XFchwZ9CM=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/eAcP_kqZhIMVXnY1oFyRZgPUNPc=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/exBIYhZ+QdmZ40OWvSUu_r0FPSw=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/fYsFdBi1eRksNHXP+_gCNcJ3BnU=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/jUt2K_i2BzpkXJG5Nry2VzVgNyA=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/kF4sOLdYHiIwOJpJ5VIG9HHbjIM=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/kPjTicUDq1yQ0iulYEMHzBkaBxU=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/l1I83OBMLBHIaxVOe3hw4aq+swk=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/l_ercFerR9XU2eO6FlcWVR_XCnw=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/nnlFWqosDEN21wwiFcZeYSyAUqs=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/qEaQd8AS3Vbe0EkvSy9SBSJHzrw=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/uFalTYbWgKyhVejplQmfgIMZblc=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/ujNC1o6c8D2KX9cx7j3fe3GlTwo=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/vdohMWcxpfIWutrXMfCp_s49pMc=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/w3H1P8CIBrHN3D50r2IOLq0IVoQ=
+A	app/build/intermediates/incremental/release-mergeJavaRes/zip-cache/xphVh2PB39bxIp2PO2bt3+QnR18=
+A	app/build/intermediates/incremental/release/mergeReleaseResources/compile-file-map.properties
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-af/values-af.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-am/values-am.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ar/values-ar.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-as/values-as.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-az/values-az.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-b+sr+Latn/values-b+sr+Latn.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-be/values-be.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-bg/values-bg.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-bn/values-bn.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-bs/values-bs.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ca/values-ca.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-cs/values-cs.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-da/values-da.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-de/values-de.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-el/values-el.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-en-rAU/values-en-rAU.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-en-rCA/values-en-rCA.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-en-rGB/values-en-rGB.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-en-rIN/values-en-rIN.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-en-rXC/values-en-rXC.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-es-rUS/values-es-rUS.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-es/values-es.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-et/values-et.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-eu/values-eu.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-fa/values-fa.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-fi/values-fi.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-fr-rCA/values-fr-rCA.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-fr/values-fr.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-gl/values-gl.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-gu/values-gu.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-h720dp-v13/values-h720dp-v13.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-hdpi-v4/values-hdpi-v4.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-hi/values-hi.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-hr/values-hr.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-hu/values-hu.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-hy/values-hy.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-in/values-in.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-is/values-is.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-it/values-it.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-iw/values-iw.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ja/values-ja.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ka/values-ka.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-kk/values-kk.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-km/values-km.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-kn/values-kn.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ko/values-ko.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ky/values-ky.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-land/values-land.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-large-v4/values-large-v4.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ldltr-v21/values-ldltr-v21.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-lo/values-lo.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-lt/values-lt.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-lv/values-lv.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-mk/values-mk.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ml/values-ml.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-mn/values-mn.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-mr/values-mr.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ms/values-ms.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-my/values-my.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-nb/values-nb.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ne/values-ne.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-night-v8/values-night-v8.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-nl/values-nl.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-or/values-or.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-pa/values-pa.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-pl/values-pl.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-port/values-port.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-pt-rBR/values-pt-rBR.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-pt-rPT/values-pt-rPT.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-pt/values-pt.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ro/values-ro.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ru/values-ru.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-si/values-si.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sk/values-sk.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sl/values-sl.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sq/values-sq.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sr/values-sr.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sv/values-sv.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sw/values-sw.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-sw600dp-v13/values-sw600dp-v13.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ta/values-ta.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-te/values-te.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-th/values-th.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-tl/values-tl.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-tr/values-tr.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-uk/values-uk.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-ur/values-ur.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-uz/values-uz.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v16/values-v16.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v17/values-v17.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v18/values-v18.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v21/values-v21.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v22/values-v22.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v23/values-v23.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v24/values-v24.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v25/values-v25.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v26/values-v26.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-v28/values-v28.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-vi/values-vi.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-watch-v20/values-watch-v20.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-watch-v21/values-watch-v21.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-xlarge-v4/values-xlarge-v4.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-zh-rCN/values-zh-rCN.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-zh-rHK/values-zh-rHK.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-zh-rTW/values-zh-rTW.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values-zu/values-zu.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir/values/values.xml
+A	app/build/intermediates/incremental/release/mergeReleaseResources/merger.xml
+A	app/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties
+A	app/build/intermediates/incremental/release/packageReleaseResources/merged.dir/values/values.xml
+A	app/build/intermediates/incremental/release/packageReleaseResources/merger.xml
+A	app/build/intermediates/intermediary_bundle/release/packageReleaseBundle/intermediary-bundle.aab
+A	app/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/siapklu/koperasi/twa/Application.class
+A	app/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/siapklu/koperasi/twa/DelegationService.class
+A	app/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/siapklu/koperasi/twa/LauncherActivity.class
+A	app/build/intermediates/linked_resources_binary_format/release/processReleaseResources/linked-resources-binary-format-release.ap_
+A	app/build/intermediates/linked_resources_binary_format/release/processReleaseResources/output-metadata.json
+A	app/build/intermediates/linked_resources_for_bundle_proto_format/release/bundleReleaseResources/linked-resources-for-bundle-proto-format.ap_
+A	app/build/intermediates/local_only_symbol_list/release/parseReleaseLocalResources/R-def.txt
+A	app/build/intermediates/manifest_merge_blame_file/release/processReleaseMainManifest/manifest-merger-blame-release-report.txt
+A	app/build/intermediates/merged_art_profile/release/mergeReleaseArtProfile/baseline-prof.txt
+A	app/build/intermediates/merged_java_res/release/mergeReleaseJavaResource/base.jar
+A	app/build/intermediates/merged_java_res/release/minifyReleaseWithR8/base.jar
+A	app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml
+A	app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
+A	app/build/intermediates/merged_manifests/release/processReleaseManifest/output-metadata.json
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-anydpi_shortcut_legacy_background.xml.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-hdpi_ic_notification_icon.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-hdpi_splash.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-mdpi_ic_notification_icon.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-mdpi_splash.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xhdpi_ic_notification_icon.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xhdpi_splash.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxhdpi_ic_notification_icon.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxhdpi_splash.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxxhdpi_ic_notification_icon.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/drawable-xxxhdpi_splash.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-anydpi-v26_ic_launcher.xml.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-hdpi_ic_launcher.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-hdpi_ic_maskable.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-mdpi_ic_launcher.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-mdpi_ic_maskable.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xhdpi_ic_launcher.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xhdpi_ic_maskable.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxhdpi_ic_launcher.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxhdpi_ic_maskable.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxxhdpi_ic_launcher.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/mipmap-xxxhdpi_ic_maskable.png.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/raw_web_app_manifest.json.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-af_values-af.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-am_values-am.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ar_values-ar.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-as_values-as.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-az_values-az.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-b+sr+Latn_values-b+sr+Latn.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-be_values-be.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-bg_values-bg.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-bn_values-bn.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-bs_values-bs.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ca_values-ca.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-cs_values-cs.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-da_values-da.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-de_values-de.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-el_values-el.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rAU_values-en-rAU.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rCA_values-en-rCA.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rGB_values-en-rGB.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rIN_values-en-rIN.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-en-rXC_values-en-rXC.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-es-rUS_values-es-rUS.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-es_values-es.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-et_values-et.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-eu_values-eu.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fa_values-fa.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fi_values-fi.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fr-rCA_values-fr-rCA.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-fr_values-fr.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-gl_values-gl.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-gu_values-gu.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-h720dp-v13_values-h720dp-v13.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hdpi-v4_values-hdpi-v4.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hi_values-hi.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hr_values-hr.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hu_values-hu.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-hy_values-hy.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-in_values-in.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-is_values-is.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-it_values-it.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-iw_values-iw.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ja_values-ja.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ka_values-ka.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-kk_values-kk.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-km_values-km.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-kn_values-kn.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ko_values-ko.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ky_values-ky.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-land_values-land.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-large-v4_values-large-v4.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ldltr-v21_values-ldltr-v21.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-lo_values-lo.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-lt_values-lt.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-lv_values-lv.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-mk_values-mk.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ml_values-ml.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-mn_values-mn.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-mr_values-mr.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ms_values-ms.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-my_values-my.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-nb_values-nb.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ne_values-ne.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-night-v8_values-night-v8.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-nl_values-nl.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-or_values-or.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pa_values-pa.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pl_values-pl.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-port_values-port.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pt-rBR_values-pt-rBR.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pt-rPT_values-pt-rPT.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-pt_values-pt.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ro_values-ro.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ru_values-ru.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-si_values-si.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sk_values-sk.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sl_values-sl.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sq_values-sq.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sr_values-sr.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sv_values-sv.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sw600dp-v13_values-sw600dp-v13.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-sw_values-sw.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ta_values-ta.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-te_values-te.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-th_values-th.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-tl_values-tl.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-tr_values-tr.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-uk_values-uk.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-ur_values-ur.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-uz_values-uz.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v16_values-v16.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v17_values-v17.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v18_values-v18.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v21_values-v21.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v22_values-v22.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v23_values-v23.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v24_values-v24.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v25_values-v25.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v26_values-v26.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-v28_values-v28.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-vi_values-vi.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-watch-v20_values-watch-v20.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-watch-v21_values-watch-v21.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-xlarge-v4_values-xlarge-v4.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zh-rCN_values-zh-rCN.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zh-rHK_values-zh-rHK.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zh-rTW_values-zh-rTW.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values-zu_values-zu.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/values_values.arsc.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/xml_filepaths.xml.flat
+A	app/build/intermediates/merged_res/release/mergeReleaseResources/xml_shortcuts.xml.flat
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/mergeReleaseResources.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-af.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-am.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ar.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-as.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-az.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-b+sr+Latn.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-be.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-bg.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-bn.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-bs.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ca.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-cs.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-da.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-de.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-el.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rAU.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rCA.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rGB.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rIN.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-en-rXC.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-es-rUS.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-es.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-et.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-eu.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fa.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fi.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fr-rCA.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-fr.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-gl.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-gu.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-h720dp-v13.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hdpi-v4.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hi.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hr.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hu.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-hy.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-in.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-is.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-it.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-iw.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ja.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ka.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-kk.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-km.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-kn.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ko.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ky.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-land.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-large-v4.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ldltr-v21.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-lo.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-lt.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-lv.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-mk.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ml.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-mn.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-mr.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ms.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-my.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-nb.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ne.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-night-v8.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-nl.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-or.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pa.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pl.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-port.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pt-rBR.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pt-rPT.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-pt.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ro.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ru.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-si.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sk.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sl.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sq.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sr.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sv.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sw.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-sw600dp-v13.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ta.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-te.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-th.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-tl.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-tr.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-uk.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-ur.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-uz.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v16.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v17.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v18.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v21.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v22.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v23.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v24.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v25.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v26.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-v28.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-vi.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-watch-v20.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-watch-v21.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-xlarge-v4.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zh-rCN.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zh-rHK.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zh-rTW.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values-zu.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/multi-v2/values.json
+A	app/build/intermediates/merged_res_blame_folder/release/mergeReleaseResources/out/single/mergeReleaseResources.json
+A	app/build/intermediates/metadata_library_dependencies_report/release/collectReleaseDependencies/dependencies.pb
+A	app/build/intermediates/module_bundle/release/buildReleasePreBundle/base.zip
+A	app/build/intermediates/navigation_json/release/extractDeepLinksRelease/navigation.json
+A	app/build/intermediates/nested_resources_validation_report/release/generateReleaseResources/nestedResourcesValidationReport.txt
+A	app/build/intermediates/optimized_processed_res/release/optimizeReleaseResources/output-metadata.json
+A	app/build/intermediates/optimized_processed_res/release/optimizeReleaseResources/resources-release-optimize.ap_
+A	app/build/intermediates/packaged_manifests/release/processReleaseManifestForPackage/AndroidManifest.xml
+A	app/build/intermediates/packaged_manifests/release/processReleaseManifestForPackage/output-metadata.json
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-anydpi-v4/shortcut_legacy_background.xml
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-hdpi-v4/ic_notification_icon.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-hdpi-v4/splash.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-mdpi-v4/ic_notification_icon.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-mdpi-v4/splash.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xhdpi-v4/ic_notification_icon.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xhdpi-v4/splash.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxhdpi-v4/ic_notification_icon.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxhdpi-v4/splash.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxxhdpi-v4/ic_notification_icon.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/drawable-xxxhdpi-v4/splash.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-anydpi-v26/ic_launcher.xml
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-hdpi-v4/ic_launcher.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-hdpi-v4/ic_maskable.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-mdpi-v4/ic_launcher.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-mdpi-v4/ic_maskable.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xhdpi-v4/ic_launcher.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xhdpi-v4/ic_maskable.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxhdpi-v4/ic_launcher.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxhdpi-v4/ic_maskable.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxxhdpi-v4/ic_launcher.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/mipmap-xxxhdpi-v4/ic_maskable.png
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/raw/web_app_manifest.json
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/values/values.xml
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/xml/filepaths.xml
+A	app/build/intermediates/packaged_res/release/packageReleaseResources/xml/shortcuts.xml
+A	app/build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt
+A	app/build/intermediates/r8_art_profile/release/minifyReleaseWithR8/baseline-prof.txt
+A	app/build/intermediates/r8_metadata/release/minifyReleaseWithR8/r8-metadata.dat
+A	app/build/intermediates/runtime_symbol_list/release/processReleaseResources/R.txt
+A	app/build/intermediates/sdk_dependency_data/release/sdkReleaseDependencyData/sdkDependencyData.pb
+A	app/build/intermediates/signing_config_versions/release/writeReleaseSigningConfigVersions/signing-config-versions.json
+A	app/build/intermediates/source_set_path_map/release/mapReleaseSourceSetPaths/file-map.txt
+A	app/build/intermediates/stable_resource_ids_file/release/processReleaseResources/stableIds.txt
+A	app/build/intermediates/symbol_list_with_package_name/release/processReleaseResources/package-aware-r.txt
+A	app/build/intermediates/version_control_info_file/release/extractReleaseVersionControlInfo/version-control-info.textproto
+A	app/build/outputs/apk/release/app-release-unsigned.apk
+A	app/build/outputs/apk/release/baselineProfiles/0/app-release-unsigned.dm
+A	app/build/outputs/apk/release/baselineProfiles/1/app-release-unsigned.dm
+A	app/build/outputs/apk/release/output-metadata.json
+A	app/build/outputs/bundle/release/app-release.aab
+A	app/build/outputs/logs/manifest-merger-release-report.txt
+A	app/build/outputs/mapping/release/configuration.txt
+A	app/build/outputs/mapping/release/mapping.txt
+A	app/build/outputs/mapping/release/seeds.txt
+A	app/build/outputs/mapping/release/usage.txt
+A	app/build/outputs/sdk-dependencies/release/sdkDependencies.txt
+A	app/build/tmp/compileReleaseJavaWithJavac/previous-compilation-data.bin
+A	app/src/main/AndroidManifest.xml
+A	app/src/main/java/com/siapklu/koperasi/twa/Application.java
+A	app/src/main/java/com/siapklu/koperasi/twa/DelegationService.java
+A	app/src/main/java/com/siapklu/koperasi/twa/LauncherActivity.java
+A	app/src/main/res/drawable-anydpi/shortcut_legacy_background.xml
+A	app/src/main/res/drawable-hdpi/ic_notification_icon.png
+A	app/src/main/res/drawable-hdpi/splash.png
+A	app/src/main/res/drawable-mdpi/ic_notification_icon.png
+A	app/src/main/res/drawable-mdpi/splash.png
+A	app/src/main/res/drawable-xhdpi/ic_notification_icon.png
+A	app/src/main/res/drawable-xhdpi/splash.png
+A	app/src/main/res/drawable-xxhdpi/ic_notification_icon.png
+A	app/src/main/res/drawable-xxhdpi/splash.png
+A	app/src/main/res/drawable-xxxhdpi/ic_notification_icon.png
+A	app/src/main/res/drawable-xxxhdpi/splash.png
+A	app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+A	app/src/main/res/mipmap-hdpi/ic_launcher.png
+A	app/src/main/res/mipmap-hdpi/ic_maskable.png
+A	app/src/main/res/mipmap-mdpi/ic_launcher.png
+A	app/src/main/res/mipmap-mdpi/ic_maskable.png
+A	app/src/main/res/mipmap-xhdpi/ic_launcher.png
+A	app/src/main/res/mipmap-xhdpi/ic_maskable.png
+A	app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+A	app/src/main/res/mipmap-xxhdpi/ic_maskable.png
+A	app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+A	app/src/main/res/mipmap-xxxhdpi/ic_maskable.png
+A	app/src/main/res/raw/web_app_manifest.json
+A	app/src/main/res/values/colors.xml
+A	app/src/main/res/values/strings.xml
+A	app/src/main/res/xml/filepaths.xml
+A	app/src/main/res/xml/shortcuts.xml
+M	bootstrap/app.php
+A	build.gradle
+A	build/reports/problems/problems-report.html
+A	gradle.properties
+A	gradle/wrapper/gradle-wrapper.jar
+A	gradle/wrapper/gradle-wrapper.properties
+A	gradlew
+A	gradlew.bat
+A	manifest-checksum.txt
+A	primkoppol lotara.apk
+A	public/.well-known/assetlinks.json
+M	public/manifest.json
+M	resources/views/components/layouts/anggota.blade.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+M	resources/views/components/layouts/print.blade.php
+M	resources/views/livewire/auth/confirm-password.blade.php
+M	resources/views/livewire/auth/login.blade.php
+M	resources/views/livewire/auth/register.blade.php
+M	resources/views/livewire/auth/verify-email.blade.php
+M	resources/views/partials/head.blade.php
+M	routes/web.php
+A	settings.gradle
+A	store_icon.png
+A	twa-manifest.json
+
+commit 9bafd79f81d77dde817f058e587f1a5218d6222e
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 6 14:22:02 2026 +0800
+
+    onlinekan
+
+A	.htaccess
+M	composer.lock
+A	koperasi-polres.zip
+A	public/favicon.png
+A	public/icon-192x192.png
+A	public/icon-512x512.png
+A	public/manifest.json
+A	public/sw.js
+M	resources/views/components/layouts/anggota.blade.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+A	resources/views/components/layouts/print.blade.php
+M	resources/views/livewire/anggota/dashboard.blade.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	resources/views/livewire/anggota/riwayat-setoran.blade.php
+M	resources/views/livewire/anggota/riwayat.blade.php
+M	resources/views/livewire/pinjaman/antrian.blade.php
+A	resources/views/livewire/pinjaman/cetak.blade.php
+M	resources/views/livewire/pinjaman/review.blade.php
+M	resources/views/livewire/pinjaman/show.blade.php
+M	routes/web.php
+
+commit 80945e2c02395c259a701ab3a68f71199747dffd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Jul 1 11:33:51 2026 +0800
+
+    update flow pinjaman
+
+M	resources/views/components/layouts/app/sidebar.blade.php
+A	resources/views/livewire/admin/reset-data.blade.php
+M	resources/views/livewire/anggota/dashboard.blade.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	routes/web.php
+
+commit c752e2addf3597d459c9cb7b68175787c9fb5a5c
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Jul 1 09:45:59 2026 +0800
+
+    update pinjaman aturan
+
+A	database/migrations/2026_06_29_021213_add_ditunda_status_to_pinjaman_table.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	resources/views/livewire/pinjaman/antrian.blade.php
+M	resources/views/livewire/pinjaman/review.blade.php
+
+commit f66d45c07768e0b014d8edf2d594dfd82bff754d
+Merge: 6375961 658babd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jun 29 09:20:22 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 63759610753631ecc85b896843afe59e5bb11231
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jun 29 09:20:20 2026 +0800
+
+    tampilkan pokok dan jasa
+
+M	resources/views/livewire/anggota/pinjaman.blade.php
+M	resources/views/livewire/pinjaman/review.blade.php
+
+commit 658babd8a459802a359face9d7aa509a301a386a
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jun 29 09:18:24 2026 +0800
+
+    input setoran dummy
+
+D	.env.example
+M	database/migrations/2026_06_22_012430_add_nrp_to_users_table.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+A	resources/views/livewire/admin/dummy-angsuran.blade.php
+M	routes/web.php
+
+commit 3d6b3364901eacb394379859204c54b5c930aa48
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Thu Jun 25 08:47:48 2026 +0800
+
+    perbaikan kompensasi
+
+A	app/Models/Angsuran.php
+M	app/Models/Pinjaman.php
+A	database/migrations/2026_06_23_055818_create_angsurans_table.php
+A	fix_db.php
+A	insert_dummy_angsuran.php
+A	insert_dummy_angsurans.php
+M	resources/views/components/app-logo-icon.blade.php
+M	resources/views/components/app-logo.blade.php
+M	resources/views/components/layouts/anggota.blade.php
+M	resources/views/components/layouts/app/header.blade.php
+M	resources/views/components/layouts/app/sidebar.blade.php
+M	resources/views/components/layouts/auth/card.blade.php
+M	resources/views/components/layouts/auth/simple.blade.php
+M	resources/views/components/layouts/auth/split.blade.php
+M	resources/views/dashboard.blade.php
+A	resources/views/livewire/admin/sync-anggota.blade.php
+A	resources/views/livewire/admin/sync-simpanan.blade.php
+M	resources/views/livewire/anggota/dashboard.blade.php
+M	resources/views/livewire/anggota/pinjaman.blade.php
+A	resources/views/livewire/anggota/riwayat-setoran.blade.php
+M	resources/views/livewire/anggota/riwayat.blade.php
+M	resources/views/livewire/auth/login.blade.php
+A	resources/views/livewire/pinjaman/antrian.blade.php
+A	resources/views/livewire/pinjaman/index.blade.php
+A	resources/views/livewire/pinjaman/review.blade.php
+A	resources/views/livewire/pinjaman/show.blade.php
+M	resources/views/livewire/simpanan/index.blade.php
+M	resources/views/partials/head.blade.php
+M	routes/web.php
+A	test_api.php
+A	test_api_2.php
+
+commit 9ccfe560dc9bfdae83dcc048a763c229afd900a1
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jun 23 09:03:21 2026 +0800
+
+    Initial commit
+
+A	.editorconfig
+A	.env.example
+A	.gitattributes
+A	.github/workflows/lint.yml
+A	.github/workflows/tests.yml
+A	.gitignore
+A	app/Http/Controllers/Auth/VerifyEmailController.php
+A	app/Http/Controllers/Controller.php
+A	app/Livewire/Actions/Logout.php
+A	app/Models/Penarikan.php
+A	app/Models/Pinjaman.php
+A	app/Models/SimpananPokok.php
+A	app/Models/SimpananWajib.php
+A	app/Models/User.php
+A	app/Providers/AppServiceProvider.php
+A	app/Providers/VoltServiceProvider.php
+A	artisan
+A	bootstrap/app.php
+A	bootstrap/cache/.gitignore
+A	bootstrap/providers.php
+A	composer.json
+A	composer.lock
+A	config/app.php
+A	config/auth.php
+A	config/cache.php
+A	config/database.php
+A	config/filesystems.php
+A	config/logging.php
+A	config/mail.php
+A	config/queue.php
+A	config/services.php
+A	config/session.php
+A	database/.gitignore
+A	database/factories/UserFactory.php
+A	database/migrations/0001_01_01_000000_create_users_table.php
+A	database/migrations/0001_01_01_000001_create_cache_table.php
+A	database/migrations/0001_01_01_000002_create_jobs_table.php
+A	database/migrations/2026_06_22_012430_add_nrp_to_users_table.php
+A	database/migrations/2026_06_22_015401_create_simpanan_pokok_table.php
+A	database/migrations/2026_06_22_015411_create_simpanan_wajib_table.php
+A	database/migrations/2026_06_22_015420_create_penarikan_table.php
+A	database/migrations/2026_06_22_025856_add_status_to_penarikan_table.php
+A	database/migrations/2026_06_22_034956_create_pinjamen_table.php
+A	database/migrations/2026_06_22_035623_add_jenis_permohonan_to_pinjaman_table.php
+A	database/seeders/AdminUserSeeder.php
+A	database/seeders/DatabaseSeeder.php
+A	database/seeders/SimpananSeeder.php
+A	package-lock.json
+A	package.json
+A	phpunit.xml
+A	public/.htaccess
+A	public/favicon.ico
+A	public/index.php
+A	public/robots.txt
+A	resources/css/app.css
+A	resources/js/app.js
+A	resources/views/components/action-message.blade.php
+A	resources/views/components/app-logo-icon.blade.php
+A	resources/views/components/app-logo.blade.php
+A	resources/views/components/auth-header.blade.php
+A	resources/views/components/auth-session-status.blade.php
+A	resources/views/components/layouts/anggota.blade.php
+A	resources/views/components/layouts/app.blade.php
+A	resources/views/components/layouts/app/header.blade.php
+A	resources/views/components/layouts/app/sidebar.blade.php
+A	resources/views/components/layouts/auth.blade.php
+A	resources/views/components/layouts/auth/card.blade.php
+A	resources/views/components/layouts/auth/simple.blade.php
+A	resources/views/components/layouts/auth/split.blade.php
+A	resources/views/components/placeholder-pattern.blade.php
+A	resources/views/components/settings/layout.blade.php
+A	resources/views/components/text-link.blade.php
+A	resources/views/dashboard.blade.php
+A	resources/views/flux/icon/book-open-text.blade.php
+A	resources/views/flux/icon/chevrons-up-down.blade.php
+A	resources/views/flux/icon/folder-git-2.blade.php
+A	resources/views/flux/icon/layout-grid.blade.php
+A	resources/views/flux/navlist/group.blade.php
+A	resources/views/livewire/anggota/dashboard.blade.php
+A	resources/views/livewire/anggota/penarikan.blade.php
+A	resources/views/livewire/anggota/pinjaman.blade.php
+A	resources/views/livewire/anggota/riwayat.blade.php
+A	resources/views/livewire/anggota/simpanan.blade.php
+A	resources/views/livewire/auth/confirm-password.blade.php
+A	resources/views/livewire/auth/forgot-password.blade.php
+A	resources/views/livewire/auth/login.blade.php
+A	resources/views/livewire/auth/register.blade.php
+A	resources/views/livewire/auth/reset-password.blade.php
+A	resources/views/livewire/auth/verify-email.blade.php
+A	resources/views/livewire/settings/appearance.blade.php
+A	resources/views/livewire/settings/delete-user-form.blade.php
+A	resources/views/livewire/settings/password.blade.php
+A	resources/views/livewire/settings/profile.blade.php
+A	resources/views/livewire/simpanan/anggota-detail.blade.php
+A	resources/views/livewire/simpanan/index.blade.php
+A	resources/views/livewire/simpanan/penarikan.blade.php
+A	resources/views/livewire/simpanan/simpanan-pokok.blade.php
+A	resources/views/livewire/simpanan/simpanan-wajib.blade.php
+A	resources/views/partials/head.blade.php
+A	resources/views/partials/settings-heading.blade.php
+A	resources/views/welcome.blade.php
+A	routes/auth.php
+A	routes/console.php
+A	routes/web.php
+A	storage/app/.gitignore
+A	storage/app/private/.gitignore
+A	storage/app/public/.gitignore
+A	storage/framework/.gitignore
+A	storage/framework/cache/.gitignore
+A	storage/framework/cache/data/.gitignore
+A	storage/framework/sessions/.gitignore
+A	storage/framework/testing/.gitignore
+A	storage/framework/views/.gitignore
+A	storage/logs/.gitignore
+A	tests/Feature/Auth/AuthenticationTest.php
+A	tests/Feature/Auth/EmailVerificationTest.php
+A	tests/Feature/Auth/PasswordConfirmationTest.php
+A	tests/Feature/Auth/PasswordResetTest.php
+A	tests/Feature/Auth/RegistrationTest.php
+A	tests/Feature/DashboardTest.php
+A	tests/Feature/ExampleTest.php
+A	tests/Feature/Settings/PasswordUpdateTest.php
+A	tests/Feature/Settings/ProfileUpdateTest.php
+A	tests/Pest.php
+A	tests/TestCase.php
+A	tests/Unit/ExampleTest.php
+A	vite.config.js

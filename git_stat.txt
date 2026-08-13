@@ -1,0 +1,1652 @@
+commit 103c40cef8203455e805364578fc1366bcf7101d
+Merge: f3ca9b0 e7f0b02
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:59:00 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit f3ca9b04a30a18d31a4b84e4ab1a701247dbdec9
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:58:32 2026 +0800
+
+    chore: add Gradle file lock for build cache consistency
+
+ .gradle/8.11.1/fileHashes/fileHashes.lock | Bin 17 -> 17 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit e7f0b02598c56e3caba2957c6728ff3006f3ecc2
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:57:54 2026 +0800
+
+    chore: update Gradle cache and build metadata files
+
+ .gradle/8.11.1/checksums/checksums.lock            | Bin 37 -> 17 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.bin           | Bin 70215 -> 70215 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          | Bin 37 -> 17 bytes
+ .gradle/buildOutputCleanup/buildOutputCleanup.lock | Bin 37 -> 17 bytes
+ 4 files changed, 0 insertions(+), 0 deletions(-)
+
+commit a692a33783eba16347a69552588e14bb4882c714
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:57:43 2026 +0800
+
+    chore: update Gradle build output and cache metadata files
+
+ .gradle/8.11.1/checksums/checksums.lock            | Bin 17 -> 37 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          | Bin 17 -> 37 bytes
+ .gradle/buildOutputCleanup/buildOutputCleanup.lock | Bin 17 -> 37 bytes
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 8c1d9d365c2a8393be1526ab35a29cf8f9173219
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Aug 12 09:57:21 2026 +0800
+
+    feat: add satuan field to asets table and sync initial pokok savings during user synchronization
+
+ ...2026_08_10_010000_add_satuan_to_asets_table.php | 22 ++++++++++++++++
+ .../views/livewire/admin/aset-inventaris.blade.php | 29 +++++++++++++++++++---
+ .../views/livewire/admin/sync-simpanan.blade.php   | 11 ++++++++
+ 3 files changed, 58 insertions(+), 4 deletions(-)
+
+commit 72ebe5e9f83e3212c5e750c002dada9563aa1021
+Merge: 7638aa6 ef72486
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Aug 10 19:15:21 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 7638aa607853d76d4d96a3a9329a21df56a06d70
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Aug 10 19:14:42 2026 +0800
+
+    chore: update build configuration file paths in Gradle problem report
+
+ .gradle/8.11.1/fileHashes/fileHashes.bin    | Bin 70215 -> 70215 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock   | Bin 17 -> 17 bytes
+ build/reports/problems/problems-report.html |   2 +-
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+
+commit ef724866bcd36a299e50618b9bccc07a1d40afbd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Aug 10 17:03:24 2026 +0800
+
+    feat: add member dashboard and index views and update application icons
+
+ .../8.11.1/executionHistory/executionHistory.bin   |  Bin 999081 -> 999081 bytes
+ .../8.11.1/executionHistory/executionHistory.lock  |  Bin 17 -> 17 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.bin           |  Bin 70215 -> 121433 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          |  Bin 17 -> 17 bytes
+ .gradle/buildOutputCleanup/buildOutputCleanup.lock |  Bin 17 -> 17 bytes
+ .gradle/buildOutputCleanup/outputFiles.bin         |  Bin 22907 -> 26723 bytes
+ .gradle/file-system.probe                          |  Bin 8 -> 8 bytes
+ APK/KoperasiPolres.apk                             |  Bin 0 -> 1712580 bytes
+ APK/KoperasiPolres.apk.idsig                       |  Bin 0 -> 21973 bytes
+ apk_certs.txt                                      |  Bin 0 -> 14806 bytes
+ .../Controllers/Auth/VerifyEmailController.php     |   30 -
+ app/Http/Controllers/Controller.php                |    8 -
+ app/Http/Controllers/PdfController.php             |  526 --
+ .../Controllers/PenarikanKwitansiController.php    |   33 -
+ app/Http/Livewire/Admin/AsetInventaris.php         |  150 -
+ app/Livewire/Actions/Logout.php                    |   22 -
+ app/Livewire/Anggota/Index.php                     |  104 -
+ app/Models/Anggota.php                             |   24 -
+ app/Models/Angsuran.php                            |   28 -
+ app/Models/Aset.php                                |   32 -
+ app/Models/Penarikan.php                           |   31 -
+ app/Models/Pinjaman.php                            |   42 -
+ app/Models/SimpananPokok.php                       |   30 -
+ app/Models/SimpananWajib.php                       |   49 -
+ app/Models/TransaksiOperasional.php                |   68 -
+ app/Models/User.php                                |  112 -
+ app/Providers/AppServiceProvider.php               |   24 -
+ app/Providers/VoltServiceProvider.php              |   28 -
+ app/build.gradle                                   |    4 +-
+ .../configureReleaseDependencies/dependencies.pb   |  Bin 5286 -> 0 bytes
+ .../output-metadata.json                           |   18 -
+ .../redirect.txt                                   |    2 -
+ .../AndroidManifest.xml                            |  218 -
+ .../release/compileReleaseArtProfile/0/.dm         |  Bin 1288 -> 1288 bytes
+ .../release/compileReleaseArtProfile/1/.dm         |  Bin 1207 -> 1207 bytes
+ .../incremental/mergeReleaseAssets/merger.xml      |    2 +-
+ .../mergeReleaseJniLibFolders/merger.xml           |    2 +-
+ .../incremental/mergeReleaseShaders/merger.xml     |    2 +-
+ .../tmp/release/dex-renamer-state.txt              |    6 +-
+ .../tmp/release/zip-cache/androidResources         |  Bin 24726 -> 24726 bytes
+ ...ln4sMgVR7l4xY= => 0x1m_fvOB+YXZTxI3o0znrfZfPo=} |  Bin
+ ...50r2IOLq0IVoQ= => 2I1_1HBplIjFInd2XhUrJYIhSMU=} |  Bin
+ ...sD027d5Hxq4GI= => 2Ne3uMRBNlHdVazYH2OyZNvyA1c=} |  Bin
+ ...2PO2bt3+QnR18= => 41D6G5aVBPyyrILPcNkFamNkzOg=} |  Bin
+ ...pJ5VIG9HHbjIM= => 6Affqg9Rx1Uww5PYBZsc9FV450Q=} |  Bin
+ ...GUOEErZiGgf0A= => 6AjJwFwEmbrMKk7eQoBd1MmK76U=} |  Bin
+ ...BT9r7x_DPDRYo= => Aazr_juMnKe4Do8YuEHVZLYqcHA=} |  Bin
+ ...Ent5R_XdQeXzY= => ApNkJLn1tjFXZrjfsxQVzAcVqGk=} |  Bin
+ ...D92Krv_sG+Fn4= => BkD5tFDgk6_cnATjcTSYuqHt1oY=} |  Bin
+ ...3v4kzGpluAQso= => DaxLdLHq3SLIIh39EdfQGe8XTyU=} |  Bin
+ ...lmwt8UJ77KHC4= => EM51IyoKG9A4fa7dPKTZd9+uol8=} |  Bin
+ ...cx7j3fe3GlTwo= => G8XZ8rSQtOzd9KeV0h0fWtNyjzA=} |  Bin
+ ...0bK27Sg27RXSk= => I4W4izhRXHs3sjyJ1sR5e6jF4iY=} |  Bin
+ ...p80GsV+wbW0RM= => J3JNoI6N9V2Dt_tt4LE7D_QIqQY=} |  Bin
+ ...pAADGH1ZTvGi8= => J9mGHnxXhHagxrwARB83+2sS2Jg=} |  Bin
+ ...nxobsSFzB0+ZE= => JJjm1VEc5yRfpjCMdkxZs9kpqiY=} |  Bin
+ ...1eP2gFb2wuvGs= => KZHAYilhndJiOsDbRjPwse0Us7Y=} |  Bin
+ ...7K9E4a1PPYm2w= => LkKF3EbCRyk1jESbCGGOzv59dr8=} |  Bin
+ ...7gb7XFchwZ9CM= => M+jnLy7hFPnzhgW46vLvKRNEOOw=} |  Bin
+ ...kkjmMyK6e+l58= => NWcuA9vrJ2ZTveR8PLS+nliYe_Y=} |  Bin
+ ...TvMoIwqRnSNdo= => Oezcd6L78qVxW0mkRMYNc0erTpk=} |  Bin
+ ...zCbteJ2gfyp_8= => P5U5kUfYyRIQQkcNIsgW_x2Lkh0=} |  Bin
+ ...UowRB+MCieYhE= => PV4w601T3ipHOZhkGJuSxvh7+C8=} |  Bin
+ ...jplQmfgIMZblc= => T13dx8ZXP6KfRWw5QncSY18rWlc=} |  Bin
+ ...VOe3hw4aq+swk= => TB8OqDwbzQysZH7Dw66auE9paM8=} |  Bin
+ ...lkA+kesytLGF4= => UPzFjyUtDfFo7_mEsBekaRL6_ow=} |  Bin
+ ...QE8dlI7DvxBF4= => WEEcG7F0feI_7ZDVzOXn2O4YP3I=} |  Bin
+ ...M5Eoo2XJB7aVA= => Xv4ikdColniPYG+CTxpcg2ZfHn0=} |  Bin
+ ...CVrG8sWqsedb8= => YSUOUO1_Oia5ccNSV+HzBuXEuAc=} |  Bin
+ ...XP+_gCNcJ3BnU= => bhN5FQmE8yqCPM60BgKElVqEM7k=} |  Bin
+ ...0769MR8rc0joo= => cwn0f2Jl3i179XsuXk7jzRdcBYc=} |  Bin
+ ...G5Nry2VzVgNyA= => d1E5F4OU1rRPogEZnGftHm5hAYc=} |  Bin
+ ...OWvSUu_r0FPSw= => dWTzGS03oKq3Q5Qm5gEsgJI3rXA=} |  Bin
+ ...acLa+3o8x6yl0= => eD8M5WZxum0l9U3LkGxeWTVc3NA=} |  Bin
+ ...Y1oFyRZgPUNPc= => eaSl0ePSgMrBGTJUQtvjZCktQKk=} |  Bin
+ ...4eMCx4iTJ57gw= => fD1V15vDnUGYAu66MmDno4dXrFo=} |  Bin
+ ...JjvL2W8FUn9ac= => fIvsO8K5nvsb1pNSQyqLEfgi1WE=} |  Bin
+ ...RAN1GnKU2SeaY= => hc7iUyZfd8V8kCa_VhYQSMrcG9I=} |  Bin
+ ...Q+JWR3P5vKDJ4= => iLwVH4Bw5QSlkUaz6xmIIcLh3O4=} |  Bin
+ ...Sf8J8S0tHLDZ4= => jDMxnYdF2HyL_eHTEViTLVBFZRg=} |  Bin
+ ...jhmKe_c8qi8YU= => kKHY8P18O8QAznP56ODiY6wH9cw=} |  Bin
+ ...FGgXQe_3+3LtI= => ltYAiTsDmgDltG2+F8GkKTquNaE=} |  Bin
+ ...O6FlcWVR_XCnw= => mSbNHnBnAs3q9iboo9x1x3L0yw0=} |  Bin
+ ...wiFcZeYSyAUqs= => oO9E8om7kRkBcCmHx7+soy36ufY=} |  Bin
+ ...zZ72MWaabIIkQ= => pIDiemAONkndeWAzGuCZ7Vx4hP8=} |  Bin
+ ...696gmOIaH0n+U= => pbXQHkM4yxRP4R_SisCo+n2PSAg=} |  Bin
+ ...G8vEHxnRuzQis= => pd_3sHKGBPMZdP1LnxAEBzgns08=} |  Bin
+ ...ulYEMHzBkaBxU= => sJueHaWTrKZgAfq__4w2yvHMg5o=} |  Bin
+ ...kvSy9SBSJHzrw= => utaCRcrlBQz8GitQnkRwENZDblE=} |  Bin
+ ...rXMfCp_s49pMc= => vdIbhKgVlzBDQOyylVrsqFsFwaM=} |  Bin
+ ...+RaEQyTk7RRi4= => xmljewL_k9dUuqRpzBGbRrp05vg=} |  Bin
+ .../compile-file-map.properties                    |   52 +-
+ .../release/mergeReleaseResources/merger.xml       |  526 +-
+ .../compile-file-map.properties                    |   52 +-
+ .../release/packageReleaseResources/merger.xml     |    4 +-
+ .../packageReleaseBundle/intermediary-bundle.aab   |  Bin 6539878 -> 0 bytes
+ .../linked-resources-binary-format-release.ap_     |  Bin 3439000 -> 1380240 bytes
+ .../processReleaseResources/output-metadata.json   |    4 +-
+ .../linked-resources-for-bundle-proto-format.ap_   |  Bin 3233064 -> 0 bytes
+ .../manifest-merger-blame-release-report.txt       |  338 +-
+ .../processReleaseMainManifest/AndroidManifest.xml |    4 +-
+ .../processReleaseManifest/AndroidManifest.xml     |    4 +-
+ .../processReleaseManifest/output-metadata.json    |    4 +-
+ ...able-anydpi_shortcut_legacy_background.xml.flat |  Bin 1064 -> 1064 bytes
+ .../drawable-hdpi_ic_notification_icon.png.flat    |  Bin 3408 -> 1516 bytes
+ .../drawable-hdpi_splash.png.flat                  |  Bin 236548 -> 67348 bytes
+ .../drawable-mdpi_ic_notification_icon.png.flat    |  Bin 1840 -> 1008 bytes
+ .../drawable-mdpi_splash.png.flat                  |  Bin 119728 -> 34420 bytes
+ .../drawable-xhdpi_ic_notification_icon.png.flat   |  Bin 5540 -> 2212 bytes
+ .../drawable-xhdpi_splash.png.flat                 |  Bin 366928 -> 106908 bytes
+ .../drawable-xxhdpi_ic_notification_icon.png.flat  |  Bin 10932 -> 3644 bytes
+ .../drawable-xxhdpi_splash.png.flat                |  Bin 662408 -> 192888 bytes
+ .../drawable-xxxhdpi_ic_notification_icon.png.flat |  Bin 17988 -> 5536 bytes
+ .../drawable-xxxhdpi_splash.png.flat               |  Bin 1030872 -> 294384 bytes
+ .../mipmap-anydpi-v26_ic_launcher.xml.flat         |  Bin 896 -> 900 bytes
+ .../mipmap-hdpi_ic_launcher.png.flat               |  Bin 10908 -> 3620 bytes
+ .../mipmap-hdpi_ic_maskable.png.flat               |  Bin 27052 -> 7956 bytes
+ .../mipmap-mdpi_ic_launcher.png.flat               |  Bin 5520 -> 2188 bytes
+ .../mipmap-mdpi_ic_maskable.png.flat               |  Bin 13652 -> 4360 bytes
+ .../mipmap-xhdpi_ic_launcher.png.flat              |  Bin 17964 -> 5512 bytes
+ .../mipmap-xhdpi_ic_maskable.png.flat              |  Bin 43768 -> 12480 bytes
+ .../mipmap-xxhdpi_ic_launcher.png.flat             |  Bin 35492 -> 10160 bytes
+ .../mipmap-xxhdpi_ic_maskable.png.flat             |  Bin 86444 -> 24588 bytes
+ .../mipmap-xxxhdpi_ic_launcher.png.flat            |  Bin 57084 -> 16420 bytes
+ .../mipmap-xxxhdpi_ic_maskable.png.flat            |  Bin 141616 -> 39764 bytes
+ .../raw_web_app_manifest.json.flat                 |  Bin 556 -> 608 bytes
+ .../values-af_values-af.arsc.flat                  |  Bin 2900 -> 2904 bytes
+ .../values-am_values-am.arsc.flat                  |  Bin 3164 -> 3168 bytes
+ .../values-ar_values-ar.arsc.flat                  |  Bin 3124 -> 3128 bytes
+ .../values-as_values-as.arsc.flat                  |  Bin 3784 -> 3788 bytes
+ .../values-az_values-az.arsc.flat                  |  Bin 2988 -> 2992 bytes
+ .../values-b+sr+Latn_values-b+sr+Latn.arsc.flat    |  Bin 3192 -> 3192 bytes
+ .../values-be_values-be.arsc.flat                  |  Bin 3364 -> 3368 bytes
+ .../values-bg_values-bg.arsc.flat                  |  Bin 3424 -> 3428 bytes
+ .../values-bn_values-bn.arsc.flat                  |  Bin 3692 -> 3696 bytes
+ .../values-bs_values-bs.arsc.flat                  |  Bin 2968 -> 2972 bytes
+ .../values-ca_values-ca.arsc.flat                  |  Bin 2972 -> 2976 bytes
+ .../values-cs_values-cs.arsc.flat                  |  Bin 2972 -> 2976 bytes
+ .../values-da_values-da.arsc.flat                  |  Bin 2888 -> 2892 bytes
+ .../values-de_values-de.arsc.flat                  |  Bin 2964 -> 2968 bytes
+ .../values-el_values-el.arsc.flat                  |  Bin 3508 -> 3512 bytes
+ .../values-en-rAU_values-en-rAU.arsc.flat          |  Bin 2984 -> 2988 bytes
+ .../values-en-rCA_values-en-rCA.arsc.flat          |  Bin 2984 -> 2988 bytes
+ .../values-en-rGB_values-en-rGB.arsc.flat          |  Bin 2984 -> 2988 bytes
+ .../values-en-rIN_values-en-rIN.arsc.flat          |  Bin 2984 -> 2988 bytes
+ .../values-en-rXC_values-en-rXC.arsc.flat          |  Bin 15496 -> 15500 bytes
+ .../values-es-rUS_values-es-rUS.arsc.flat          |  Bin 3096 -> 3100 bytes
+ .../values-es_values-es.arsc.flat                  |  Bin 2984 -> 2988 bytes
+ .../values-et_values-et.arsc.flat                  |  Bin 2956 -> 2960 bytes
+ .../values-eu_values-eu.arsc.flat                  |  Bin 2976 -> 2980 bytes
+ .../values-fa_values-fa.arsc.flat                  |  Bin 3236 -> 3240 bytes
+ .../values-fi_values-fi.arsc.flat                  |  Bin 2916 -> 2920 bytes
+ .../values-fr-rCA_values-fr-rCA.arsc.flat          |  Bin 3128 -> 3132 bytes
+ .../values-fr_values-fr.arsc.flat                  |  Bin 2992 -> 2996 bytes
+ .../values-gl_values-gl.arsc.flat                  |  Bin 2996 -> 3000 bytes
+ .../values-gu_values-gu.arsc.flat                  |  Bin 3468 -> 3472 bytes
+ .../values-h720dp-v13_values-h720dp-v13.arsc.flat  |  Bin 284 -> 288 bytes
+ .../values-hdpi-v4_values-hdpi-v4.arsc.flat        |  Bin 488 -> 488 bytes
+ .../values-hi_values-hi.arsc.flat                  |  Bin 3580 -> 3584 bytes
+ .../values-hr_values-hr.arsc.flat                  |  Bin 2952 -> 2956 bytes
+ .../values-hu_values-hu.arsc.flat                  |  Bin 3036 -> 3040 bytes
+ .../values-hy_values-hy.arsc.flat                  |  Bin 3276 -> 3280 bytes
+ .../values-in_values-in.arsc.flat                  |  Bin 2924 -> 2928 bytes
+ .../values-is_values-is.arsc.flat                  |  Bin 2900 -> 2904 bytes
+ .../values-it_values-it.arsc.flat                  |  Bin 2928 -> 2932 bytes
+ .../values-iw_values-iw.arsc.flat                  |  Bin 3088 -> 3092 bytes
+ .../values-ja_values-ja.arsc.flat                  |  Bin 3004 -> 3008 bytes
+ .../values-ka_values-ka.arsc.flat                  |  Bin 3628 -> 3632 bytes
+ .../values-kk_values-kk.arsc.flat                  |  Bin 3216 -> 3220 bytes
+ .../values-km_values-km.arsc.flat                  |  Bin 3632 -> 3636 bytes
+ .../values-kn_values-kn.arsc.flat                  |  Bin 3844 -> 3848 bytes
+ .../values-ko_values-ko.arsc.flat                  |  Bin 2948 -> 2952 bytes
+ .../values-ky_values-ky.arsc.flat                  |  Bin 3292 -> 3296 bytes
+ .../values-land_values-land.arsc.flat              |  Bin 400 -> 404 bytes
+ .../values-large-v4_values-large-v4.arsc.flat      |  Bin 888 -> 896 bytes
+ .../values-ldltr-v21_values-ldltr-v21.arsc.flat    |  Bin 344 -> 344 bytes
+ .../values-lo_values-lo.arsc.flat                  |  Bin 3476 -> 3480 bytes
+ .../values-lt_values-lt.arsc.flat                  |  Bin 3108 -> 3112 bytes
+ .../values-lv_values-lv.arsc.flat                  |  Bin 3192 -> 3196 bytes
+ .../values-mk_values-mk.arsc.flat                  |  Bin 3320 -> 3324 bytes
+ .../values-ml_values-ml.arsc.flat                  |  Bin 3856 -> 3860 bytes
+ .../values-mn_values-mn.arsc.flat                  |  Bin 3296 -> 3300 bytes
+ .../values-mr_values-mr.arsc.flat                  |  Bin 3568 -> 3572 bytes
+ .../values-ms_values-ms.arsc.flat                  |  Bin 2940 -> 2944 bytes
+ .../values-my_values-my.arsc.flat                  |  Bin 3908 -> 3912 bytes
+ .../values-nb_values-nb.arsc.flat                  |  Bin 2868 -> 2872 bytes
+ .../values-ne_values-ne.arsc.flat                  |  Bin 3780 -> 3784 bytes
+ .../values-night-v8_values-night-v8.arsc.flat      |  Bin 1040 -> 1044 bytes
+ .../values-nl_values-nl.arsc.flat                  |  Bin 2948 -> 2952 bytes
+ .../values-or_values-or.arsc.flat                  |  Bin 3860 -> 3864 bytes
+ .../values-pa_values-pa.arsc.flat                  |  Bin 3472 -> 3476 bytes
+ .../values-pl_values-pl.arsc.flat                  |  Bin 2980 -> 2984 bytes
+ .../values-port_values-port.arsc.flat              |  Bin 252 -> 256 bytes
+ .../values-pt-rBR_values-pt-rBR.arsc.flat          |  Bin 3124 -> 3128 bytes
+ .../values-pt-rPT_values-pt-rPT.arsc.flat          |  Bin 3112 -> 3116 bytes
+ .../values-pt_values-pt.arsc.flat                  |  Bin 2996 -> 3000 bytes
+ .../values-ro_values-ro.arsc.flat                  |  Bin 2988 -> 2992 bytes
+ .../values-ru_values-ru.arsc.flat                  |  Bin 3328 -> 3332 bytes
+ .../values-si_values-si.arsc.flat                  |  Bin 3688 -> 3692 bytes
+ .../values-sk_values-sk.arsc.flat                  |  Bin 3008 -> 3012 bytes
+ .../values-sl_values-sl.arsc.flat                  |  Bin 2976 -> 2980 bytes
+ .../values-sq_values-sq.arsc.flat                  |  Bin 2964 -> 2968 bytes
+ .../values-sr_values-sr.arsc.flat                  |  Bin 3324 -> 3328 bytes
+ .../values-sv_values-sv.arsc.flat                  |  Bin 2920 -> 2924 bytes
+ ...values-sw600dp-v13_values-sw600dp-v13.arsc.flat |  Bin 776 -> 776 bytes
+ .../values-sw_values-sw.arsc.flat                  |  Bin 2932 -> 2936 bytes
+ .../values-ta_values-ta.arsc.flat                  |  Bin 3888 -> 3892 bytes
+ .../values-te_values-te.arsc.flat                  |  Bin 3888 -> 3892 bytes
+ .../values-th_values-th.arsc.flat                  |  Bin 3388 -> 3392 bytes
+ .../values-tl_values-tl.arsc.flat                  |  Bin 2980 -> 2984 bytes
+ .../values-tr_values-tr.arsc.flat                  |  Bin 2936 -> 2940 bytes
+ .../values-uk_values-uk.arsc.flat                  |  Bin 3368 -> 3372 bytes
+ .../values-ur_values-ur.arsc.flat                  |  Bin 3288 -> 3292 bytes
+ .../values-uz_values-uz.arsc.flat                  |  Bin 2940 -> 2944 bytes
+ .../values-v16_values-v16.arsc.flat                |  Bin 412 -> 412 bytes
+ .../values-v17_values-v17.arsc.flat                |  Bin 3696 -> 3696 bytes
+ .../values-v18_values-v18.arsc.flat                |  Bin 248 -> 248 bytes
+ .../values-v21_values-v21.arsc.flat                |  Bin 20628 -> 20628 bytes
+ .../values-v22_values-v22.arsc.flat                |  Bin 936 -> 936 bytes
+ .../values-v23_values-v23.arsc.flat                |  Bin 3452 -> 3452 bytes
+ .../values-v24_values-v24.arsc.flat                |  Bin 520 -> 520 bytes
+ .../values-v25_values-v25.arsc.flat                |  Bin 584 -> 584 bytes
+ .../values-v26_values-v26.arsc.flat                |  Bin 1056 -> 1056 bytes
+ .../values-v28_values-v28.arsc.flat                |  Bin 748 -> 748 bytes
+ .../values-vi_values-vi.arsc.flat                  |  Bin 3104 -> 3108 bytes
+ .../values-watch-v20_values-watch-v20.arsc.flat    |  Bin 728 -> 728 bytes
+ .../values-watch-v21_values-watch-v21.arsc.flat    |  Bin 904 -> 904 bytes
+ .../values-xlarge-v4_values-xlarge-v4.arsc.flat    |  Bin 584 -> 584 bytes
+ .../values-zh-rCN_values-zh-rCN.arsc.flat          |  Bin 3012 -> 3016 bytes
+ .../values-zh-rHK_values-zh-rHK.arsc.flat          |  Bin 3016 -> 3020 bytes
+ .../values-zh-rTW_values-zh-rTW.arsc.flat          |  Bin 3020 -> 3024 bytes
+ .../values-zu_values-zu.arsc.flat                  |  Bin 2936 -> 2940 bytes
+ .../mergeReleaseResources/values_values.arsc.flat  |  Bin 183988 -> 183988 bytes
+ .../mergeReleaseResources/xml_filepaths.xml.flat   |  Bin 204 -> 204 bytes
+ .../mergeReleaseResources/xml_shortcuts.xml.flat   |  Bin 192 -> 192 bytes
+ .../out/multi-v2/mergeReleaseResources.json        | 5910 ++++++++++----------
+ .../out/multi-v2/values-af.json                    |   40 +-
+ .../out/multi-v2/values-am.json                    |   40 +-
+ .../out/multi-v2/values-ar.json                    |   40 +-
+ .../out/multi-v2/values-as.json                    |   40 +-
+ .../out/multi-v2/values-az.json                    |   40 +-
+ .../out/multi-v2/values-b+sr+Latn.json             |    8 +-
+ .../out/multi-v2/values-be.json                    |   40 +-
+ .../out/multi-v2/values-bg.json                    |   40 +-
+ .../out/multi-v2/values-bn.json                    |    8 +-
+ .../out/multi-v2/values-bs.json                    |   40 +-
+ .../out/multi-v2/values-ca.json                    |    8 +-
+ .../out/multi-v2/values-cs.json                    |   48 +-
+ .../out/multi-v2/values-da.json                    |   40 +-
+ .../out/multi-v2/values-de.json                    |    8 +-
+ .../out/multi-v2/values-el.json                    |   40 +-
+ .../out/multi-v2/values-en-rAU.json                |   40 +-
+ .../out/multi-v2/values-en-rCA.json                |   40 +-
+ .../out/multi-v2/values-en-rGB.json                |   48 +-
+ .../out/multi-v2/values-en-rIN.json                |   40 +-
+ .../out/multi-v2/values-en-rXC.json                |   40 +-
+ .../out/multi-v2/values-es-rUS.json                |   40 +-
+ .../out/multi-v2/values-es.json                    |    8 +-
+ .../out/multi-v2/values-et.json                    |   40 +-
+ .../out/multi-v2/values-eu.json                    |   40 +-
+ .../out/multi-v2/values-fa.json                    |    8 +-
+ .../out/multi-v2/values-fi.json                    |   40 +-
+ .../out/multi-v2/values-fr-rCA.json                |   40 +-
+ .../out/multi-v2/values-fr.json                    |   40 +-
+ .../out/multi-v2/values-gl.json                    |    8 +-
+ .../out/multi-v2/values-gu.json                    |   40 +-
+ .../out/multi-v2/values-h720dp-v13.json            |    4 +-
+ .../out/multi-v2/values-hdpi-v4.json               |    4 +-
+ .../out/multi-v2/values-hi.json                    |    8 +-
+ .../out/multi-v2/values-hr.json                    |    8 +-
+ .../out/multi-v2/values-hu.json                    |    8 +-
+ .../out/multi-v2/values-hy.json                    |   40 +-
+ .../out/multi-v2/values-in.json                    |   40 +-
+ .../out/multi-v2/values-is.json                    |    8 +-
+ .../out/multi-v2/values-it.json                    |   40 +-
+ .../out/multi-v2/values-iw.json                    |   40 +-
+ .../out/multi-v2/values-ja.json                    |   40 +-
+ .../out/multi-v2/values-ka.json                    |   40 +-
+ .../out/multi-v2/values-kk.json                    |   40 +-
+ .../out/multi-v2/values-km.json                    |    8 +-
+ .../out/multi-v2/values-kn.json                    |   40 +-
+ .../out/multi-v2/values-ko.json                    |   40 +-
+ .../out/multi-v2/values-ky.json                    |    8 +-
+ .../out/multi-v2/values-land.json                  |    4 +-
+ .../out/multi-v2/values-large-v4.json              |    4 +-
+ .../out/multi-v2/values-ldltr-v21.json             |    4 +-
+ .../out/multi-v2/values-lo.json                    |   40 +-
+ .../out/multi-v2/values-lt.json                    |   40 +-
+ .../out/multi-v2/values-lv.json                    |   40 +-
+ .../out/multi-v2/values-mk.json                    |   40 +-
+ .../out/multi-v2/values-ml.json                    |   40 +-
+ .../out/multi-v2/values-mn.json                    |   40 +-
+ .../out/multi-v2/values-mr.json                    |    8 +-
+ .../out/multi-v2/values-ms.json                    |    8 +-
+ .../out/multi-v2/values-my.json                    |   48 +-
+ .../out/multi-v2/values-nb.json                    |    8 +-
+ .../out/multi-v2/values-ne.json                    |   40 +-
+ .../out/multi-v2/values-night-v8.json              |    4 +-
+ .../out/multi-v2/values-nl.json                    |    8 +-
+ .../out/multi-v2/values-or.json                    |   40 +-
+ .../out/multi-v2/values-pa.json                    |   40 +-
+ .../out/multi-v2/values-pl.json                    |   40 +-
+ .../out/multi-v2/values-port.json                  |    4 +-
+ .../out/multi-v2/values-pt-rBR.json                |   48 +-
+ .../out/multi-v2/values-pt-rPT.json                |   40 +-
+ .../out/multi-v2/values-pt.json                    |   48 +-
+ .../out/multi-v2/values-ro.json                    |   40 +-
+ .../out/multi-v2/values-ru.json                    |   40 +-
+ .../out/multi-v2/values-si.json                    |   40 +-
+ .../out/multi-v2/values-sk.json                    |   40 +-
+ .../out/multi-v2/values-sl.json                    |    8 +-
+ .../out/multi-v2/values-sq.json                    |   48 +-
+ .../out/multi-v2/values-sr.json                    |    8 +-
+ .../out/multi-v2/values-sv.json                    |   40 +-
+ .../out/multi-v2/values-sw.json                    |   40 +-
+ .../out/multi-v2/values-sw600dp-v13.json           |    4 +-
+ .../out/multi-v2/values-ta.json                    |   40 +-
+ .../out/multi-v2/values-te.json                    |   40 +-
+ .../out/multi-v2/values-th.json                    |   40 +-
+ .../out/multi-v2/values-tl.json                    |   40 +-
+ .../out/multi-v2/values-tr.json                    |   40 +-
+ .../out/multi-v2/values-uk.json                    |   40 +-
+ .../out/multi-v2/values-ur.json                    |    8 +-
+ .../out/multi-v2/values-uz.json                    |   40 +-
+ .../out/multi-v2/values-v16.json                   |    4 +-
+ .../out/multi-v2/values-v17.json                   |    4 +-
+ .../out/multi-v2/values-v18.json                   |    4 +-
+ .../out/multi-v2/values-v21.json                   |    6 +-
+ .../out/multi-v2/values-v22.json                   |    4 +-
+ .../out/multi-v2/values-v23.json                   |    4 +-
+ .../out/multi-v2/values-v24.json                   |    4 +-
+ .../out/multi-v2/values-v25.json                   |    4 +-
+ .../out/multi-v2/values-v26.json                   |    4 +-
+ .../out/multi-v2/values-v28.json                   |    4 +-
+ .../out/multi-v2/values-vi.json                    |   40 +-
+ .../out/multi-v2/values-watch-v20.json             |    4 +-
+ .../out/multi-v2/values-watch-v21.json             |    4 +-
+ .../out/multi-v2/values-xlarge-v4.json             |    4 +-
+ .../out/multi-v2/values-zh-rCN.json                |   40 +-
+ .../out/multi-v2/values-zh-rHK.json                |   40 +-
+ .../out/multi-v2/values-zh-rTW.json                |   48 +-
+ .../out/multi-v2/values-zu.json                    |   40 +-
+ .../mergeReleaseResources/out/multi-v2/values.json |  230 +-
+ .../out/single/mergeReleaseResources.json          |  100 +-
+ .../release/buildReleasePreBundle/base.zip         |  Bin 3978653 -> 0 bytes
+ .../optimizeReleaseResources/output-metadata.json  |    4 +-
+ .../resources-release-optimize.ap_                 |  Bin 3393092 -> 1334330 bytes
+ .../AndroidManifest.xml                            |    4 +-
+ .../output-metadata.json                           |    4 +-
+ .../drawable-hdpi-v4/ic_notification_icon.png      |  Bin 3311 -> 1405 bytes
+ .../drawable-hdpi-v4/splash.png                    |  Bin 249742 -> 68756 bytes
+ .../drawable-mdpi-v4/ic_notification_icon.png      |  Bin 1696 -> 867 bytes
+ .../drawable-mdpi-v4/splash.png                    |  Bin 123792 -> 35008 bytes
+ .../drawable-xhdpi-v4/ic_notification_icon.png     |  Bin 5511 -> 2094 bytes
+ .../drawable-xhdpi-v4/splash.png                   |  Bin 399810 -> 109911 bytes
+ .../drawable-xxhdpi-v4/ic_notification_icon.png    |  Bin 11206 -> 3617 bytes
+ .../drawable-xxhdpi-v4/splash.png                  |  Bin 763667 -> 203872 bytes
+ .../drawable-xxxhdpi-v4/ic_notification_icon.png   |  Bin 18355 -> 5590 bytes
+ .../drawable-xxxhdpi-v4/splash.png                 |  Bin 1221428 -> 314345 bytes
+ .../mipmap-hdpi-v4/ic_launcher.png                 |  Bin 11206 -> 3617 bytes
+ .../mipmap-hdpi-v4/ic_maskable.png                 |  Bin 27652 -> 8268 bytes
+ .../mipmap-mdpi-v4/ic_launcher.png                 |  Bin 5511 -> 2094 bytes
+ .../mipmap-mdpi-v4/ic_maskable.png                 |  Bin 13914 -> 4465 bytes
+ .../mipmap-xhdpi-v4/ic_launcher.png                |  Bin 18355 -> 5590 bytes
+ .../mipmap-xhdpi-v4/ic_maskable.png                |  Bin 44899 -> 12900 bytes
+ .../mipmap-xxhdpi-v4/ic_launcher.png               |  Bin 36429 -> 10557 bytes
+ .../mipmap-xxhdpi-v4/ic_maskable.png               |  Bin 88746 -> 25210 bytes
+ .../mipmap-xxxhdpi-v4/ic_launcher.png              |  Bin 58410 -> 16669 bytes
+ .../mipmap-xxxhdpi-v4/ic_maskable.png              |  Bin 144989 -> 40559 bytes
+ .../raw/web_app_manifest.json                      |    2 +-
+ .../release/minifyReleaseWithR8/r8-metadata.dat    |    2 +-
+ .../sdkReleaseDependencyData/sdkDependencyData.pb  |  Bin 3464 -> 3464 bytes
+ .../release/mapReleaseSourceSetPaths/file-map.txt  |   56 +-
+ .../version-control-info.textproto                 |    2 +-
+ .../outputs/apk/release/app-release-aligned.apk    |  Bin 0 -> 1669295 bytes
+ .../outputs/apk/release/app-release-unsigned.apk   |  Bin 3728063 -> 1669295 bytes
+ .../baselineProfiles/0/app-release-unsigned.dm     |  Bin 1288 -> 1288 bytes
+ .../baselineProfiles/1/app-release-unsigned.dm     |  Bin 1207 -> 1207 bytes
+ app/build/outputs/apk/release/output-metadata.json |    4 +-
+ app/build/outputs/bundle/release/app-release.aab   |  Bin 3856263 -> 0 bytes
+ .../logs/manifest-merger-release-report.txt        |  580 +-
+ .../outputs/mapping/release/configuration.txt      |   68 +-
+ app/build/outputs/mapping/release/seeds.txt        | 1492 ++---
+ .../previous-compilation-data.bin                  |  Bin 18671 -> 18671 bytes
+ .../res/drawable-hdpi/ic_notification_icon.png     |  Bin 3311 -> 1405 bytes
+ app/src/main/res/drawable-hdpi/splash.png          |  Bin 249742 -> 68756 bytes
+ .../res/drawable-mdpi/ic_notification_icon.png     |  Bin 1696 -> 867 bytes
+ app/src/main/res/drawable-mdpi/splash.png          |  Bin 123792 -> 35008 bytes
+ .../res/drawable-xhdpi/ic_notification_icon.png    |  Bin 5511 -> 2094 bytes
+ app/src/main/res/drawable-xhdpi/splash.png         |  Bin 399810 -> 109911 bytes
+ .../res/drawable-xxhdpi/ic_notification_icon.png   |  Bin 11206 -> 3617 bytes
+ app/src/main/res/drawable-xxhdpi/splash.png        |  Bin 763667 -> 203872 bytes
+ .../res/drawable-xxxhdpi/ic_notification_icon.png  |  Bin 18355 -> 5590 bytes
+ app/src/main/res/drawable-xxxhdpi/splash.png       |  Bin 1221428 -> 314345 bytes
+ app/src/main/res/mipmap-hdpi/ic_launcher.png       |  Bin 11206 -> 3617 bytes
+ app/src/main/res/mipmap-hdpi/ic_maskable.png       |  Bin 27652 -> 8268 bytes
+ app/src/main/res/mipmap-mdpi/ic_launcher.png       |  Bin 5511 -> 2094 bytes
+ app/src/main/res/mipmap-mdpi/ic_maskable.png       |  Bin 13914 -> 4465 bytes
+ app/src/main/res/mipmap-xhdpi/ic_launcher.png      |  Bin 18355 -> 5590 bytes
+ app/src/main/res/mipmap-xhdpi/ic_maskable.png      |  Bin 44899 -> 12900 bytes
+ app/src/main/res/mipmap-xxhdpi/ic_launcher.png     |  Bin 36429 -> 10557 bytes
+ app/src/main/res/mipmap-xxhdpi/ic_maskable.png     |  Bin 88746 -> 25210 bytes
+ app/src/main/res/mipmap-xxxhdpi/ic_launcher.png    |  Bin 58410 -> 16669 bytes
+ app/src/main/res/mipmap-xxxhdpi/ic_maskable.png    |  Bin 144989 -> 40559 bytes
+ app/src/main/res/raw/web_app_manifest.json         |    2 +-
+ formatted_sha.txt                                  |    1 +
+ gradle_build.log                                   |  Bin 0 -> 3124 bytes
+ gradle_build_utf8.log                              |   47 +
+ headers.txt                                        |  Bin 0 -> 1578 bytes
+ local.properties                                   |    1 +
+ manifest-checksum.txt                              |    2 +-
+ pass_key.txt                                       |    1 +
+ public/.well-known/assetlinks.json                 |    2 +-
+ pure_sha.txt                                       |    1 +
+ .../views/livewire/admin/sync-simpanan.blade.php   |    4 +
+ .../views/livewire/anggota/dashboard.blade.php     |   10 +
+ resources/views/livewire/anggota/index.blade.php   |   54 +-
+ .../views/livewire/anggota/pinjaman.blade.php      |   63 +-
+ store_icon.png                                     |  Bin 300374 -> 86463 bytes
+ twa-manifest.json                                  |    8 +-
+ 420 files changed, 6343 insertions(+), 7796 deletions(-)
+
+commit bdb4f726b78901516f5bd5bd05b3889d16faa55f
+Author: mujurin <mujurakakom@gmail.com>
+Date:   Thu Jul 30 07:22:30 2026 +0800
+
+    feat: implement member management system and financial ledger reporting features
+
+ app/Http/Controllers/PdfController.php             |  12 +-
+ app/Livewire/Anggota/Index.php                     | 104 ++++++++++++
+ app/Models/Anggota.php                             |  24 +++
+ .../2026_07_30_064257_create_anggotas_table.php    |  31 ++++
+ ...7_30_071132_add_is_active_to_anggotas_table.php |  32 ++++
+ .../views/components/layouts/app/sidebar.blade.php |   3 +
+ resources/views/livewire/anggota/index.blade.php   | 111 ++++++++++++
+ resources/views/livewire/auth/login.blade.php      |  13 ++
+ .../views/livewire/laporan/buku-kas.blade.php      | 186 +++++++++++++++++----
+ routes/web.php                                     |   3 +
+ 10 files changed, 486 insertions(+), 33 deletions(-)
+
+commit 6cc8abb62d180cf4f95eee696fb0b8d4bb3f9d44
+Author: mujurin <mujurakakom@gmail.com>
+Date:   Wed Jul 29 15:02:56 2026 +0800
+
+    update bebrapa menu
+
+ app/Http/Controllers/PdfController.php             | 277 ++++++++++++++++-
+ app/Http/Livewire/Admin/AsetInventaris.php         | 150 +++++++++
+ app/Models/Aset.php                                |  32 ++
+ .../2026_07_29_000001_create_asets_table.php       |  28 ++
+ .../views/components/layouts/anggota.blade.php     |   2 +-
+ .../views/components/layouts/app/sidebar.blade.php |  17 +-
+ resources/views/components/layouts/print.blade.php |   2 +-
+ .../views/livewire/admin/aset-inventaris.blade.php | 324 +++++++++++++++++++
+ .../livewire/anggota/riwayat-setoran.blade.php     |  15 +-
+ .../views/livewire/anggota/simpanan.blade.php      |  10 +-
+ .../views/livewire/laporan/buku-kas.blade.php      | 346 +++++++++++++++++++++
+ resources/views/livewire/pinjaman/cetak.blade.php  | 220 +++++++------
+ resources/views/pdf/buku_kas.blade.php             | 153 +++++++++
+ resources/views/pdf/cetak_pinjaman.blade.php       |  52 +++-
+ resources/views/pdf/rekap_simpanan.blade.php       | 196 ++++++++++++
+ routes/web.php                                     |  56 +++-
+ 16 files changed, 1759 insertions(+), 121 deletions(-)
+
+commit bb8040ed16ca6c2048d66b47777bb9d98bcf7dde
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jul 28 10:18:58 2026 +0800
+
+    feat: add PDF template for loan approval document printing
+
+ .gradle/8.11.1/fileHashes/fileHashes.lock    | Bin 17 -> 17 bytes
+ resources/views/pdf/cetak_pinjaman.blade.php |  30 ++++++++++++++++++---------
+ 2 files changed, 20 insertions(+), 10 deletions(-)
+
+commit 3d216cbf7f0f836c010f4fa4734d6f99e3e669ac
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 27 11:45:35 2026 +0800
+
+    chore: add Gradle fileHashes lock file for project build environment
+
+ .gradle/8.11.1/fileHashes/fileHashes.lock | Bin 17 -> 17 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 22b06026409ee2be556e322aef2e84f9812bd70d
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 27 11:45:28 2026 +0800
+
+    chore: add Gradle lock file and route list to project directory
+
+ .gradle/8.11.1/fileHashes/fileHashes.lock | Bin 17 -> 17 bytes
+ route_list.txt                            | Bin 0 -> 6676 bytes
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 65787116182bb0198e49285301cb41b0be9423be
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 27 11:44:17 2026 +0800
+
+    update role pinjaman
+
+ .../views/livewire/anggota/pinjaman.blade.php      | 74 ++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 5 deletions(-)
+
+commit 2be88d23cb10f2abe62943e091c0361ed21a67fb
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 16:05:34 2026 +0800
+
+    error pc kantor
+
+ .gradle/8.11.1/fileHashes/fileHashes.bin           |  Bin 70165 -> 70215 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          |  Bin 17 -> 17 bytes
+ build/reports/problems/problems-report.html        | 1347 ++++++++++----------
+ .../views/components/layouts/anggota.blade.php     |    3 +-
+ .../views/components/layouts/app/header.blade.php  |    3 +-
+ .../views/components/layouts/app/sidebar.blade.php |    3 +-
+ .../views/components/layouts/auth/card.blade.php   |    3 +-
+ .../views/components/layouts/auth/simple.blade.php |    3 +-
+ .../views/components/layouts/auth/split.blade.php  |    3 +-
+ resources/views/components/layouts/print.blade.php |    3 +-
+ resources/views/pdf/cetak_pinjaman.blade.php       |    3 +-
+ resources/views/pdf/kwitansi-penarikan.blade.php   |    3 +-
+ resources/views/pdf/rekap_pinjaman.blade.php       |    3 +-
+ resources/views/welcome.blade.php                  |    3 +-
+ 14 files changed, 668 insertions(+), 712 deletions(-)
+
+commit aabc86d868c5925d325af78be959311f94871887
+Merge: 5750cea d516c5a
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:27:44 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 5750cea3242e1d912b3c34c284c4dc55d80f5a9b
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:27:27 2026 +0800
+
+    pc kantor
+
+ .gradle/8.11.1/fileHashes/fileHashes.lock | Bin 17 -> 17 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit d516c5a4134611b671348953e036cedef8b57c2e
+Merge: 2c7fb6d 5a47177
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:23:42 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 2c7fb6d7d203ef58ac08b0741f2633ac57583f3c
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jul 13 15:22:16 2026 +0800
+
+    tambah menu neraca
+
+ .gradle/8.11.1/fileHashes/fileHashes.bin           | Bin 70165 -> 70165 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          | Bin 17 -> 17 bytes
+ app-release-signed.apk                             | Bin 3772868 -> 0 bytes
+ app/Models/TransaksiOperasional.php                |  68 ++
+ build/reports/problems/problems-report.html        |   2 +-
+ ...3_000001_create_transaksi_operasional_table.php |  34 +
+ primkoppol lotara.apk                              | Bin 3772868 -> 3772868 bytes
+ .../views/components/layouts/app/sidebar.blade.php |  11 +
+ .../views/livewire/laporan/laba-rugi.blade.php     | 739 +++++++++++++++++++++
+ .../views/livewire/laporan/neraca-saldo.blade.php  | 546 +++++++++++++++
+ .../views/livewire/pinjaman/rekap-pdf.blade.php    | 223 +++++++
+ routes/web.php                                     |   5 +
+ 12 files changed, 1627 insertions(+), 1 deletion(-)
+
+commit 5a47177c8cc9dab8cc233e8a0d47488f8af7a759
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Fri Jul 10 11:07:15 2026 +0800
+
+    update tampilan pwa
+
+ .gradle/8.11.1/fileHashes/fileHashes.bin           | Bin 70215 -> 70265 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          | Bin 17 -> 17 bytes
+ .../Controllers/PenarikanKwitansiController.php    |  33 +++
+ app/Models/User.php                                |   1 +
+ ...021213_add_ditunda_status_to_pinjaman_table.php |   7 +-
+ .../2026_07_10_024119_add_no_wa_to_users_table.php |  27 +++
+ migrate_output.txt                                 | Bin 0 -> 2490 bytes
+ primkoppol lotara.apk                              | Bin 3772868 -> 0 bytes
+ public/.well-known/assetlinks.json                 |   2 +-
+ public/favicon.png                                 | Bin 37558 -> 127959 bytes
+ public/icon-192x192.png                            | Bin 37558 -> 127959 bytes
+ public/icon-512x512.png                            | Bin 37558 -> 127959 bytes
+ public/logo.png                                    | Bin 0 -> 127959 bytes
+ public/manifest.json                               |   3 +-
+ resources/views/components/app-logo-icon.blade.php |   2 +-
+ .../views/components/layouts/anggota.blade.php     |  30 +--
+ .../views/components/layouts/app/sidebar.blade.php |   4 +
+ resources/views/dashboard.blade.php                | 130 ++++++++---
+ .../views/livewire/anggota/dashboard.blade.php     |   4 +-
+ .../views/livewire/anggota/penarikan.blade.php     |  53 ++++-
+ .../views/livewire/anggota/pinjaman.blade.php      |  53 ++++-
+ resources/views/livewire/anggota/riwayat.blade.php |   2 +-
+ .../views/livewire/anggota/simpanan.blade.php      |   4 +-
+ resources/views/livewire/auth/login.blade.php      |   3 +-
+ resources/views/livewire/pinjaman/rekap.blade.php  |  22 +-
+ .../livewire/pinjaman/tarik-setoran.blade.php      | 242 +++++++++++++++++++++
+ .../livewire/simpanan/anggota-detail.blade.php     |  45 +++-
+ resources/views/livewire/simpanan/index.blade.php  |   6 +-
+ resources/views/partials/head.blade.php            |  16 ++
+ resources/views/pdf/kwitansi-penarikan.blade.php   | 210 ++++++++++++++++++
+ routes/web.php                                     |   4 +-
+ 31 files changed, 803 insertions(+), 100 deletions(-)
+
+commit 879d87fe93f30d13c26241e15bf14cd73161a7bd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Jul 8 11:44:51 2026 +0800
+
+    cetak rekap dan detail antrian
+
+ .gradle/8.11.1/checksums/checksums.lock            | Bin 17 -> 17 bytes
+ .gradle/8.11.1/checksums/md5-checksums.bin         | Bin 34947 -> 77765 bytes
+ .gradle/8.11.1/checksums/sha1-checksums.bin        | Bin 81671 -> 158831 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.bin           | Bin 70165 -> 70215 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          | Bin 17 -> 17 bytes
+ app/Http/Controllers/PdfController.php             | 249 ++++++++++++++++++++
+ build/reports/problems/problems-report.html        |   2 +-
+ composer.json                                      |   1 +
+ dummy.php                                          |  39 ++++
+ dummy_check.php                                    |  10 +
+ dummy_err.log                                      |   1 +
+ dummy_log.txt                                      |   7 +
+ dummy_restore.php                                  |  14 ++
+ dummy_test.log                                     | Bin 0 -> 2872 bytes
+ output.log                                         | Bin 0 -> 2500 bytes
+ .../views/livewire/pinjaman/antrian.blade.php      |   7 +
+ resources/views/livewire/pinjaman/rekap.blade.php  |  10 +-
+ resources/views/livewire/pinjaman/review.blade.php | 145 ++++++++++--
+ resources/views/pdf/cetak_pinjaman.blade.php       | 260 +++++++++++++++++++++
+ resources/views/pdf/rekap_pinjaman.blade.php       | 249 ++++++++++++++++++++
+ routes/web.php                                     |   4 +-
+ vendor.zip                                         | Bin 0 -> 38080026 bytes
+ 22 files changed, 972 insertions(+), 26 deletions(-)
+
+commit 31483bcd21b69e9c3d29c475c74d36d9926ec9d4
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:20:14 2026 +0800
+
+    update apk baru
+
+ .../8.11.1/executionHistory/executionHistory.bin   | Bin 996311 -> 999081 bytes
+ .../8.11.1/executionHistory/executionHistory.lock  | Bin 17 -> 17 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.bin           | Bin 70165 -> 70165 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          | Bin 17 -> 17 bytes
+ .gradle/buildOutputCleanup/buildOutputCleanup.lock | Bin 17 -> 17 bytes
+ .gradle/file-system.probe                          | Bin 8 -> 8 bytes
+ app-release-bundle.aab                             | Bin 3899122 -> 3899124 bytes
+ app-release-signed.apk                             | Bin 0 -> 3772868 bytes
+ app-release-signed.apk.idsig                       | Bin 38357 -> 38357 bytes
+ app-release-unsigned-aligned.apk                   | Bin 3728063 -> 3728063 bytes
+ .../tmp/release/dex-renamer-state.txt              |   2 +-
+ .../packageReleaseBundle/intermediary-bundle.aab   | Bin 6539878 -> 6539878 bytes
+ .../release/buildReleasePreBundle/base.zip         | Bin 3978653 -> 3978653 bytes
+ .../version-control-info.textproto                 |   2 +-
+ .../outputs/apk/release/app-release-unsigned.apk   | Bin 3728063 -> 3728063 bytes
+ app/build/outputs/bundle/release/app-release.aab   | Bin 3856262 -> 3856263 bytes
+ build/reports/problems/problems-report.html        |   2 +-
+ koperasi-polres.zip                                | Bin 51412739 -> 0 bytes
+ 18 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 708fdb9cbbbdb20c23667889c67fb862f5351490
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:13:25 2026 +0800
+
+    update dashboard
+
+ resources/views/dashboard.blade.php | 224 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 200 insertions(+), 24 deletions(-)
+
+commit 0668eac473e3bd5c754605e26af59168040c67d3
+Merge: 1b494a3 e938bdb
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:05:20 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 1b494a35b1a4ded46fed131e7baef015d84a29f9
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 20:05:16 2026 +0800
+
+    gradle update
+
+ .gradle/8.11.1/fileHashes/fileHashes.bin    | Bin 70115 -> 70165 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock   | Bin 17 -> 17 bytes
+ build/reports/problems/problems-report.html |   2 +-
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+
+commit e938bdb31a757989d0c7f44e975422e6d68115e9
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 13:15:15 2026 +0800
+
+    update aturan kompensasi dan rekap pinjaman keseluruhan
+
+ check_nunggak.php                                  |  14 +
+ .../views/components/layouts/app/sidebar.blade.php |  64 +--
+ .../views/livewire/anggota/pinjaman.blade.php      |  25 +-
+ resources/views/livewire/auth/login.blade.php      |   4 +-
+ resources/views/livewire/pinjaman/cetak.blade.php  |   2 +-
+ resources/views/livewire/pinjaman/index.blade.php  |  80 +++-
+ resources/views/livewire/pinjaman/rekap.blade.php  | 505 +++++++++++++++++++++
+ resources/views/livewire/pinjaman/review.blade.php |   2 +-
+ routes/web.php                                     |   5 +-
+ 9 files changed, 642 insertions(+), 59 deletions(-)
+
+commit 21f3ee74386c87eaa3da58dedb7fd5d4e75fb9a9
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jul 7 08:39:08 2026 +0800
+
+    Restore Laravel app directory deleted by Android APK generation
+
+ .../Controllers/Auth/VerifyEmailController.php     |  30 ++++++
+ app/Http/Controllers/Controller.php                |   8 ++
+ app/Livewire/Actions/Logout.php                    |  22 ++++
+ app/Models/Angsuran.php                            |  28 ++++++
+ app/Models/Penarikan.php                           |  31 ++++++
+ app/Models/Pinjaman.php                            |  42 ++++++++
+ app/Models/SimpananPokok.php                       |  30 ++++++
+ app/Models/SimpananWajib.php                       |  49 +++++++++
+ app/Models/User.php                                | 111 +++++++++++++++++++++
+ app/Providers/AppServiceProvider.php               |  24 +++++
+ app/Providers/VoltServiceProvider.php              |  28 ++++++
+ 11 files changed, 403 insertions(+)
+
+commit 36a3d784ae7a79a2acaa1466b5fc053d4c72a0ea
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jul 6 22:46:02 2026 +0800
+
+    generate APK
+
+ .gradle/8.11.1/checksums/checksums.lock            |   Bin 0 -> 17 bytes
+ .gradle/8.11.1/checksums/md5-checksums.bin         |   Bin 0 -> 34947 bytes
+ .gradle/8.11.1/checksums/sha1-checksums.bin        |   Bin 0 -> 81671 bytes
+ .../8.11.1/executionHistory/executionHistory.bin   |   Bin 0 -> 996311 bytes
+ .../8.11.1/executionHistory/executionHistory.lock  |   Bin 0 -> 17 bytes
+ .gradle/8.11.1/fileChanges/last-build.bin          |   Bin 0 -> 1 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.bin           |   Bin 0 -> 70115 bytes
+ .gradle/8.11.1/fileHashes/fileHashes.lock          |   Bin 0 -> 17 bytes
+ .gradle/8.11.1/fileHashes/resourceHashesCache.bin  |   Bin 0 -> 19075 bytes
+ .gradle/8.11.1/gc.properties                       |     0
+ .gradle/buildOutputCleanup/buildOutputCleanup.lock |   Bin 0 -> 17 bytes
+ .gradle/buildOutputCleanup/cache.properties        |     2 +
+ .gradle/buildOutputCleanup/outputFiles.bin         |   Bin 0 -> 22907 bytes
+ .gradle/file-system.probe                          |   Bin 0 -> 8 bytes
+ .gradle/vcs-1/gc.properties                        |     0
+ android.keystore                                   |   Bin 0 -> 2666 bytes
+ app-release-bundle.aab                             |   Bin 0 -> 3899122 bytes
+ app-release-signed.apk.idsig                       |   Bin 0 -> 38357 bytes
+ app-release-unsigned-aligned.apk                   |   Bin 0 -> 3728063 bytes
+ .../Controllers/Auth/VerifyEmailController.php     |    30 -
+ app/Http/Controllers/Controller.php                |     8 -
+ app/Livewire/Actions/Logout.php                    |    22 -
+ app/Models/Angsuran.php                            |    28 -
+ app/Models/Penarikan.php                           |    31 -
+ app/Models/Pinjaman.php                            |    42 -
+ app/Models/SimpananPokok.php                       |    30 -
+ app/Models/SimpananWajib.php                       |    49 -
+ app/Models/User.php                                |   111 -
+ app/Providers/AppServiceProvider.php               |    24 -
+ app/Providers/VoltServiceProvider.php              |    28 -
+ app/build.gradle                                   |   213 +
+ .../resValues/release/values/gradleResValues.xml   |    47 +
+ .../release/processReleaseResources/aapt_rules.txt |    53 +
+ .../annotationProcessors.json                      |     1 +
+ .../redirect.txt                                   |     2 +
+ .../app-metadata.properties                        |     2 +
+ .../release/compileReleaseArtProfile/baseline.prof |   Bin 0 -> 798 bytes
+ .../compileReleaseArtProfile/baseline.profm        |   Bin 0 -> 143 bytes
+ .../configureReleaseDependencies/dependencies.pb   |   Bin 0 -> 5286 bytes
+ .../output-metadata.json                           |    18 +
+ .../redirect.txt                                   |     2 +
+ .../AndroidManifest.xml                            |   218 +
+ .../compileReleaseArtProfile/baseline-prof.txt     |   484 +
+ .../output-metadata.json                           |    10 +
+ .../release/processReleaseResources/R.jar          |   Bin 0 -> 198650 bytes
+ .../global/proguard-android-optimize.txt-8.9.1     |    89 +
+ .../global/proguard-android.txt-8.9.1              |    95 +
+ .../global/proguard-defaults.txt-8.9.1             |    89 +
+ .../dex/release/minifyReleaseWithR8/classes.dex    |   Bin 0 -> 725820 bytes
+ .../release/compileReleaseArtProfile/0/.dm         |   Bin 0 -> 1288 bytes
+ .../release/compileReleaseArtProfile/1/.dm         |   Bin 0 -> 1207 bytes
+ .../dex-metadata-map.properties                    |     5 +
+ .../incremental/mergeReleaseAssets/merger.xml      |     2 +
+ .../mergeReleaseJniLibFolders/merger.xml           |     2 +
+ .../incremental/mergeReleaseShaders/merger.xml     |     2 +
+ .../tmp/release/dex-renamer-state.txt              |     4 +
+ .../tmp/release/zip-cache/androidResources         |   Bin 0 -> 24726 bytes
+ .../tmp/release/zip-cache/javaResources0           |   Bin 0 -> 4200 bytes
+ .../incremental/release-mergeJavaRes/merge-state   |   Bin 0 -> 7837 bytes
+ .../zip-cache/2vMYjl9UQol0uv696gmOIaH0n+U=         |   Bin 0 -> 1551152 bytes
+ .../zip-cache/5SXKNeE8mE0qk2kkjmMyK6e+l58=         |   Bin 0 -> 41698 bytes
+ .../zip-cache/5u7oobhYJVGcRuzCbteJ2gfyp_8=         |   Bin 0 -> 20559 bytes
+ .../zip-cache/9hmdeOI9AfEpzZFGgXQe_3+3LtI=         |   Bin 0 -> 33627 bytes
+ .../zip-cache/BSi2mHTqRtchdBM5Eoo2XJB7aVA=         |   Bin 0 -> 77251 bytes
+ .../zip-cache/Bsemca8FIJ6Y5F0bK27Sg27RXSk=         |   Bin 0 -> 67902 bytes
+ .../zip-cache/CCzn7Rn9NqWLkuGUOEErZiGgf0A=         |   Bin 0 -> 56126 bytes
+ .../zip-cache/DUQiTSTBDwr8fLnxobsSFzB0+ZE=         |   Bin 0 -> 248854 bytes
+ .../zip-cache/DyYSir0OkfC6m3QE8dlI7DvxBF4=         |   Bin 0 -> 963 bytes
+ .../zip-cache/H5QoB5K3yskZGk+RaEQyTk7RRi4=         |   Bin 0 -> 31413 bytes
+ .../zip-cache/I6hQosGZnj8Bsb4eMCx4iTJ57gw=         |   Bin 0 -> 2936569 bytes
+ .../zip-cache/ISJumgX401PfvAUowRB+MCieYhE=         |   Bin 0 -> 2336 bytes
+ .../zip-cache/JQ9g2H42cKMQ0OzZ72MWaabIIkQ=         |   Bin 0 -> 87206 bytes
+ .../zip-cache/KL5F2+LTJL61FNEnt5R_XdQeXzY=         |   Bin 0 -> 34311 bytes
+ .../zip-cache/LvhrVgNmbNUVSPjhmKe_c8qi8YU=         |   Bin 0 -> 14592 bytes
+ .../zip-cache/NulTahRvmCZbaNQ+JWR3P5vKDJ4=         |   Bin 0 -> 6788 bytes
+ .../zip-cache/Nxky7kWL5jLH5+TvMoIwqRnSNdo=         |   Bin 0 -> 9612 bytes
+ .../zip-cache/ON7xNialxf8_iORAN1GnKU2SeaY=         |   Bin 0 -> 11657 bytes
+ .../zip-cache/Or4q_OluGv8mN6ln4sMgVR7l4xY=         |   Bin 0 -> 33350 bytes
+ .../zip-cache/PFBEJxmIjUNoCFlkA+kesytLGF4=         |   Bin 0 -> 40372 bytes
+ .../zip-cache/SOSb3K0CHEss921eP2gFb2wuvGs=         |   Bin 0 -> 2199 bytes
+ .../zip-cache/Sf2HrkDcbgR8AXp80GsV+wbW0RM=         |   Bin 0 -> 12467 bytes
+ .../zip-cache/SxX88X3l_cuXlhG8vEHxnRuzQis=         |   Bin 0 -> 1261357 bytes
+ .../zip-cache/TwHn05fvXJoTBb3v4kzGpluAQso=         |   Bin 0 -> 19401 bytes
+ .../zip-cache/UolqWpSttD03q3Sf8J8S0tHLDZ4=         |   Bin 0 -> 3819 bytes
+ .../zip-cache/WHk2W1aZ5nMdLJacLa+3o8x6yl0=         |   Bin 0 -> 6304 bytes
+ .../zip-cache/WRWao9GoQBAkuD7K9E4a1PPYm2w=         |   Bin 0 -> 47517 bytes
+ .../zip-cache/XV97cx78yAsC7nBT9r7x_DPDRYo=         |   Bin 0 -> 188652 bytes
+ .../zip-cache/XsOSXNhfT5K5rjlmwt8UJ77KHC4=         |   Bin 0 -> 7661 bytes
+ .../zip-cache/YVsl2bzBTDZSCbsD027d5Hxq4GI=         |   Bin 0 -> 1670469 bytes
+ .../zip-cache/coGHKg3ES7r_qlpAADGH1ZTvGi8=         |   Bin 0 -> 19555 bytes
+ .../zip-cache/cyiClazuqdAJT10769MR8rc0joo=         |   Bin 0 -> 969 bytes
+ .../zip-cache/d1aY4e9cJ41fBrJjvL2W8FUn9ac=         |   Bin 0 -> 287265 bytes
+ .../zip-cache/dARzy1RjZg2w4XD92Krv_sG+Fn4=         |   Bin 0 -> 29371 bytes
+ .../zip-cache/dGbIlJvMZSIAIVCVrG8sWqsedb8=         |   Bin 0 -> 218779 bytes
+ .../zip-cache/ddv0gCqgULMcDc7gb7XFchwZ9CM=         |   Bin 0 -> 11504 bytes
+ .../zip-cache/eAcP_kqZhIMVXnY1oFyRZgPUNPc=         |   Bin 0 -> 23113 bytes
+ .../zip-cache/exBIYhZ+QdmZ40OWvSUu_r0FPSw=         |   Bin 0 -> 6270 bytes
+ .../zip-cache/fYsFdBi1eRksNHXP+_gCNcJ3BnU=         |   Bin 0 -> 35177 bytes
+ .../zip-cache/jUt2K_i2BzpkXJG5Nry2VzVgNyA=         |   Bin 0 -> 791932 bytes
+ .../zip-cache/kF4sOLdYHiIwOJpJ5VIG9HHbjIM=         |   Bin 0 -> 55298 bytes
+ .../zip-cache/kPjTicUDq1yQ0iulYEMHzBkaBxU=         |   Bin 0 -> 18379 bytes
+ .../zip-cache/l1I83OBMLBHIaxVOe3hw4aq+swk=         |   Bin 0 -> 68235 bytes
+ .../zip-cache/l_ercFerR9XU2eO6FlcWVR_XCnw=         |   Bin 0 -> 775789 bytes
+ .../zip-cache/nnlFWqosDEN21wwiFcZeYSyAUqs=         |   Bin 0 -> 10763 bytes
+ .../zip-cache/qEaQd8AS3Vbe0EkvSy9SBSJHzrw=         |   Bin 0 -> 25987 bytes
+ .../zip-cache/uFalTYbWgKyhVejplQmfgIMZblc=         |   Bin 0 -> 20637 bytes
+ .../zip-cache/ujNC1o6c8D2KX9cx7j3fe3GlTwo=         |   Bin 0 -> 3696 bytes
+ .../zip-cache/vdohMWcxpfIWutrXMfCp_s49pMc=         |   Bin 0 -> 221491 bytes
+ .../zip-cache/w3H1P8CIBrHN3D50r2IOLq0IVoQ=         |   Bin 0 -> 31906 bytes
+ .../zip-cache/xphVh2PB39bxIp2PO2bt3+QnR18=         |   Bin 0 -> 52314 bytes
+ .../compile-file-map.properties                    |    26 +
+ .../merged.dir/values-af/values-af.xml             |    43 +
+ .../merged.dir/values-am/values-am.xml             |    43 +
+ .../merged.dir/values-ar/values-ar.xml             |    43 +
+ .../merged.dir/values-as/values-as.xml             |    43 +
+ .../merged.dir/values-az/values-az.xml             |    43 +
+ .../values-b+sr+Latn/values-b+sr+Latn.xml          |    43 +
+ .../merged.dir/values-be/values-be.xml             |    43 +
+ .../merged.dir/values-bg/values-bg.xml             |    43 +
+ .../merged.dir/values-bn/values-bn.xml             |    43 +
+ .../merged.dir/values-bs/values-bs.xml             |    43 +
+ .../merged.dir/values-ca/values-ca.xml             |    43 +
+ .../merged.dir/values-cs/values-cs.xml             |    43 +
+ .../merged.dir/values-da/values-da.xml             |    43 +
+ .../merged.dir/values-de/values-de.xml             |    43 +
+ .../merged.dir/values-el/values-el.xml             |    43 +
+ .../merged.dir/values-en-rAU/values-en-rAU.xml     |    43 +
+ .../merged.dir/values-en-rCA/values-en-rCA.xml     |    43 +
+ .../merged.dir/values-en-rGB/values-en-rGB.xml     |    43 +
+ .../merged.dir/values-en-rIN/values-en-rIN.xml     |    43 +
+ .../merged.dir/values-en-rXC/values-en-rXC.xml     |    43 +
+ .../merged.dir/values-es-rUS/values-es-rUS.xml     |    43 +
+ .../merged.dir/values-es/values-es.xml             |    43 +
+ .../merged.dir/values-et/values-et.xml             |    43 +
+ .../merged.dir/values-eu/values-eu.xml             |    43 +
+ .../merged.dir/values-fa/values-fa.xml             |    43 +
+ .../merged.dir/values-fi/values-fi.xml             |    43 +
+ .../merged.dir/values-fr-rCA/values-fr-rCA.xml     |    43 +
+ .../merged.dir/values-fr/values-fr.xml             |    43 +
+ .../merged.dir/values-gl/values-gl.xml             |    43 +
+ .../merged.dir/values-gu/values-gu.xml             |    43 +
+ .../values-h720dp-v13/values-h720dp-v13.xml        |     4 +
+ .../merged.dir/values-hdpi-v4/values-hdpi-v4.xml   |     8 +
+ .../merged.dir/values-hi/values-hi.xml             |    43 +
+ .../merged.dir/values-hr/values-hr.xml             |    43 +
+ .../merged.dir/values-hu/values-hu.xml             |    43 +
+ .../merged.dir/values-hy/values-hy.xml             |    43 +
+ .../merged.dir/values-in/values-in.xml             |    43 +
+ .../merged.dir/values-is/values-is.xml             |    43 +
+ .../merged.dir/values-it/values-it.xml             |    43 +
+ .../merged.dir/values-iw/values-iw.xml             |    43 +
+ .../merged.dir/values-ja/values-ja.xml             |    43 +
+ .../merged.dir/values-ka/values-ka.xml             |    43 +
+ .../merged.dir/values-kk/values-kk.xml             |    43 +
+ .../merged.dir/values-km/values-km.xml             |    43 +
+ .../merged.dir/values-kn/values-kn.xml             |    43 +
+ .../merged.dir/values-ko/values-ko.xml             |    43 +
+ .../merged.dir/values-ky/values-ky.xml             |    43 +
+ .../merged.dir/values-land/values-land.xml         |     6 +
+ .../merged.dir/values-large-v4/values-large-v4.xml |    12 +
+ .../values-ldltr-v21/values-ldltr-v21.xml          |     4 +
+ .../merged.dir/values-lo/values-lo.xml             |    43 +
+ .../merged.dir/values-lt/values-lt.xml             |    43 +
+ .../merged.dir/values-lv/values-lv.xml             |    43 +
+ .../merged.dir/values-mk/values-mk.xml             |    43 +
+ .../merged.dir/values-ml/values-ml.xml             |    43 +
+ .../merged.dir/values-mn/values-mn.xml             |    43 +
+ .../merged.dir/values-mr/values-mr.xml             |    43 +
+ .../merged.dir/values-ms/values-ms.xml             |    43 +
+ .../merged.dir/values-my/values-my.xml             |    43 +
+ .../merged.dir/values-nb/values-nb.xml             |    43 +
+ .../merged.dir/values-ne/values-ne.xml             |    43 +
+ .../merged.dir/values-night-v8/values-night-v8.xml |    11 +
+ .../merged.dir/values-nl/values-nl.xml             |    43 +
+ .../merged.dir/values-or/values-or.xml             |    43 +
+ .../merged.dir/values-pa/values-pa.xml             |    43 +
+ .../merged.dir/values-pl/values-pl.xml             |    43 +
+ .../merged.dir/values-port/values-port.xml         |     4 +
+ .../merged.dir/values-pt-rBR/values-pt-rBR.xml     |    43 +
+ .../merged.dir/values-pt-rPT/values-pt-rPT.xml     |    43 +
+ .../merged.dir/values-pt/values-pt.xml             |    43 +
+ .../merged.dir/values-ro/values-ro.xml             |    43 +
+ .../merged.dir/values-ru/values-ru.xml             |    43 +
+ .../merged.dir/values-si/values-si.xml             |    43 +
+ .../merged.dir/values-sk/values-sk.xml             |    43 +
+ .../merged.dir/values-sl/values-sl.xml             |    43 +
+ .../merged.dir/values-sq/values-sq.xml             |    43 +
+ .../merged.dir/values-sr/values-sr.xml             |    43 +
+ .../merged.dir/values-sv/values-sv.xml             |    43 +
+ .../merged.dir/values-sw/values-sw.xml             |    43 +
+ .../values-sw600dp-v13/values-sw600dp-v13.xml      |    11 +
+ .../merged.dir/values-ta/values-ta.xml             |    43 +
+ .../merged.dir/values-te/values-te.xml             |    43 +
+ .../merged.dir/values-th/values-th.xml             |    43 +
+ .../merged.dir/values-tl/values-tl.xml             |    43 +
+ .../merged.dir/values-tr/values-tr.xml             |    43 +
+ .../merged.dir/values-uk/values-uk.xml             |    43 +
+ .../merged.dir/values-ur/values-ur.xml             |    43 +
+ .../merged.dir/values-uz/values-uz.xml             |    43 +
+ .../merged.dir/values-v16/values-v16.xml           |     7 +
+ .../merged.dir/values-v17/values-v17.xml           |    62 +
+ .../merged.dir/values-v18/values-v18.xml           |     4 +
+ .../merged.dir/values-v21/values-v21.xml           |   277 +
+ .../merged.dir/values-v22/values-v22.xml           |    15 +
+ .../merged.dir/values-v23/values-v23.xml           |    51 +
+ .../merged.dir/values-v24/values-v24.xml           |     5 +
+ .../merged.dir/values-v25/values-v25.xml           |     9 +
+ .../merged.dir/values-v26/values-v26.xml           |    18 +
+ .../merged.dir/values-v28/values-v28.xml           |    13 +
+ .../merged.dir/values-vi/values-vi.xml             |    43 +
+ .../values-watch-v20/values-watch-v20.xml          |    12 +
+ .../values-watch-v21/values-watch-v21.xml          |    15 +
+ .../values-xlarge-v4/values-xlarge-v4.xml          |     9 +
+ .../merged.dir/values-zh-rCN/values-zh-rCN.xml     |    43 +
+ .../merged.dir/values-zh-rHK/values-zh-rHK.xml     |    43 +
+ .../merged.dir/values-zh-rTW/values-zh-rTW.xml     |    43 +
+ .../merged.dir/values-zu/values-zu.xml             |    43 +
+ .../merged.dir/values/values.xml                   |  3177 +++
+ .../release/mergeReleaseResources/merger.xml       |  3885 +++
+ .../compile-file-map.properties                    |    26 +
+ .../merged.dir/values/values.xml                   |    34 +
+ .../release/packageReleaseResources/merger.xml     |    11 +
+ .../packageReleaseBundle/intermediary-bundle.aab   |   Bin 0 -> 6539878 bytes
+ .../com/siapklu/koperasi/twa/Application.class     |   Bin 0 -> 401 bytes
+ .../siapklu/koperasi/twa/DelegationService.class   |   Bin 0 -> 453 bytes
+ .../siapklu/koperasi/twa/LauncherActivity.class    |   Bin 0 -> 998 bytes
+ .../linked-resources-binary-format-release.ap_     |   Bin 0 -> 3439000 bytes
+ .../processReleaseResources/output-metadata.json   |    20 +
+ .../linked-resources-for-bundle-proto-format.ap_   |   Bin 0 -> 3233064 bytes
+ .../release/parseReleaseLocalResources/R-def.txt   |    32 +
+ .../manifest-merger-blame-release-report.txt       |   385 +
+ .../mergeReleaseArtProfile/baseline-prof.txt       |  1485 ++
+ .../release/mergeReleaseJavaResource/base.jar      |   Bin 0 -> 19174 bytes
+ .../release/minifyReleaseWithR8/base.jar           |   Bin 0 -> 20109 bytes
+ .../processReleaseMainManifest/AndroidManifest.xml |   218 +
+ .../processReleaseManifest/AndroidManifest.xml     |   218 +
+ .../processReleaseManifest/output-metadata.json    |    20 +
+ ...able-anydpi_shortcut_legacy_background.xml.flat |   Bin 0 -> 1064 bytes
+ .../drawable-hdpi_ic_notification_icon.png.flat    |   Bin 0 -> 3408 bytes
+ .../drawable-hdpi_splash.png.flat                  |   Bin 0 -> 236548 bytes
+ .../drawable-mdpi_ic_notification_icon.png.flat    |   Bin 0 -> 1840 bytes
+ .../drawable-mdpi_splash.png.flat                  |   Bin 0 -> 119728 bytes
+ .../drawable-xhdpi_ic_notification_icon.png.flat   |   Bin 0 -> 5540 bytes
+ .../drawable-xhdpi_splash.png.flat                 |   Bin 0 -> 366928 bytes
+ .../drawable-xxhdpi_ic_notification_icon.png.flat  |   Bin 0 -> 10932 bytes
+ .../drawable-xxhdpi_splash.png.flat                |   Bin 0 -> 662408 bytes
+ .../drawable-xxxhdpi_ic_notification_icon.png.flat |   Bin 0 -> 17988 bytes
+ .../drawable-xxxhdpi_splash.png.flat               |   Bin 0 -> 1030872 bytes
+ .../mipmap-anydpi-v26_ic_launcher.xml.flat         |   Bin 0 -> 896 bytes
+ .../mipmap-hdpi_ic_launcher.png.flat               |   Bin 0 -> 10908 bytes
+ .../mipmap-hdpi_ic_maskable.png.flat               |   Bin 0 -> 27052 bytes
+ .../mipmap-mdpi_ic_launcher.png.flat               |   Bin 0 -> 5520 bytes
+ .../mipmap-mdpi_ic_maskable.png.flat               |   Bin 0 -> 13652 bytes
+ .../mipmap-xhdpi_ic_launcher.png.flat              |   Bin 0 -> 17964 bytes
+ .../mipmap-xhdpi_ic_maskable.png.flat              |   Bin 0 -> 43768 bytes
+ .../mipmap-xxhdpi_ic_launcher.png.flat             |   Bin 0 -> 35492 bytes
+ .../mipmap-xxhdpi_ic_maskable.png.flat             |   Bin 0 -> 86444 bytes
+ .../mipmap-xxxhdpi_ic_launcher.png.flat            |   Bin 0 -> 57084 bytes
+ .../mipmap-xxxhdpi_ic_maskable.png.flat            |   Bin 0 -> 141616 bytes
+ .../raw_web_app_manifest.json.flat                 |   Bin 0 -> 556 bytes
+ .../values-af_values-af.arsc.flat                  |   Bin 0 -> 2900 bytes
+ .../values-am_values-am.arsc.flat                  |   Bin 0 -> 3164 bytes
+ .../values-ar_values-ar.arsc.flat                  |   Bin 0 -> 3124 bytes
+ .../values-as_values-as.arsc.flat                  |   Bin 0 -> 3784 bytes
+ .../values-az_values-az.arsc.flat                  |   Bin 0 -> 2988 bytes
+ .../values-b+sr+Latn_values-b+sr+Latn.arsc.flat    |   Bin 0 -> 3192 bytes
+ .../values-be_values-be.arsc.flat                  |   Bin 0 -> 3364 bytes
+ .../values-bg_values-bg.arsc.flat                  |   Bin 0 -> 3424 bytes
+ .../values-bn_values-bn.arsc.flat                  |   Bin 0 -> 3692 bytes
+ .../values-bs_values-bs.arsc.flat                  |   Bin 0 -> 2968 bytes
+ .../values-ca_values-ca.arsc.flat                  |   Bin 0 -> 2972 bytes
+ .../values-cs_values-cs.arsc.flat                  |   Bin 0 -> 2972 bytes
+ .../values-da_values-da.arsc.flat                  |   Bin 0 -> 2888 bytes
+ .../values-de_values-de.arsc.flat                  |   Bin 0 -> 2964 bytes
+ .../values-el_values-el.arsc.flat                  |   Bin 0 -> 3508 bytes
+ .../values-en-rAU_values-en-rAU.arsc.flat          |   Bin 0 -> 2984 bytes
+ .../values-en-rCA_values-en-rCA.arsc.flat          |   Bin 0 -> 2984 bytes
+ .../values-en-rGB_values-en-rGB.arsc.flat          |   Bin 0 -> 2984 bytes
+ .../values-en-rIN_values-en-rIN.arsc.flat          |   Bin 0 -> 2984 bytes
+ .../values-en-rXC_values-en-rXC.arsc.flat          |   Bin 0 -> 15496 bytes
+ .../values-es-rUS_values-es-rUS.arsc.flat          |   Bin 0 -> 3096 bytes
+ .../values-es_values-es.arsc.flat                  |   Bin 0 -> 2984 bytes
+ .../values-et_values-et.arsc.flat                  |   Bin 0 -> 2956 bytes
+ .../values-eu_values-eu.arsc.flat                  |   Bin 0 -> 2976 bytes
+ .../values-fa_values-fa.arsc.flat                  |   Bin 0 -> 3236 bytes
+ .../values-fi_values-fi.arsc.flat                  |   Bin 0 -> 2916 bytes
+ .../values-fr-rCA_values-fr-rCA.arsc.flat          |   Bin 0 -> 3128 bytes
+ .../values-fr_values-fr.arsc.flat                  |   Bin 0 -> 2992 bytes
+ .../values-gl_values-gl.arsc.flat                  |   Bin 0 -> 2996 bytes
+ .../values-gu_values-gu.arsc.flat                  |   Bin 0 -> 3468 bytes
+ .../values-h720dp-v13_values-h720dp-v13.arsc.flat  |   Bin 0 -> 284 bytes
+ .../values-hdpi-v4_values-hdpi-v4.arsc.flat        |   Bin 0 -> 488 bytes
+ .../values-hi_values-hi.arsc.flat                  |   Bin 0 -> 3580 bytes
+ .../values-hr_values-hr.arsc.flat                  |   Bin 0 -> 2952 bytes
+ .../values-hu_values-hu.arsc.flat                  |   Bin 0 -> 3036 bytes
+ .../values-hy_values-hy.arsc.flat                  |   Bin 0 -> 3276 bytes
+ .../values-in_values-in.arsc.flat                  |   Bin 0 -> 2924 bytes
+ .../values-is_values-is.arsc.flat                  |   Bin 0 -> 2900 bytes
+ .../values-it_values-it.arsc.flat                  |   Bin 0 -> 2928 bytes
+ .../values-iw_values-iw.arsc.flat                  |   Bin 0 -> 3088 bytes
+ .../values-ja_values-ja.arsc.flat                  |   Bin 0 -> 3004 bytes
+ .../values-ka_values-ka.arsc.flat                  |   Bin 0 -> 3628 bytes
+ .../values-kk_values-kk.arsc.flat                  |   Bin 0 -> 3216 bytes
+ .../values-km_values-km.arsc.flat                  |   Bin 0 -> 3632 bytes
+ .../values-kn_values-kn.arsc.flat                  |   Bin 0 -> 3844 bytes
+ .../values-ko_values-ko.arsc.flat                  |   Bin 0 -> 2948 bytes
+ .../values-ky_values-ky.arsc.flat                  |   Bin 0 -> 3292 bytes
+ .../values-land_values-land.arsc.flat              |   Bin 0 -> 400 bytes
+ .../values-large-v4_values-large-v4.arsc.flat      |   Bin 0 -> 888 bytes
+ .../values-ldltr-v21_values-ldltr-v21.arsc.flat    |   Bin 0 -> 344 bytes
+ .../values-lo_values-lo.arsc.flat                  |   Bin 0 -> 3476 bytes
+ .../values-lt_values-lt.arsc.flat                  |   Bin 0 -> 3108 bytes
+ .../values-lv_values-lv.arsc.flat                  |   Bin 0 -> 3192 bytes
+ .../values-mk_values-mk.arsc.flat                  |   Bin 0 -> 3320 bytes
+ .../values-ml_values-ml.arsc.flat                  |   Bin 0 -> 3856 bytes
+ .../values-mn_values-mn.arsc.flat                  |   Bin 0 -> 3296 bytes
+ .../values-mr_values-mr.arsc.flat                  |   Bin 0 -> 3568 bytes
+ .../values-ms_values-ms.arsc.flat                  |   Bin 0 -> 2940 bytes
+ .../values-my_values-my.arsc.flat                  |   Bin 0 -> 3908 bytes
+ .../values-nb_values-nb.arsc.flat                  |   Bin 0 -> 2868 bytes
+ .../values-ne_values-ne.arsc.flat                  |   Bin 0 -> 3780 bytes
+ .../values-night-v8_values-night-v8.arsc.flat      |   Bin 0 -> 1040 bytes
+ .../values-nl_values-nl.arsc.flat                  |   Bin 0 -> 2948 bytes
+ .../values-or_values-or.arsc.flat                  |   Bin 0 -> 3860 bytes
+ .../values-pa_values-pa.arsc.flat                  |   Bin 0 -> 3472 bytes
+ .../values-pl_values-pl.arsc.flat                  |   Bin 0 -> 2980 bytes
+ .../values-port_values-port.arsc.flat              |   Bin 0 -> 252 bytes
+ .../values-pt-rBR_values-pt-rBR.arsc.flat          |   Bin 0 -> 3124 bytes
+ .../values-pt-rPT_values-pt-rPT.arsc.flat          |   Bin 0 -> 3112 bytes
+ .../values-pt_values-pt.arsc.flat                  |   Bin 0 -> 2996 bytes
+ .../values-ro_values-ro.arsc.flat                  |   Bin 0 -> 2988 bytes
+ .../values-ru_values-ru.arsc.flat                  |   Bin 0 -> 3328 bytes
+ .../values-si_values-si.arsc.flat                  |   Bin 0 -> 3688 bytes
+ .../values-sk_values-sk.arsc.flat                  |   Bin 0 -> 3008 bytes
+ .../values-sl_values-sl.arsc.flat                  |   Bin 0 -> 2976 bytes
+ .../values-sq_values-sq.arsc.flat                  |   Bin 0 -> 2964 bytes
+ .../values-sr_values-sr.arsc.flat                  |   Bin 0 -> 3324 bytes
+ .../values-sv_values-sv.arsc.flat                  |   Bin 0 -> 2920 bytes
+ ...values-sw600dp-v13_values-sw600dp-v13.arsc.flat |   Bin 0 -> 776 bytes
+ .../values-sw_values-sw.arsc.flat                  |   Bin 0 -> 2932 bytes
+ .../values-ta_values-ta.arsc.flat                  |   Bin 0 -> 3888 bytes
+ .../values-te_values-te.arsc.flat                  |   Bin 0 -> 3888 bytes
+ .../values-th_values-th.arsc.flat                  |   Bin 0 -> 3388 bytes
+ .../values-tl_values-tl.arsc.flat                  |   Bin 0 -> 2980 bytes
+ .../values-tr_values-tr.arsc.flat                  |   Bin 0 -> 2936 bytes
+ .../values-uk_values-uk.arsc.flat                  |   Bin 0 -> 3368 bytes
+ .../values-ur_values-ur.arsc.flat                  |   Bin 0 -> 3288 bytes
+ .../values-uz_values-uz.arsc.flat                  |   Bin 0 -> 2940 bytes
+ .../values-v16_values-v16.arsc.flat                |   Bin 0 -> 412 bytes
+ .../values-v17_values-v17.arsc.flat                |   Bin 0 -> 3696 bytes
+ .../values-v18_values-v18.arsc.flat                |   Bin 0 -> 248 bytes
+ .../values-v21_values-v21.arsc.flat                |   Bin 0 -> 20628 bytes
+ .../values-v22_values-v22.arsc.flat                |   Bin 0 -> 936 bytes
+ .../values-v23_values-v23.arsc.flat                |   Bin 0 -> 3452 bytes
+ .../values-v24_values-v24.arsc.flat                |   Bin 0 -> 520 bytes
+ .../values-v25_values-v25.arsc.flat                |   Bin 0 -> 584 bytes
+ .../values-v26_values-v26.arsc.flat                |   Bin 0 -> 1056 bytes
+ .../values-v28_values-v28.arsc.flat                |   Bin 0 -> 748 bytes
+ .../values-vi_values-vi.arsc.flat                  |   Bin 0 -> 3104 bytes
+ .../values-watch-v20_values-watch-v20.arsc.flat    |   Bin 0 -> 728 bytes
+ .../values-watch-v21_values-watch-v21.arsc.flat    |   Bin 0 -> 904 bytes
+ .../values-xlarge-v4_values-xlarge-v4.arsc.flat    |   Bin 0 -> 584 bytes
+ .../values-zh-rCN_values-zh-rCN.arsc.flat          |   Bin 0 -> 3012 bytes
+ .../values-zh-rHK_values-zh-rHK.arsc.flat          |   Bin 0 -> 3016 bytes
+ .../values-zh-rTW_values-zh-rTW.arsc.flat          |   Bin 0 -> 3020 bytes
+ .../values-zu_values-zu.arsc.flat                  |   Bin 0 -> 2936 bytes
+ .../mergeReleaseResources/values_values.arsc.flat  |   Bin 0 -> 183988 bytes
+ .../mergeReleaseResources/xml_filepaths.xml.flat   |   Bin 0 -> 204 bytes
+ .../mergeReleaseResources/xml_shortcuts.xml.flat   |   Bin 0 -> 192 bytes
+ .../out/multi-v2/mergeReleaseResources.json        |  5370 ++++
+ .../out/multi-v2/values-af.json                    |    60 +
+ .../out/multi-v2/values-am.json                    |    60 +
+ .../out/multi-v2/values-ar.json                    |    60 +
+ .../out/multi-v2/values-as.json                    |    60 +
+ .../out/multi-v2/values-az.json                    |    60 +
+ .../out/multi-v2/values-b+sr+Latn.json             |    60 +
+ .../out/multi-v2/values-be.json                    |    60 +
+ .../out/multi-v2/values-bg.json                    |    60 +
+ .../out/multi-v2/values-bn.json                    |    60 +
+ .../out/multi-v2/values-bs.json                    |    60 +
+ .../out/multi-v2/values-ca.json                    |    60 +
+ .../out/multi-v2/values-cs.json                    |    60 +
+ .../out/multi-v2/values-da.json                    |    60 +
+ .../out/multi-v2/values-de.json                    |    60 +
+ .../out/multi-v2/values-el.json                    |    60 +
+ .../out/multi-v2/values-en-rAU.json                |    60 +
+ .../out/multi-v2/values-en-rCA.json                |    60 +
+ .../out/multi-v2/values-en-rGB.json                |    60 +
+ .../out/multi-v2/values-en-rIN.json                |    60 +
+ .../out/multi-v2/values-en-rXC.json                |    60 +
+ .../out/multi-v2/values-es-rUS.json                |    60 +
+ .../out/multi-v2/values-es.json                    |    60 +
+ .../out/multi-v2/values-et.json                    |    60 +
+ .../out/multi-v2/values-eu.json                    |    60 +
+ .../out/multi-v2/values-fa.json                    |    60 +
+ .../out/multi-v2/values-fi.json                    |    60 +
+ .../out/multi-v2/values-fr-rCA.json                |    60 +
+ .../out/multi-v2/values-fr.json                    |    60 +
+ .../out/multi-v2/values-gl.json                    |    60 +
+ .../out/multi-v2/values-gu.json                    |    60 +
+ .../out/multi-v2/values-h720dp-v13.json            |    19 +
+ .../out/multi-v2/values-hdpi-v4.json               |    20 +
+ .../out/multi-v2/values-hi.json                    |    60 +
+ .../out/multi-v2/values-hr.json                    |    60 +
+ .../out/multi-v2/values-hu.json                    |    60 +
+ .../out/multi-v2/values-hy.json                    |    60 +
+ .../out/multi-v2/values-in.json                    |    60 +
+ .../out/multi-v2/values-is.json                    |    60 +
+ .../out/multi-v2/values-it.json                    |    60 +
+ .../out/multi-v2/values-iw.json                    |    60 +
+ .../out/multi-v2/values-ja.json                    |    60 +
+ .../out/multi-v2/values-ka.json                    |    60 +
+ .../out/multi-v2/values-kk.json                    |    60 +
+ .../out/multi-v2/values-km.json                    |    60 +
+ .../out/multi-v2/values-kn.json                    |    60 +
+ .../out/multi-v2/values-ko.json                    |    60 +
+ .../out/multi-v2/values-ky.json                    |    60 +
+ .../out/multi-v2/values-land.json                  |    19 +
+ .../out/multi-v2/values-large-v4.json              |    19 +
+ .../out/multi-v2/values-ldltr-v21.json             |    19 +
+ .../out/multi-v2/values-lo.json                    |    60 +
+ .../out/multi-v2/values-lt.json                    |    60 +
+ .../out/multi-v2/values-lv.json                    |    60 +
+ .../out/multi-v2/values-mk.json                    |    60 +
+ .../out/multi-v2/values-ml.json                    |    60 +
+ .../out/multi-v2/values-mn.json                    |    60 +
+ .../out/multi-v2/values-mr.json                    |    60 +
+ .../out/multi-v2/values-ms.json                    |    60 +
+ .../out/multi-v2/values-my.json                    |    60 +
+ .../out/multi-v2/values-nb.json                    |    60 +
+ .../out/multi-v2/values-ne.json                    |    60 +
+ .../out/multi-v2/values-night-v8.json              |    19 +
+ .../out/multi-v2/values-nl.json                    |    60 +
+ .../out/multi-v2/values-or.json                    |    60 +
+ .../out/multi-v2/values-pa.json                    |    60 +
+ .../out/multi-v2/values-pl.json                    |    60 +
+ .../out/multi-v2/values-port.json                  |    19 +
+ .../out/multi-v2/values-pt-rBR.json                |    60 +
+ .../out/multi-v2/values-pt-rPT.json                |    60 +
+ .../out/multi-v2/values-pt.json                    |    60 +
+ .../out/multi-v2/values-ro.json                    |    60 +
+ .../out/multi-v2/values-ru.json                    |    60 +
+ .../out/multi-v2/values-si.json                    |    60 +
+ .../out/multi-v2/values-sk.json                    |    60 +
+ .../out/multi-v2/values-sl.json                    |    60 +
+ .../out/multi-v2/values-sq.json                    |    60 +
+ .../out/multi-v2/values-sr.json                    |    60 +
+ .../out/multi-v2/values-sv.json                    |    60 +
+ .../out/multi-v2/values-sw.json                    |    60 +
+ .../out/multi-v2/values-sw600dp-v13.json           |    19 +
+ .../out/multi-v2/values-ta.json                    |    60 +
+ .../out/multi-v2/values-te.json                    |    60 +
+ .../out/multi-v2/values-th.json                    |    60 +
+ .../out/multi-v2/values-tl.json                    |    60 +
+ .../out/multi-v2/values-tr.json                    |    60 +
+ .../out/multi-v2/values-uk.json                    |    60 +
+ .../out/multi-v2/values-ur.json                    |    60 +
+ .../out/multi-v2/values-uz.json                    |    60 +
+ .../out/multi-v2/values-v16.json                   |    20 +
+ .../out/multi-v2/values-v17.json                   |    20 +
+ .../out/multi-v2/values-v18.json                   |    19 +
+ .../out/multi-v2/values-v21.json                   |    47 +
+ .../out/multi-v2/values-v22.json                   |    20 +
+ .../out/multi-v2/values-v23.json                   |    20 +
+ .../out/multi-v2/values-v24.json                   |    19 +
+ .../out/multi-v2/values-v25.json                   |    20 +
+ .../out/multi-v2/values-v26.json                   |    20 +
+ .../out/multi-v2/values-v28.json                   |    20 +
+ .../out/multi-v2/values-vi.json                    |    60 +
+ .../out/multi-v2/values-watch-v20.json             |    20 +
+ .../out/multi-v2/values-watch-v21.json             |    20 +
+ .../out/multi-v2/values-xlarge-v4.json             |    19 +
+ .../out/multi-v2/values-zh-rCN.json                |    60 +
+ .../out/multi-v2/values-zh-rHK.json                |    60 +
+ .../out/multi-v2/values-zh-rTW.json                |    60 +
+ .../out/multi-v2/values-zu.json                    |    60 +
+ .../mergeReleaseResources/out/multi-v2/values.json |   257 +
+ .../out/single/mergeReleaseResources.json          |   102 +
+ .../collectReleaseDependencies/dependencies.pb     |   Bin 0 -> 5286 bytes
+ .../release/buildReleasePreBundle/base.zip         |   Bin 0 -> 3978653 bytes
+ .../extractDeepLinksRelease/navigation.json        |     1 +
+ .../nestedResourcesValidationReport.txt            |     1 +
+ .../optimizeReleaseResources/output-metadata.json  |    20 +
+ .../resources-release-optimize.ap_                 |   Bin 0 -> 3393092 bytes
+ .../AndroidManifest.xml                            |   218 +
+ .../output-metadata.json                           |    20 +
+ .../shortcut_legacy_background.xml                 |    25 +
+ .../drawable-hdpi-v4/ic_notification_icon.png      |   Bin 0 -> 3311 bytes
+ .../drawable-hdpi-v4/splash.png                    |   Bin 0 -> 249742 bytes
+ .../drawable-mdpi-v4/ic_notification_icon.png      |   Bin 0 -> 1696 bytes
+ .../drawable-mdpi-v4/splash.png                    |   Bin 0 -> 123792 bytes
+ .../drawable-xhdpi-v4/ic_notification_icon.png     |   Bin 0 -> 5511 bytes
+ .../drawable-xhdpi-v4/splash.png                   |   Bin 0 -> 399810 bytes
+ .../drawable-xxhdpi-v4/ic_notification_icon.png    |   Bin 0 -> 11206 bytes
+ .../drawable-xxhdpi-v4/splash.png                  |   Bin 0 -> 763667 bytes
+ .../drawable-xxxhdpi-v4/ic_notification_icon.png   |   Bin 0 -> 18355 bytes
+ .../drawable-xxxhdpi-v4/splash.png                 |   Bin 0 -> 1221428 bytes
+ .../mipmap-anydpi-v26/ic_launcher.xml              |    33 +
+ .../mipmap-hdpi-v4/ic_launcher.png                 |   Bin 0 -> 11206 bytes
+ .../mipmap-hdpi-v4/ic_maskable.png                 |   Bin 0 -> 27652 bytes
+ .../mipmap-mdpi-v4/ic_launcher.png                 |   Bin 0 -> 5511 bytes
+ .../mipmap-mdpi-v4/ic_maskable.png                 |   Bin 0 -> 13914 bytes
+ .../mipmap-xhdpi-v4/ic_launcher.png                |   Bin 0 -> 18355 bytes
+ .../mipmap-xhdpi-v4/ic_maskable.png                |   Bin 0 -> 44899 bytes
+ .../mipmap-xxhdpi-v4/ic_launcher.png               |   Bin 0 -> 36429 bytes
+ .../mipmap-xxhdpi-v4/ic_maskable.png               |   Bin 0 -> 88746 bytes
+ .../mipmap-xxxhdpi-v4/ic_launcher.png              |   Bin 0 -> 58410 bytes
+ .../mipmap-xxxhdpi-v4/ic_maskable.png              |   Bin 0 -> 144989 bytes
+ .../raw/web_app_manifest.json                      |     1 +
+ .../packageReleaseResources/values/values.xml      |    34 +
+ .../packageReleaseResources/xml/filepaths.xml      |    18 +
+ .../packageReleaseResources/xml/shortcuts.xml      |     1 +
+ .../baseline-prof.txt                              |  1394 ++
+ .../release/minifyReleaseWithR8/baseline-prof.txt  |   484 +
+ .../release/minifyReleaseWithR8/r8-metadata.dat    |     1 +
+ .../release/processReleaseResources/R.txt          |  1803 ++
+ .../sdkReleaseDependencyData/sdkDependencyData.pb  |   Bin 0 -> 3464 bytes
+ .../signing-config-versions.json                   |     1 +
+ .../release/mapReleaseSourceSetPaths/file-map.txt  |    28 +
+ .../release/processReleaseResources/stableIds.txt  |  1362 +
+ .../processReleaseResources/package-aware-r.txt    |  1362 +
+ .../version-control-info.textproto                 |     5 +
+ .../outputs/apk/release/app-release-unsigned.apk   |   Bin 0 -> 3728063 bytes
+ .../baselineProfiles/0/app-release-unsigned.dm     |   Bin 0 -> 1288 bytes
+ .../baselineProfiles/1/app-release-unsigned.dm     |   Bin 0 -> 1207 bytes
+ app/build/outputs/apk/release/output-metadata.json |    37 +
+ app/build/outputs/bundle/release/app-release.aab   |   Bin 0 -> 3856262 bytes
+ .../logs/manifest-merger-release-report.txt        |   463 +
+ .../outputs/mapping/release/configuration.txt      |   411 +
+ app/build/outputs/mapping/release/mapping.txt      | 25049 +++++++++++++++++++
+ app/build/outputs/mapping/release/seeds.txt        |   809 +
+ app/build/outputs/mapping/release/usage.txt        | 15748 ++++++++++++
+ .../sdk-dependencies/release/sdkDependencies.txt   |  1041 +
+ .../previous-compilation-data.bin                  |   Bin 0 -> 18671 bytes
+ app/src/main/AndroidManifest.xml                   |   200 +
+ .../java/com/siapklu/koperasi/twa/Application.java |    29 +
+ .../siapklu/koperasi/twa/DelegationService.java    |    14 +
+ .../com/siapklu/koperasi/twa/LauncherActivity.java |    54 +
+ .../drawable-anydpi/shortcut_legacy_background.xml |    25 +
+ .../res/drawable-hdpi/ic_notification_icon.png     |   Bin 0 -> 3311 bytes
+ app/src/main/res/drawable-hdpi/splash.png          |   Bin 0 -> 249742 bytes
+ .../res/drawable-mdpi/ic_notification_icon.png     |   Bin 0 -> 1696 bytes
+ app/src/main/res/drawable-mdpi/splash.png          |   Bin 0 -> 123792 bytes
+ .../res/drawable-xhdpi/ic_notification_icon.png    |   Bin 0 -> 5511 bytes
+ app/src/main/res/drawable-xhdpi/splash.png         |   Bin 0 -> 399810 bytes
+ .../res/drawable-xxhdpi/ic_notification_icon.png   |   Bin 0 -> 11206 bytes
+ app/src/main/res/drawable-xxhdpi/splash.png        |   Bin 0 -> 763667 bytes
+ .../res/drawable-xxxhdpi/ic_notification_icon.png  |   Bin 0 -> 18355 bytes
+ app/src/main/res/drawable-xxxhdpi/splash.png       |   Bin 0 -> 1221428 bytes
+ app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml |    33 +
+ app/src/main/res/mipmap-hdpi/ic_launcher.png       |   Bin 0 -> 11206 bytes
+ app/src/main/res/mipmap-hdpi/ic_maskable.png       |   Bin 0 -> 27652 bytes
+ app/src/main/res/mipmap-mdpi/ic_launcher.png       |   Bin 0 -> 5511 bytes
+ app/src/main/res/mipmap-mdpi/ic_maskable.png       |   Bin 0 -> 13914 bytes
+ app/src/main/res/mipmap-xhdpi/ic_launcher.png      |   Bin 0 -> 18355 bytes
+ app/src/main/res/mipmap-xhdpi/ic_maskable.png      |   Bin 0 -> 44899 bytes
+ app/src/main/res/mipmap-xxhdpi/ic_launcher.png     |   Bin 0 -> 36429 bytes
+ app/src/main/res/mipmap-xxhdpi/ic_maskable.png     |   Bin 0 -> 88746 bytes
+ app/src/main/res/mipmap-xxxhdpi/ic_launcher.png    |   Bin 0 -> 58410 bytes
+ app/src/main/res/mipmap-xxxhdpi/ic_maskable.png    |   Bin 0 -> 144989 bytes
+ app/src/main/res/raw/web_app_manifest.json         |     1 +
+ app/src/main/res/values/colors.xml                 |    18 +
+ app/src/main/res/values/strings.xml                |    42 +
+ app/src/main/res/xml/filepaths.xml                 |    18 +
+ app/src/main/res/xml/shortcuts.xml                 |     1 +
+ bootstrap/app.php                                  |     6 +-
+ build.gradle                                       |    42 +
+ build/reports/problems/problems-report.html        |   663 +
+ gradle.properties                                  |    14 +
+ gradle/wrapper/gradle-wrapper.jar                  |   Bin 0 -> 55616 bytes
+ gradle/wrapper/gradle-wrapper.properties           |     7 +
+ gradlew                                            |   249 +
+ gradlew.bat                                        |    92 +
+ manifest-checksum.txt                              |     1 +
+ primkoppol lotara.apk                              |   Bin 0 -> 3772868 bytes
+ public/.well-known/assetlinks.json                 |    14 +
+ public/manifest.json                               |    14 +-
+ .../views/components/layouts/anggota.blade.php     |     1 -
+ .../views/components/layouts/app/sidebar.blade.php |     1 -
+ resources/views/components/layouts/print.blade.php |     1 -
+ .../views/livewire/auth/confirm-password.blade.php |     2 +-
+ resources/views/livewire/auth/login.blade.php      |     8 +-
+ resources/views/livewire/auth/register.blade.php   |     2 +-
+ .../views/livewire/auth/verify-email.blade.php     |     2 +-
+ resources/views/partials/head.blade.php            |     4 +-
+ routes/web.php                                     |    31 +-
+ settings.gradle                                    |     1 +
+ store_icon.png                                     |   Bin 0 -> 300374 bytes
+ twa-manifest.json                                  |    47 +
+ 589 files changed, 78337 insertions(+), 428 deletions(-)
+
+commit 9bafd79f81d77dde817f058e587f1a5218d6222e
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jul 6 14:22:02 2026 +0800
+
+    onlinekan
+
+ .htaccess                                          |   7 +
+ composer.lock                                      | 524 ++++++++++++++++++++-
+ koperasi-polres.zip                                | Bin 0 -> 51412739 bytes
+ public/favicon.png                                 | Bin 0 -> 37558 bytes
+ public/icon-192x192.png                            | Bin 0 -> 37558 bytes
+ public/icon-512x512.png                            | Bin 0 -> 37558 bytes
+ public/manifest.json                               |  22 +
+ public/sw.js                                       |  56 +++
+ .../views/components/layouts/anggota.blade.php     |  13 +
+ .../views/components/layouts/app/sidebar.blade.php |   1 +
+ resources/views/components/layouts/print.blade.php |  27 ++
+ .../views/livewire/anggota/dashboard.blade.php     |   2 +
+ .../views/livewire/anggota/pinjaman.blade.php      |  66 ++-
+ .../livewire/anggota/riwayat-setoran.blade.php     |  14 +-
+ resources/views/livewire/anggota/riwayat.blade.php |   6 +-
+ .../views/livewire/pinjaman/antrian.blade.php      |  22 +-
+ resources/views/livewire/pinjaman/cetak.blade.php  | 235 +++++++++
+ resources/views/livewire/pinjaman/review.blade.php | 122 +++--
+ resources/views/livewire/pinjaman/show.blade.php   |  22 +-
+ routes/web.php                                     |   1 +
+ 20 files changed, 1058 insertions(+), 82 deletions(-)
+
+commit 80945e2c02395c259a701ab3a68f71199747dffd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Wed Jul 1 11:33:51 2026 +0800
+
+    update flow pinjaman
+
+ .../views/components/layouts/app/sidebar.blade.php |  14 +-
+ .../views/livewire/admin/reset-data.blade.php      | 185 +++++++++++++++++++++
+ .../views/livewire/anggota/dashboard.blade.php     |  68 ++++++--
+ .../views/livewire/anggota/pinjaman.blade.php      |  74 ++++++---
+ routes/web.php                                     |   1 +
+ 5 files changed, 303 insertions(+), 39 deletions(-)
+
+commit c752e2addf3597d459c9cb7b68175787c9fb5a5c
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Wed Jul 1 09:45:59 2026 +0800
+
+    update pinjaman aturan
+
+ ...021213_add_ditunda_status_to_pinjaman_table.php |  25 +++++
+ .../views/livewire/anggota/pinjaman.blade.php      |  88 ++++++++++++---
+ .../views/livewire/pinjaman/antrian.blade.php      |  74 +++++++++++--
+ resources/views/livewire/pinjaman/review.blade.php | 122 ++++++++++++++++++++-
+ 4 files changed, 278 insertions(+), 31 deletions(-)
+
+commit f66d45c07768e0b014d8edf2d594dfd82bff754d
+Merge: 6375961 658babd
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jun 29 09:20:22 2026 +0800
+
+    Merge branch 'main' of https://github.com/mujurin/koperasi-polres
+
+commit 63759610753631ecc85b896843afe59e5bb11231
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Mon Jun 29 09:20:20 2026 +0800
+
+    tampilkan pokok dan jasa
+
+ .../views/livewire/anggota/pinjaman.blade.php      | 35 +++++++++++++++++-----
+ resources/views/livewire/pinjaman/review.blade.php | 26 ++++++++++++++--
+ 2 files changed, 51 insertions(+), 10 deletions(-)
+
+commit 658babd8a459802a359face9d7aa509a301a386a
+Author: mujurjati <mujurindrajati@gmail.com>
+Date:   Mon Jun 29 09:18:24 2026 +0800
+
+    input setoran dummy
+
+ .env.example                                       |  65 ----
+ .../2026_06_22_012430_add_nrp_to_users_table.php   |  16 +-
+ .../views/components/layouts/app/sidebar.blade.php |   3 +
+ .../views/livewire/admin/dummy-angsuran.blade.php  | 400 +++++++++++++++++++++
+ routes/web.php                                     |   3 +
+ 5 files changed, 418 insertions(+), 69 deletions(-)
+
+commit 3d6b3364901eacb394379859204c54b5c930aa48
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Thu Jun 25 08:47:48 2026 +0800
+
+    perbaikan kompensasi
+
+ app/Models/Angsuran.php                            |  28 ++
+ app/Models/Pinjaman.php                            |   5 +
+ .../2026_06_23_055818_create_angsurans_table.php   |  31 ++
+ fix_db.php                                         |  14 +
+ insert_dummy_angsuran.php                          |  59 +++
+ insert_dummy_angsurans.php                         |  55 +++
+ resources/views/components/app-logo-icon.blade.php |   9 +-
+ resources/views/components/app-logo.blade.php      |  11 +-
+ .../views/components/layouts/anggota.blade.php     |  21 +-
+ .../views/components/layouts/app/header.blade.php  |   2 +-
+ .../views/components/layouts/app/sidebar.blade.php |   8 +-
+ .../views/components/layouts/auth/card.blade.php   |  44 +-
+ .../views/components/layouts/auth/simple.blade.php |  41 +-
+ .../views/components/layouts/auth/split.blade.php  |  78 ++--
+ resources/views/dashboard.blade.php                |  53 ++-
+ .../views/livewire/admin/sync-anggota.blade.php    | 196 +++++++++
+ .../views/livewire/admin/sync-simpanan.blade.php   | 257 ++++++++++++
+ .../views/livewire/anggota/dashboard.blade.php     |  63 +--
+ .../views/livewire/anggota/pinjaman.blade.php      | 139 ++++++-
+ .../livewire/anggota/riwayat-setoran.blade.php     | 158 +++++++
+ resources/views/livewire/anggota/riwayat.blade.php |  85 ++--
+ resources/views/livewire/auth/login.blade.php      |  17 +-
+ .../views/livewire/pinjaman/antrian.blade.php      | 157 +++++++
+ resources/views/livewire/pinjaman/index.blade.php  | 148 +++++++
+ resources/views/livewire/pinjaman/review.blade.php | 459 +++++++++++++++++++++
+ resources/views/livewire/pinjaman/show.blade.php   | 294 +++++++++++++
+ resources/views/livewire/simpanan/index.blade.php  | 110 +++--
+ resources/views/partials/head.blade.php            |   3 +-
+ routes/web.php                                     |   7 +
+ test_api.php                                       | Bin 0 -> 2472 bytes
+ test_api_2.php                                     |   8 +
+ 31 files changed, 2313 insertions(+), 247 deletions(-)
+
+commit 9ccfe560dc9bfdae83dcc048a763c229afd900a1
+Author: Mujur Jati <mujurindrajati@gmail.com>
+Date:   Tue Jun 23 09:03:21 2026 +0800
+
+    Initial commit
+
+ .editorconfig                                      |   18 +
+ .env.example                                       |   65 +
+ .gitattributes                                     |   10 +
+ .github/workflows/lint.yml                         |   44 +
+ .github/workflows/tests.yml                        |   54 +
+ .gitignore                                         |   24 +
+ .../Controllers/Auth/VerifyEmailController.php     |   30 +
+ app/Http/Controllers/Controller.php                |    8 +
+ app/Livewire/Actions/Logout.php                    |   22 +
+ app/Models/Penarikan.php                           |   31 +
+ app/Models/Pinjaman.php                            |   37 +
+ app/Models/SimpananPokok.php                       |   30 +
+ app/Models/SimpananWajib.php                       |   49 +
+ app/Models/User.php                                |  111 +
+ app/Providers/AppServiceProvider.php               |   24 +
+ app/Providers/VoltServiceProvider.php              |   28 +
+ artisan                                            |   15 +
+ bootstrap/app.php                                  |   18 +
+ bootstrap/cache/.gitignore                         |    2 +
+ bootstrap/providers.php                            |    7 +
+ composer.json                                      |   78 +
+ composer.lock                                      | 9833 ++++++++++++++++++++
+ config/app.php                                     |  126 +
+ config/auth.php                                    |  115 +
+ config/cache.php                                   |  108 +
+ config/database.php                                |  174 +
+ config/filesystems.php                             |   77 +
+ config/logging.php                                 |  132 +
+ config/mail.php                                    |  116 +
+ config/queue.php                                   |  112 +
+ config/services.php                                |   38 +
+ config/session.php                                 |  217 +
+ database/.gitignore                                |    1 +
+ database/factories/UserFactory.php                 |   44 +
+ .../0001_01_01_000000_create_users_table.php       |   49 +
+ .../0001_01_01_000001_create_cache_table.php       |   35 +
+ .../0001_01_01_000002_create_jobs_table.php        |   57 +
+ .../2026_06_22_012430_add_nrp_to_users_table.php   |   28 +
+ ...26_06_22_015401_create_simpanan_pokok_table.php |   27 +
+ ...26_06_22_015411_create_simpanan_wajib_table.php |   28 +
+ .../2026_06_22_015420_create_penarikan_table.php   |   24 +
+ ..._06_22_025856_add_status_to_penarikan_table.php |   27 +
+ .../2026_06_22_034956_create_pinjamen_table.php    |   36 +
+ ...5623_add_jenis_permohonan_to_pinjaman_table.php |   27 +
+ database/seeders/AdminUserSeeder.php               |   26 +
+ database/seeders/DatabaseSeeder.php                |   23 +
+ database/seeders/SimpananSeeder.php                |  181 +
+ package-lock.json                                  | 2194 +++++
+ package.json                                       |   22 +
+ phpunit.xml                                        |   33 +
+ public/.htaccess                                   |   21 +
+ public/favicon.ico                                 |    0
+ public/index.php                                   |   17 +
+ public/robots.txt                                  |    2 +
+ resources/css/app.css                              |   66 +
+ resources/js/app.js                                |    0
+ .../views/components/action-message.blade.php      |   14 +
+ resources/views/components/app-logo-icon.blade.php |    8 +
+ resources/views/components/app-logo.blade.php      |    6 +
+ resources/views/components/auth-header.blade.php   |    9 +
+ .../views/components/auth-session-status.blade.php |    9 +
+ .../views/components/layouts/anggota.blade.php     |  119 +
+ resources/views/components/layouts/app.blade.php   |    5 +
+ .../views/components/layouts/app/header.blade.php  |  125 +
+ .../views/components/layouts/app/sidebar.blade.php |  128 +
+ resources/views/components/layouts/auth.blade.php  |    3 +
+ .../views/components/layouts/auth/card.blade.php   |   26 +
+ .../views/components/layouts/auth/simple.blade.php |   22 +
+ .../views/components/layouts/auth/split.blade.php  |   43 +
+ .../views/components/placeholder-pattern.blade.php |   12 +
+ .../views/components/settings/layout.blade.php     |   20 +
+ resources/views/components/text-link.blade.php     |    6 +
+ resources/views/dashboard.blade.php                |   18 +
+ resources/views/flux/icon/book-open-text.blade.php |   47 +
+ .../views/flux/icon/chevrons-up-down.blade.php     |   43 +
+ resources/views/flux/icon/folder-git-2.blade.php   |   45 +
+ resources/views/flux/icon/layout-grid.blade.php    |   45 +
+ resources/views/flux/navlist/group.blade.php       |   51 +
+ .../views/livewire/anggota/dashboard.blade.php     |  288 +
+ .../views/livewire/anggota/penarikan.blade.php     |  196 +
+ .../views/livewire/anggota/pinjaman.blade.php      |  266 +
+ resources/views/livewire/anggota/riwayat.blade.php |  184 +
+ .../views/livewire/anggota/simpanan.blade.php      |  114 +
+ .../views/livewire/auth/confirm-password.blade.php |   61 +
+ .../views/livewire/auth/forgot-password.blade.php  |   44 +
+ resources/views/livewire/auth/login.blade.php      |  144 +
+ resources/views/livewire/auth/register.blade.php   |   94 +
+ .../views/livewire/auth/reset-password.blade.php   |  117 +
+ .../views/livewire/auth/verify-email.blade.php     |   61 +
+ .../views/livewire/settings/appearance.blade.php   |   19 +
+ .../livewire/settings/delete-user-form.blade.php   |   58 +
+ .../views/livewire/settings/password.blade.php     |   84 +
+ .../views/livewire/settings/profile.blade.php      |  117 +
+ .../livewire/simpanan/anggota-detail.blade.php     |  521 ++
+ resources/views/livewire/simpanan/index.blade.php  |  252 +
+ .../views/livewire/simpanan/penarikan.blade.php    |  192 +
+ .../livewire/simpanan/simpanan-pokok.blade.php     |  192 +
+ .../livewire/simpanan/simpanan-wajib.blade.php     |  162 +
+ resources/views/partials/head.blade.php            |   10 +
+ .../views/partials/settings-heading.blade.php      |    5 +
+ resources/views/welcome.blade.php                  |  273 +
+ routes/auth.php                                    |   35 +
+ routes/console.php                                 |    8 +
+ routes/web.php                                     |   36 +
+ storage/app/.gitignore                             |    4 +
+ storage/app/private/.gitignore                     |    2 +
+ storage/app/public/.gitignore                      |    2 +
+ storage/framework/.gitignore                       |    9 +
+ storage/framework/cache/.gitignore                 |    3 +
+ storage/framework/cache/data/.gitignore            |    2 +
+ storage/framework/sessions/.gitignore              |    2 +
+ storage/framework/testing/.gitignore               |    2 +
+ storage/framework/views/.gitignore                 |    2 +
+ storage/logs/.gitignore                            |    2 +
+ tests/Feature/Auth/AuthenticationTest.php          |   45 +
+ tests/Feature/Auth/EmailVerificationTest.php       |   47 +
+ tests/Feature/Auth/PasswordConfirmationTest.php    |   38 +
+ tests/Feature/Auth/PasswordResetTest.php           |   66 +
+ tests/Feature/Auth/RegistrationTest.php            |   24 +
+ tests/Feature/DashboardTest.php                    |   16 +
+ tests/Feature/ExampleTest.php                      |    7 +
+ tests/Feature/Settings/PasswordUpdateTest.php      |   39 +
+ tests/Feature/Settings/ProfileUpdateTest.php       |   75 +
+ tests/Pest.php                                     |   47 +
+ tests/TestCase.php                                 |   10 +
+ tests/Unit/ExampleTest.php                         |    5 +
+ vite.config.js                                     |   18 +
+ 127 files changed, 19525 insertions(+)
