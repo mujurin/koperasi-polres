@@ -129,7 +129,7 @@
 <body>
 
     <div class="header">
-        <h1>Rekapitulasi Pinjaman Koperasi Polres Lombok Utara</h1>
+        <h1>Rekapitulasi Pinjaman Koperasi Polres Lombok Utara ({{ $type === 'primer' ? 'Primer' : 'Reguler / Baru & Kompensasi' }})</h1>
         <h2>Tahun: <strong>{{ $year }}</strong> | Filter: <strong>{{ ucfirst($filter) }}</strong></h2>
     </div>
 
@@ -154,6 +154,7 @@
         <thead>
             <tr>
                 <th style="text-align: left;">Nama / NRP</th>
+                <th style="width: 70px; background-color: #e0e7ff; color: #4338ca;">Tahun Sebelumnya</th>
                 @foreach(['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'] as $m)
                     <th style="width: 55px;">{{ $m }}</th>
                 @endforeach
@@ -172,6 +173,20 @@
                                 <div class="val-row"><span class="lbl-tgk">Tgk P:</span> {{ number_format($row['tunggakan_pokok'], 0, ',', '.') }}</div>
                                 <div class="val-row"><span style="color:#c2410c; font-weight:bold; float:left;">Tgk J:</span> {{ number_format($row['tunggakan_jasa'], 0, ',', '.') }}</div>
                             </div>
+                        @endif
+                    </td>
+                    <td style="background-color: #e0e7ff33;">
+                        @if(isset($row['past_pokok']) && ($row['past_pokok'] > 0 || $row['past_jasa'] > 0))
+                            <div class="cell-content">
+                                @if($row['past_pokok'] > 0)
+                                    <div class="val-row"><span class="lbl-p">P:</span> <span class="val-p">{{ number_format($row['past_pokok'], 0, ',', '.') }}</span></div>
+                                @endif
+                                @if($row['past_jasa'] > 0)
+                                    <div class="val-row"><span class="lbl-j">J:</span> <span class="val-j">{{ number_format($row['past_jasa'], 0, ',', '.') }}</span></div>
+                                @endif
+                            </div>
+                        @else
+                            <div class="text-center" style="color:#999">-</div>
                         @endif
                     </td>
                     @for($i = 1; $i <= 12; $i++)
@@ -218,6 +233,20 @@
                             </div>
                         @endif
                     </td>
+                    <td style="background-color: #e0e7ff;">
+                        @if(isset($totalPastPokok) && ($totalPastPokok > 0 || $totalPastJasa > 0))
+                            <div class="cell-content">
+                                @if($totalPastPokok > 0)
+                                    <div class="val-row"><span class="lbl-p">P:</span> {{ number_format($totalPastPokok, 0, ',', '.') }}</div>
+                                @endif
+                                @if($totalPastJasa > 0)
+                                    <div class="val-row"><span class="lbl-j">J:</span> {{ number_format($totalPastJasa, 0, ',', '.') }}</div>
+                                @endif
+                            </div>
+                        @else
+                            <div class="text-center" style="color:#999">-</div>
+                        @endif
+                    </td>
                     @for($i = 1; $i <= 12; $i++)
                         <td style="background-color: #f3f4f6;">
                             @if($totalPerBulan[$i]['pokok'] > 0 || $totalPerBulan[$i]['jasa'] > 0)
@@ -235,8 +264,8 @@
                         </td>
                     @endfor
                     <td class="total-col cell-content" style="background-color: #e5e7eb;">
-                        <div class="val-row"><span class="lbl-p">Tot P:</span> {{ number_format($totalPokok, 0, ',', '.') }}</div>
-                        <div class="val-row"><span class="lbl-j">Tot J:</span> {{ number_format($totalJasa, 0, ',', '.') }}</div>
+                        <div class="val-row"><span class="lbl-p">Tot P:</span> {{ number_format($matrixTotalPokok, 0, ',', '.') }}</div>
+                        <div class="val-row"><span class="lbl-j">Tot J:</span> {{ number_format($matrixTotalJasa, 0, ',', '.') }}</div>
                     </td>
                 </tr>
             </tfoot>

@@ -18,9 +18,9 @@
             <flux:navlist.group heading="Platform" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                     wire:navigate>Dashboard</flux:navlist.item>
-                
-                <flux:navlist.item icon="users" :href="route('anggota.index')" :current="request()->routeIs('anggota.index')"
-                    wire:navigate>Anggota</flux:navlist.item>
+
+                <flux:navlist.item icon="users" :href="route('anggota.index')"
+                    :current="request()->routeIs('anggota.index')" wire:navigate>Anggota</flux:navlist.item>
             </flux:navlist.group>
 
             <flux:navlist.group heading="Simpanan Koperasi" class="grid mt-4">
@@ -28,29 +28,32 @@
                     :current="request()->routeIs('simpanan.index')" wire:navigate>
                     Simpanan
                 </flux:navlist.item>
-                <flux:navlist.item icon="arrow-down-tray" :href="route('simpanan.penarikan')"
-                    :current="request()->routeIs('simpanan.penarikan')" wire:navigate>
-                    Persetujuan Penarikan
-                </flux:navlist.item>
-            </flux:navlist.group>
-
-            <flux:navlist.group heading="Pinjaman Koperasi" class="grid mt-4">
                 <flux:navlist.item icon="clock" href="{{ route('pinjaman.antrian') }}"
                     :current="request()->routeIs('pinjaman.antrian') || request()->routeIs('pinjaman.review')"
                     wire:navigate>
                     Antrian Pinjaman
                 </flux:navlist.item>
-                <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index') }}"
-                    :current="request()->routeIs('pinjaman.index')" wire:navigate>
-                    Daftar Pinjaman
+            </flux:navlist.group>
+
+            <flux:navlist.group heading="Pinjaman Baru & Kompensasi" class="grid mt-4">
+                <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index', ['type' => 'reguler']) }}"
+                    :current="request()->routeIs('pinjaman.index') && request('type') !== 'primer'" wire:navigate>
+                    Baru & Kompensasi
                 </flux:navlist.item>
-                <flux:navlist.item icon="arrow-down-on-square" href="{{ route('pinjaman.tarik-setoran') }}"
-                    :current="request()->routeIs('pinjaman.tarik-setoran')" wire:navigate>
-                    Tarik Setoran
-                </flux:navlist.item>
-                <flux:navlist.item icon="chart-bar" href="{{ route('pinjaman.rekap') }}"
-                    :current="request()->routeIs('pinjaman.rekap')" wire:navigate>
+                <flux:navlist.item icon="chart-bar" href="{{ route('pinjaman.rekap', ['type' => 'reguler']) }}"
+                    :current="request()->routeIs('pinjaman.rekap') && request('type') !== 'primer'" wire:navigate>
                     Rekap Pinjaman
+                </flux:navlist.item>
+            </flux:navlist.group>
+
+            <flux:navlist.group heading="Pinjaman Primer" class="grid mt-4">
+                <flux:navlist.item icon="document-text" href="{{ route('pinjaman.index', ['type' => 'primer']) }}"
+                    :current="request()->routeIs('pinjaman.index') && request('type') === 'primer'" wire:navigate>
+                    Pinjaman Primer
+                </flux:navlist.item>
+                <flux:navlist.item icon="chart-bar" href="{{ route('pinjaman.rekap', ['type' => 'primer']) }}"
+                    :current="request()->routeIs('pinjaman.rekap') && request('type') === 'primer'" wire:navigate>
+                    Rekap Pinjaman Primer
                 </flux:navlist.item>
             </flux:navlist.group>
 

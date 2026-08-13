@@ -169,7 +169,7 @@
             <td class="label">Tipe Pengajuan</td>
             <td style="font-weight: bold; text-transform: uppercase;"
                 class="{{ $isKompensasi ? 'text-orange' : 'text-indigo' }}">
-                : {{ $isKompensasi ? 'Kompensasi' : 'Pengajuan Baru' }}
+                : {{ $isKompensasi ? 'Kompensasi' : (in_array($pinjaman->jenis_permohonan, ['Handphone', 'Motor', 'Barang Lain']) ? 'Pengajuan Primer' : 'Pengajuan Baru') }}
             </td>
         </tr>
         <tr>
