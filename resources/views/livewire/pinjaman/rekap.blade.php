@@ -4,9 +4,13 @@ use App\Models\Pinjaman;
 use App\Models\Angsuran;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.app')] class extends Component {
+    #[Url]
+    public $type = 'reguler';
+
     public $filter = 'semua';
     public $year;
 
@@ -32,22 +36,43 @@ new #[Layout('components.layouts.app')] class extends Component {
 
     public function with(): array
     {
-        $activePinjamans = Pinjaman::whereIn('status', ['disetujui', 'lunas'])->with([
+        $query = Pinjaman::whereIn('status', ['disetujui', 'lunas'])->with([
             'user',
             'angsurans' => function ($q) {
                 $q->where('status_pembayaran', 'lunas');
             }
-        ])->get();
+        ]);
+
+        if ($this->type === 'primer') {
+            $query->whereIn('jenis_permohonan', ['Handphone', 'Motor', 'Barang Lain']);
+        } else {
+            $query->whereNotIn('jenis_permohonan', ['Handphone', 'Motor', 'Barang Lain']);
+        }
+
+        $activePinjamans = $query->get();
 
         $totalPinjamanCair = 0;
         $totalPokok = 0;
         $totalJasa = 0;
         $totalTunggakanPokok = 0;
         $totalTunggakanJasa = 0;
+        $totalPastPokok = 0;
+        $totalPastJasa = 0;
+        $matrixTotalPokok = 0;
+        $matrixTotalJasa = 0;
 
         $rekapBulan = [];
         $totalPerBulan = array_fill(1, 12, ['pokok' => 0, 'jasa' => 0]);
         $now = Carbon::now();
+        $selectedYear = (int) $this->year;
+
+        if ($selectedYear < $now->year) {
+            $effectiveCurrentMonth = 12;
+        } elseif ($selectedYear == $now->year) {
+            $effectiveCurrentMonth = $now->month;
+        } else {
+            $effectiveCurrentMonth = 0;
+        }
 
         foreach ($activePinjamans as $pinjaman) {
             $user = $pinjaman->user;
@@ -62,6 +87,8 @@ new #[Layout('components.layouts.app')] class extends Component {
                     'months' => array_fill(1, 12, ['pokok' => 0, 'jasa' => 0]),
                     'total_pokok' => 0,
                     'total_jasa' => 0,
+                    'past_pokok' => 0,
+                    'past_jasa' => 0,
                     'tunggakan_pokok' => 0,
                     'tunggakan_jasa' => 0,
                     'tunggakan_bulan' => 0,
@@ -69,7 +96,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                     'kompensasi_month' => null,
                     'acc_month' => null,
                     'max_valid_month' => 12,
-                    'current_month' => Carbon::now()->month
+                    'current_month' => $effectiveCurrentMonth
                 ];
             }
 
@@ -169,6 +196,20 @@ new #[Layout('components.layouts.app')] class extends Component {
 
                     $totalPerBulan[$month]['pokok'] += $pokok;
                     $totalPerBulan[$month]['jasa'] += $jasa;
+                    
+                    $matrixTotalPokok += $pokok;
+                    $matrixTotalJasa += $jasa;
+                } elseif ($tglBayar->year < $this->year) {
+                    $rekapBulan[$userId]['past_pokok'] += $pokok;
+                    $rekapBulan[$userId]['past_jasa'] += $jasa;
+                    $rekapBulan[$userId]['total_pokok'] += $pokok;
+                    $rekapBulan[$userId]['total_jasa'] += $jasa;
+
+                    $totalPastPokok += $pokok;
+                    $totalPastJasa += $jasa;
+                    
+                    $matrixTotalPokok += $pokok;
+                    $matrixTotalJasa += $jasa;
                 }
             }
         }
@@ -181,7 +222,7 @@ new #[Layout('components.layouts.app')] class extends Component {
             return strcmp($a['user']->name, $b['user']->name);
         });
 
-        return compact('totalPinjamanCair', 'totalPokok', 'totalJasa', 'rekapBulan', 'totalPerBulan', 'totalTunggakanPokok', 'totalTunggakanJasa');
+        return compact('totalPinjamanCair', 'totalPokok', 'totalJasa', 'rekapBulan', 'totalPerBulan', 'totalTunggakanPokok', 'totalTunggakanJasa', 'totalPastPokok', 'totalPastJasa', 'matrixTotalPokok', 'matrixTotalJasa');
     }
 }; ?>
 
@@ -189,13 +230,13 @@ new #[Layout('components.layouts.app')] class extends Component {
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-zinc-900 dark:text-white">Rekap Pinjaman</h1>
+            <h1 class="text-2xl font-bold text-zinc-900 dark:text-white">Rekap Pinjaman {{ $type === 'primer' ? 'Primer' : 'Baru & Kompensasi' }}</h1>
             <p class="text-sm text-zinc-500 dark:text-zinc-400">Ringkasan total pinjaman terealisasi, cicilan pokok, dan
                 jasa.</p>
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('pinjaman.rekap.download') }}?year={{ $year }}&filter={{ $filter }}" target="_blank"
+            <a href="{{ route('pinjaman.rekap.download') }}?year={{ $year }}&filter={{ $filter }}&type={{ $type }}" target="_blank"
                 class="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-black shadow-sm hover:bg-red-500 transition-all cursor-pointer mr-2">
                 <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 PDF
@@ -332,6 +373,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                         <th
                             class="px-4 py-3 font-bold sticky left-0 z-10 bg-zinc-50 dark:bg-zinc-900 min-w-[160px] border-r border-zinc-200 dark:border-zinc-800 shadow-[1px_0_0_rgba(0,0,0,0.05)] dark:shadow-[1px_0_0_rgba(255,255,255,0.02)]">
                             Nama / NRP</th>
+                        <th class="px-2 py-3 font-bold text-center border-r border-zinc-200/60 dark:border-zinc-800/60 whitespace-nowrap bg-indigo-50/50 dark:bg-indigo-900/10 text-indigo-700 dark:text-indigo-400">
+                            Tahun Sebelumnya
+                        </th>
                         @foreach(['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'] as $m)
                             <th
                                 class="px-2 py-3 font-semibold text-center border-r border-zinc-200/60 dark:border-zinc-800/60">
@@ -378,6 +422,27 @@ new #[Layout('components.layouts.app')] class extends Component {
                                                 class="text-[8px] text-orange-600 dark:text-orange-400 font-mono font-bold">{{ number_format($row['tunggakan_jasa'], 0, ',', '.') }}</span>
                                         </div>
                                     </div>
+                                @endif
+                            </td>
+
+                            <td class="px-2 py-2 border-r border-zinc-200/50 dark:border-zinc-800/50 bg-indigo-50/30 dark:bg-indigo-900/10">
+                                @if($row['past_pokok'] > 0 || $row['past_jasa'] > 0)
+                                    <div class="flex flex-col gap-1 items-end min-w-[70px]">
+                                        @if($row['past_pokok'] > 0)
+                                            <div class="flex items-center gap-1 w-full justify-between">
+                                                <span class="text-[8px] font-bold text-emerald-600/70 dark:text-emerald-500/70 uppercase">P:</span>
+                                                <span class="text-zinc-700 dark:text-zinc-300 font-mono tracking-tight">{{ number_format($row['past_pokok'], 0, ',', '.') }}</span>
+                                            </div>
+                                        @endif
+                                        @if($row['past_jasa'] > 0)
+                                            <div class="flex items-center gap-1 w-full justify-between">
+                                                <span class="text-[8px] font-bold text-blue-500/80 dark:text-blue-500/80 uppercase">J:</span>
+                                                <span class="text-zinc-700 dark:text-zinc-300 font-mono tracking-tight">{{ number_format($row['past_jasa'], 0, ',', '.') }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="text-center text-zinc-300 dark:text-zinc-700/50 font-black">-</div>
                                 @endif
                             </td>
 
@@ -472,6 +537,26 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     </div>
                                 @endif
                             </th>
+                            <th class="px-2 py-3 border-t border-r border-zinc-200 dark:border-zinc-700/50 bg-indigo-50/50 dark:bg-indigo-900/10">
+                                @if($totalPastPokok > 0 || $totalPastJasa > 0)
+                                    <div class="flex flex-col gap-1 items-end min-w-[70px]">
+                                        @if($totalPastPokok > 0)
+                                            <div class="flex items-center gap-1 w-full justify-between">
+                                                <span class="text-[8px] font-bold text-emerald-700 dark:text-emerald-400">P:</span>
+                                                <span class="font-mono font-bold tracking-tight">{{ number_format($totalPastPokok, 0, ',', '.') }}</span>
+                                            </div>
+                                        @endif
+                                        @if($totalPastJasa > 0)
+                                            <div class="flex items-center gap-1 w-full justify-between">
+                                                <span class="text-[8px] font-bold text-blue-700 dark:text-blue-400">J:</span>
+                                                <span class="font-mono font-bold tracking-tight">{{ number_format($totalPastJasa, 0, ',', '.') }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="text-center text-zinc-400 dark:text-zinc-600 font-black">-</div>
+                                @endif
+                            </th>
                             @for($i = 1; $i <= 12; $i++)
                                 <th class="px-2 py-3 border-t border-r border-zinc-200 dark:border-zinc-700/50">
                                     @if($totalPerBulan[$i]['pokok'] > 0 || $totalPerBulan[$i]['jasa'] > 0)
@@ -504,13 +589,13 @@ new #[Layout('components.layouts.app')] class extends Component {
                                             class="text-[9px] font-bold text-emerald-700 dark:text-emerald-400 uppercase">Tot
                                             P:</span>
                                         <span
-                                            class="font-bold text-zinc-900 dark:text-white font-mono tracking-tighter">{{ number_format($totalPokok, 0, ',', '.') }}</span>
+                                            class="font-bold text-zinc-900 dark:text-white font-mono tracking-tighter">{{ number_format($matrixTotalPokok, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="flex items-center gap-1.5 w-full justify-between">
                                         <span class="text-[9px] font-bold text-blue-700 dark:text-blue-400 uppercase">Tot
                                             J:</span>
                                         <span
-                                            class="font-bold text-zinc-900 dark:text-white font-mono tracking-tighter">{{ number_format($totalJasa, 0, ',', '.') }}</span>
+                                            class="font-bold text-zinc-900 dark:text-white font-mono tracking-tighter">{{ number_format($matrixTotalJasa, 0, ',', '.') }}</span>
                                     </div>
                                 </div>
                             </th>

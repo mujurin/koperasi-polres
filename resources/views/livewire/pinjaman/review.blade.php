@@ -70,6 +70,7 @@ new #[Layout('components.layouts.app')] class extends Component {
         $this->formJumlahAjuan = (int) $this->pinjaman->jumlah_ajuan;
         $this->formTenor = (int) $this->pinjaman->tenor;
         $this->selectedUser = $this->pinjaman->user?->name ?? 'User Dihapus';
+        $this->selectedJenis = $this->pinjaman->jenis_permohonan ?? 'Baru';
         $this->sisaPinjaman = 0;
         $pinjamanAktif = $this->pinjaman->user?->pinjaman()
             ->where('status', 'disetujui')
@@ -491,13 +492,16 @@ new #[Layout('components.layouts.app')] class extends Component {
             @endif
             
             @if(count($riwayatGaji) > 0)
+                @php
+                    $isPrimer = in_array($pinjaman->jenis_permohonan, ['Handphone', 'Motor', 'Barang Lain']);
+                @endphp
                 <div
                     class="mb-5 rounded-2xl bg-white shadow-sm border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 overflow-hidden">
                     <div
                         class="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800/60 bg-orange-50/30 dark:bg-orange-900/10">
                         <h4 class="text-xs font-bold text-orange-800 dark:text-orange-400 flex items-center gap-1.5">
                             <flux:icon name="banknotes" class="size-4" />
-                            Gaji & Tunkin 3 Bulan Terakhir
+                            {{ $isPrimer ? 'Gaji 3 Bulan Terakhir' : 'Tunkin 3 Bulan Terakhir' }}
                         </h4>
                     </div>
                     <div class="divide-y divide-zinc-100 dark:divide-zinc-800/60">
@@ -510,22 +514,19 @@ new #[Layout('components.layouts.app')] class extends Component {
                                     </span>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-zinc-500 dark:text-zinc-400">Gaji Bersih</span>
-                                        <span class="font-semibold text-zinc-800 dark:text-zinc-300">Rp
-                                            {{ number_format($gaji['gaji_pokok_bersih'] ?? 0, 0, ',', '.') }}</span>
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-zinc-500 dark:text-zinc-400">Tunkin Bersih</span>
-                                        <span class="font-semibold text-zinc-800 dark:text-zinc-300">Rp
-                                            {{ number_format($gaji['tunkin_bersih'] ?? 0, 0, ',', '.') }}</span>
-                                    </div>
-                                    <div
-                                        class="flex items-center justify-between text-xs pt-2 border-t border-dashed border-zinc-200 dark:border-zinc-700">
-                                        <span class="font-bold text-orange-700 dark:text-orange-500">Total THP</span>
-                                        <span class="font-bold text-orange-700 dark:text-orange-400">Rp
-                                            {{ number_format(($gaji['gaji_pokok_bersih'] ?? 0) + ($gaji['tunkin_bersih'] ?? 0), 0, ',', '.') }}</span>
-                                    </div>
+                                    @if($isPrimer)
+                                        <div class="flex items-center justify-between text-xs">
+                                            <span class="text-zinc-500 dark:text-zinc-400">Gaji Bersih</span>
+                                            <span class="font-semibold text-zinc-800 dark:text-zinc-300">Rp
+                                                {{ number_format($gaji['gaji_pokok_bersih'] ?? 0, 0, ',', '.') }}</span>
+                                        </div>
+                                    @else
+                                        <div class="flex items-center justify-between text-xs">
+                                            <span class="text-zinc-500 dark:text-zinc-400">Tunkin Bersih</span>
+                                            <span class="font-semibold text-zinc-800 dark:text-zinc-300">Rp
+                                                {{ number_format($gaji['tunkin_bersih'] ?? 0, 0, ',', '.') }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

@@ -8,11 +8,13 @@ use Livewire\Volt\Component;
 new #[Layout('components.layouts.print')] class extends Component {
     public int $year;
     public string $filter = 'semua';
+    public string $type = 'reguler';
 
     public function mount()
     {
         $this->year = (int) request()->get('year', date('Y'));
         $this->filter = request()->get('filter', 'semua');
+        $this->type = request()->get('type', 'reguler');
     }
 
     public function with(): array
@@ -21,12 +23,23 @@ new #[Layout('components.layouts.print')] class extends Component {
             $q->where('status_pembayaran', 'lunas');
         }])->whereIn('status', ['disetujui', 'lunas']);
 
+        if ($this->type === 'primer') {
+            $query->whereIn('jenis_permohonan', ['Handphone', 'Motor', 'Barang Lain']);
+        } else {
+            $query->where(function ($q) {
+                $q->whereNotIn('jenis_permohonan', ['Handphone', 'Motor', 'Barang Lain'])
+                  ->orWhereNull('jenis_permohonan');
+            });
+        }
+
         $pinjamanList = $query->get();
 
         // Siapkan matriks data per pinjaman
         $rekapRows = [];
         $grandTotalPokok = 0;
         $grandTotalJasa = 0;
+        $grandTotalPastPokok = 0;
+        $grandTotalPastJasa = 0;
         $grandTotalBulan = array_fill(1, 12, ['pokok' => 0, 'jasa' => 0]);
 
         foreach ($pinjamanList as $item) {
@@ -35,14 +48,16 @@ new #[Layout('components.layouts.print')] class extends Component {
             $months = array_fill(1, 12, ['pokok' => 0, 'jasa' => 0, 'status' => '-']);
             $totalPokokRow = 0;
             $totalJasaRow = 0;
+            $pastPokokRow = 0;
+            $pastJasaRow = 0;
 
             foreach ($item->angsurans as $ang) {
                 $tgl = Carbon::parse($ang->tanggal_bayar);
-                if ($tgl->year == $this->year) {
-                    $ajuan = $item->jumlah_ajuan ?? 0;
-                    $jasa = min($ang->jumlah_bayar, $ajuan * 0.01);
-                    $pokok = max(0, $ang->jumlah_bayar - $jasa);
+                $ajuan = $item->jumlah_ajuan ?? 0;
+                $jasa = min($ang->jumlah_bayar, $ajuan * 0.01);
+                $pokok = max(0, $ang->jumlah_bayar - $jasa);
 
+                if ($tgl->year == $this->year) {
                     $months[$tgl->month] = [
                         'pokok' => $pokok,
                         'jasa' => $jasa,
@@ -54,11 +69,14 @@ new #[Layout('components.layouts.print')] class extends Component {
 
                     $grandTotalBulan[$tgl->month]['pokok'] += $pokok;
                     $grandTotalBulan[$tgl->month]['jasa'] += $jasa;
+                } elseif ($tgl->year < $this->year) {
+                    $pastPokokRow += $pokok;
+                    $pastJasaRow += $jasa;
                 }
             }
 
             // Jika filter tahun_ini aktif dan tidak ada transaksi di tahun ini, lewati atau tetap tampilkan
-            if ($totalPokokRow > 0 || $totalJasaRow > 0 || $this->filter === 'semua') {
+            if ($totalPokokRow > 0 || $totalJasaRow > 0 || $pastPokokRow > 0 || $pastJasaRow > 0 || $this->filter === 'semua') {
                 $rekapRows[] = [
                     'id' => $item->id,
                     'user_name' => $item->user->name,
@@ -67,6 +85,8 @@ new #[Layout('components.layouts.print')] class extends Component {
                     'tenor' => $item->tenor,
                     'angsuran_perbulan' => $item->angsuran_perbulan,
                     'months' => $months,
+                    'past_pokok' => $pastPokokRow,
+                    'past_jasa' => $pastJasaRow,
                     'total_pokok' => $totalPokokRow,
                     'total_jasa' => $totalJasaRow,
                     'total_row' => $totalPokokRow + $totalJasaRow,
@@ -74,10 +94,12 @@ new #[Layout('components.layouts.print')] class extends Component {
 
                 $grandTotalPokok += $totalPokokRow;
                 $grandTotalJasa += $totalJasaRow;
+                $grandTotalPastPokok += $pastPokokRow;
+                $grandTotalPastJasa += $pastJasaRow;
             }
         }
 
-        return compact('rekapRows', 'grandTotalPokok', 'grandTotalJasa', 'grandTotalBulan');
+        return compact('rekapRows', 'grandTotalPokok', 'grandTotalJasa', 'grandTotalBulan', 'grandTotalPastPokok', 'grandTotalPastJasa');
     }
 }; ?>
 
@@ -108,7 +130,7 @@ new #[Layout('components.layouts.print')] class extends Component {
     <div class="border-b-2 border-black pb-4 mb-6 text-center">
         <h1 class="text-xl font-black uppercase tracking-wider text-black">KOPERASI POLRES LOMBOK UTARA (PRIMKOPPOL LOTARA)</h1>
         <p class="text-xs text-zinc-700 font-semibold">Jl. Raya Tanjung - Bayan, Kabupaten Lombok Utara, Nusa Tenggara Barat</p>
-        <h2 class="text-base font-extrabold uppercase underline mt-2">REKAPITULASI ANGSURAN PINJAMAN ANGGOTA & PENDAPATAN JASA</h2>
+        <h2 class="text-base font-extrabold uppercase underline mt-2">REKAPITULASI ANGSURAN PINJAMAN {{ $type === 'primer' ? 'PRIMER' : 'REGULER / BARU & KOMPENSASI' }}</h2>
         <p class="text-xs font-bold mt-0.5">Tahun Buku: {{ $year }} &bull; Status Filter: {{ strtoupper($filter) }}</p>
     </div>
 
@@ -121,6 +143,7 @@ new #[Layout('components.layouts.print')] class extends Component {
                     <th class="border border-black px-2 py-2 text-left">Nama Anggota & NRP</th>
                     <th class="border border-black px-2 py-2 text-right">Total Pinjaman</th>
                     <th class="border border-black px-1 py-2">Tenor</th>
+                    <th class="border border-black px-1 py-2 text-center" style="width:50px">Th. Sblm</th>
                     <th class="border border-black px-1 py-2">Jan</th>
                     <th class="border border-black px-1 py-2">Feb</th>
                     <th class="border border-black px-1 py-2">Mar</th>
@@ -150,6 +173,14 @@ new #[Layout('components.layouts.print')] class extends Component {
                             Rp {{ number_format($row['jumlah_ajuan'], 0, ',', '.') }}
                         </td>
                         <td class="border border-black px-1 py-1.5 text-center font-bold">{{ $row['tenor'] }}x</td>
+                        <td class="border border-black px-1 py-1.5 text-right font-mono text-[9px]">
+                            @if($row['past_pokok'] > 0 || $row['past_jasa'] > 0)
+                                <div class="text-[8px] leading-tight text-emerald-700">P: {{ number_format($row['past_pokok'], 0, ',', '.') }}</div>
+                                <div class="text-[8px] leading-tight text-blue-700">J: {{ number_format($row['past_jasa'], 0, ',', '.') }}</div>
+                            @else
+                                <div class="text-center text-zinc-300">-</div>
+                            @endif
+                        </td>
                         
                         @for($m = 1; $m <= 12; $m++)
                             <td class="border border-black px-1 py-1.5 text-center {{ $row['months'][$m]['status'] === 'Lunas' ? 'bg-emerald-100/70 font-bold text-emerald-900' : 'text-zinc-300 font-mono' }}">
@@ -182,6 +213,14 @@ new #[Layout('components.layouts.print')] class extends Component {
             <tfoot>
                 <tr class="bg-zinc-200 border-2 border-black font-extrabold text-[10px] text-black">
                     <td colspan="4" class="border border-black px-3 py-2 text-right uppercase">Total Bulan:</td>
+                    <td class="border border-black px-1 py-2 text-right font-mono text-[9px]">
+                        @if($grandTotalPastPokok > 0 || $grandTotalPastJasa > 0)
+                            <div class="text-[8px] leading-tight text-emerald-700">P: {{ number_format($grandTotalPastPokok, 0, ',', '.') }}</div>
+                            <div class="text-[8px] leading-tight text-blue-700">J: {{ number_format($grandTotalPastJasa, 0, ',', '.') }}</div>
+                        @else
+                            -
+                        @endif
+                    </td>
                     @for($m = 1; $m <= 12; $m++)
                         <td class="border border-black px-1 py-2 text-center font-mono">
                             {{ $grandTotalBulan[$m]['pokok'] + $grandTotalBulan[$m]['jasa'] > 0 ? '✓' : '-' }}
@@ -208,16 +247,16 @@ new #[Layout('components.layouts.print')] class extends Component {
             <p class="font-semibold">Mengetahui,</p>
             <p class="font-bold">Ketua Primkoppol Lotara</p>
             <div class="h-16"></div>
-            <p class="font-bold underline">( ............................................ )</p>
-            <p class="text-[10px]">NRP. .................................</p>
+            <p class="font-bold underline">( I Made Sukadana )</p>
+            <p class="text-[10px]">NRP. 79060072</p>
         </div>
 
         <div class="col-span-1 text-center text-xs pt-2">
             <p class="font-semibold">Tanjung, {{ Carbon::now()->translatedFormat('d F Y') }}</p>
             <p class="font-bold">Bendahara Koperasi</p>
             <div class="h-16"></div>
-            <p class="font-bold underline">( ............................................ )</p>
-            <p class="text-[10px]">NRP. .................................</p>
+            <p class="font-bold underline">( Pande Nyoman Suastika )</p>
+            <p class="text-[10px]">NRP. 86071388</p>
         </div>
     </div>
 </div>

@@ -16,7 +16,8 @@ new #[Layout('components.layouts.app')] class extends Component
     public $foto;
     public string $foto_path = ''; // optional just in case
     public int $jumlah_barang = 1;
-    public string $satuan = 'Unit';
+    public string $satuan_pilihan = 'Unit';
+    public string $satuan_lainnya = '';
     public string $no_register = '';
     public int $harga = 0;
     public string $hargaFormatted = '0';
@@ -34,7 +35,8 @@ new #[Layout('components.layouts.app')] class extends Component
             'nama_barang' => 'required|string|max:255',
             'foto' => 'nullable|image|max:2048',
             'jumlah_barang' => 'required|integer|min:1',
-            'satuan' => 'required|string|max:255',
+            'satuan_pilihan' => 'required|string|max:255',
+            'satuan_lainnya' => 'required_if:satuan_pilihan,Lainnya|max:255',
             'no_register' => [
                 'required',
                 'string',
@@ -58,7 +60,8 @@ new #[Layout('components.layouts.app')] class extends Component
         $this->nama_barang = '';
         $this->foto = null;
         $this->jumlah_barang = 1;
-        $this->satuan = 'Unit';
+        $this->satuan_pilihan = 'Unit';
+        $this->satuan_lainnya = '';
         $this->no_register = '';
         $this->harga = 0;
         $this->hargaFormatted = $this->formatCurrency($this->harga);
@@ -78,7 +81,14 @@ new #[Layout('components.layouts.app')] class extends Component
         $this->tanggal_perolehan = $aset->tanggal_perolehan->format('Y-m-d');
         $this->nama_barang = $aset->nama_barang;
         $this->jumlah_barang = $aset->jumlah_barang;
-        $this->satuan = $aset->satuan ?? 'Unit';
+        $predefined = ['Unit', 'Buah', 'Set', 'Are', 'Meter Persegi', 'Lantai', 'Titik'];
+        if (in_array($aset->satuan, $predefined) || empty($aset->satuan)) {
+            $this->satuan_pilihan = $aset->satuan ?: 'Unit';
+            $this->satuan_lainnya = '';
+        } else {
+            $this->satuan_pilihan = 'Lainnya';
+            $this->satuan_lainnya = $aset->satuan;
+        }
         $this->no_register = $aset->no_register;
         $this->harga = $aset->harga;
         $this->hargaFormatted = $this->formatCurrency($aset->harga);
@@ -102,7 +112,7 @@ new #[Layout('components.layouts.app')] class extends Component
             'tanggal_perolehan' => $this->tanggal_perolehan,
             'nama_barang' => $this->nama_barang,
             'jumlah_barang' => $this->jumlah_barang,
-            'satuan' => $this->satuan,
+            'satuan' => $this->satuan_pilihan === 'Lainnya' ? $this->satuan_lainnya : $this->satuan_pilihan,
             'no_register' => $this->no_register,
             'harga' => $this->harga,
             'keadaan' => $this->keadaan,
@@ -163,7 +173,14 @@ new #[Layout('components.layouts.app')] class extends Component
         $this->tanggal_perolehan = $aset->tanggal_perolehan->format('Y-m-d');
         $this->nama_barang = $aset->nama_barang;
         $this->jumlah_barang = $aset->jumlah_barang;
-        $this->satuan = $aset->satuan ?? 'Unit';
+        $predefined = ['Unit', 'Buah', 'Set', 'Are', 'Meter Persegi', 'Lantai', 'Titik'];
+        if (in_array($aset->satuan, $predefined) || empty($aset->satuan)) {
+            $this->satuan_pilihan = $aset->satuan ?: 'Unit';
+            $this->satuan_lainnya = '';
+        } else {
+            $this->satuan_pilihan = 'Lainnya';
+            $this->satuan_lainnya = $aset->satuan;
+        }
         $this->no_register = $aset->no_register;
         $this->harga = $aset->harga;
         $this->keadaan = $aset->keadaan;
@@ -179,7 +196,7 @@ new #[Layout('components.layouts.app')] class extends Component
 
     public function getAsetsProperty()
     {
-        $query = Aset::query()->orderByDesc('created_at');
+        $query = Aset::query()->orderByDesc('tanggal_perolehan')->orderByDesc('created_at');
 
         if (!empty($this->search)) {
             $query->where('nama_barang', 'like', '%' . $this->search . '%')
@@ -191,8 +208,12 @@ new #[Layout('components.layouts.app')] class extends Component
 
     public function with(): array
     {
+        $grouped = $this->asets->groupBy(function($item) {
+            return $item->tanggal_perolehan->format('Y');
+        })->sortKeysDesc();
+
         return [
-            'assets' => $this->asets,
+            'groupedAssets' => $grouped,
         ];
     }
 };
@@ -231,29 +252,49 @@ new #[Layout('components.layouts.app')] class extends Component
                 <input type="text" wire:model="search" placeholder="Cari nama atau no register" class="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
             </div>
 
-            <div class="mt-4 space-y-4">
-                @forelse($assets as $item)
-                    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900">
-                        <div class="flex items-start gap-4">
-                            @if($item->foto_url)
-                                <img src="{{ $item->foto_url }}" alt="Foto {{ $item->nama_barang }}" class="h-16 w-16 rounded-2xl object-cover" />
-                            @else
-                                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-200 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">No Image</div>
-                            @endif
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-zinc-900 dark:text-white">{{ $item->nama_barang }}</h3>
-                                <p class="text-xs text-zinc-500 dark:text-zinc-400">Register: {{ $item->no_register }}</p>
-                                <p class="text-xs text-zinc-500 dark:text-zinc-400">Peroleh: {{ $item->tanggal_perolehan->format('d M Y') }}</p>
+            <div class="mt-4 space-y-6">
+                @forelse($groupedAssets as $year => $items)
+                    <div x-data="{ expanded: false }" class="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950 overflow-hidden">
+                        <button @click="expanded = !expanded" class="flex w-full items-center justify-between bg-zinc-50 px-6 py-4 text-left transition hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800">
+                            <div class="flex items-center gap-3">
+                                <flux:icon name="folder" class="size-6 text-indigo-500" />
+                                <div>
+                                    <h3 class="font-bold text-zinc-900 dark:text-white">Tahun {{ $year }}</h3>
+                                    <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $items->count() }} Aset/Inventaris</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                            <div class="text-sm text-zinc-700 dark:text-zinc-300">Jumlah: {{ $item->jumlah_barang }} {{ $item->satuan }}</div>
-                            <div class="text-sm text-zinc-700 dark:text-zinc-300">Harga: Rp {{ number_format($item->harga, 0, ',', '.') }}</div>
-                            <div class="text-sm text-zinc-700 dark:text-zinc-300">Keadaan: {{ $item->keadaan }}</div>
-                        </div>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <button wire:click="showEditForm({{ $item->id }})" class="rounded-2xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Edit</button>
-                            <button wire:click="deleteAset({{ $item->id }})" class="rounded-2xl border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition">Hapus</button>
+                            <flux:icon name="chevron-down" class="size-5 text-zinc-400 transition-transform duration-200" x-bind:class="expanded ? 'rotate-180' : ''" />
+                        </button>
+                        
+                        <div x-show="expanded" class="border-t border-zinc-200 p-6 dark:border-zinc-800 space-y-4">
+                            @foreach($items as $item)
+                                <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                                    <div class="flex items-start gap-4">
+                                        @if($item->foto_url)
+                                            <img src="{{ $item->foto_url }}" alt="Foto {{ $item->nama_barang }}" class="h-16 w-16 rounded-2xl object-cover" />
+                                        @else
+                                            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-200 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">No Image</div>
+                                        @endif
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold text-zinc-900 dark:text-white">{{ $item->nama_barang }}</h3>
+                                            <p class="text-xs text-zinc-500 dark:text-zinc-400">Register: {{ $item->no_register }}</p>
+                                            <p class="text-xs text-zinc-500 dark:text-zinc-400">Peroleh: {{ $item->tanggal_perolehan->format('d M Y') }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                                        <div class="text-sm text-zinc-700 dark:text-zinc-300">Jumlah: {{ $item->jumlah_barang }} {{ $item->satuan }}</div>
+                                        <div class="text-sm text-zinc-700 dark:text-zinc-300">Harga Satuan: Rp {{ number_format($item->harga, 0, ',', '.') }}</div>
+                                        <div class="text-sm text-zinc-700 dark:text-zinc-300">Keadaan: {{ $item->keadaan }}</div>
+                                        @if($item->jumlah_barang > 1)
+                                        <div class="text-sm font-bold text-zinc-900 dark:text-white">Total Harga: Rp {{ number_format($item->harga * $item->jumlah_barang, 0, ',', '.') }}</div>
+                                        @endif
+                                    </div>
+                                    <div class="mt-4 flex flex-wrap gap-2">
+                                        <button wire:click="showEditForm({{ $item->id }})" class="rounded-2xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Edit</button>
+                                        <button wire:click="deleteAset({{ $item->id }})" class="rounded-2xl border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition">Hapus</button>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 @empty
@@ -298,22 +339,29 @@ new #[Layout('components.layouts.app')] class extends Component
                 <div class="grid gap-4 sm:grid-cols-3">
                     <div>
                         <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Jumlah Barang</label>
-                        <input type="number" wire:model="jumlah_barang" min="1" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
+                        <input type="number" wire:model.live="jumlah_barang" min="1" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
                         @error('jumlah_barang') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Satuan</label>
-                        <input type="text" wire:model="satuan" list="satuan-list" placeholder="Contoh: Unit, Are" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
-                        <datalist id="satuan-list">
-                            <option value="Unit"></option>
-                            <option value="Buah"></option>
-                            <option value="Set"></option>
-                            <option value="Are"></option>
-                            <option value="Meter Persegi"></option>
-                            <option value="Lantai"></option>
-                            <option value="Titik"></option>
-                        </datalist>
-                        @error('satuan') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+                        <select wire:model.live="satuan_pilihan" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
+                            <option value="Unit">Unit</option>
+                            <option value="Buah">Buah</option>
+                            <option value="Set">Set</option>
+                            <option value="Are">Are</option>
+                            <option value="Meter Persegi">Meter Persegi</option>
+                            <option value="Lantai">Lantai</option>
+                            <option value="Titik">Titik</option>
+                            <option value="Lainnya">Lainnya...</option>
+                        </select>
+                        @error('satuan_pilihan') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+
+                        @if($satuan_pilihan === 'Lainnya')
+                            <div class="mt-2 relative">
+                                <input type="text" wire:model="satuan_lainnya" placeholder="Ketik satuan baru..." class="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
+                                @error('satuan_lainnya') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">No Register Aset</label>
@@ -323,10 +371,35 @@ new #[Layout('components.layouts.app')] class extends Component
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Harga Aset / Inventaris</label>
-                        <input type="text" wire:model.lazy="hargaFormatted" oninput="let v = this.value.replace(/[^0-9]/g, ''); v = v.replace(/^0+/, ''); this.value = v ? v.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';" class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
+                    <div x-data="{
+                        hargaInput: '',
+                        init() {
+                            this.$watch('$wire.hargaFormatted', value => {
+                                this.hargaInput = value;
+                            });
+                            this.hargaInput = $wire.hargaFormatted;
+                        },
+                        get total() {
+                            let hNum = parseInt(this.hargaInput.toString().replace(/[^0-9]/g, '')) || 0;
+                            return hNum * $wire.jumlah_barang;
+                        },
+                        formatRupiah(number) {
+                            return new Intl.NumberFormat('id-ID').format(number);
+                        }
+                    }">
+                        <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Harga Aset (Satuan)</label>
+                        <input type="text" 
+                               wire:model.blur="hargaFormatted" 
+                               x-on:input="let v = $event.target.value.replace(/[^0-9]/g, ''); v = v.replace(/^0+/, ''); $event.target.value = v ? v.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; hargaInput = $event.target.value;" 
+                               class="mt-1 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white" />
                         @error('harga') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+                        
+                        <template x-if="$wire.jumlah_barang > 1 && total > 0">
+                            <div class="mt-3 rounded-xl bg-indigo-50 px-4 py-3 border border-indigo-100 dark:bg-indigo-900/20 dark:border-indigo-800/40">
+                                <p class="text-xs text-indigo-600 dark:text-indigo-400">Total Harga (<span x-text="$wire.jumlah_barang"></span> <span x-text="$wire.satuan_pilihan === 'Lainnya' ? $wire.satuan_lainnya : $wire.satuan_pilihan"></span>)</p>
+                                <p class="text-lg font-bold text-indigo-900 dark:text-indigo-300">Rp <span x-text="formatRupiah(total)"></span></p>
+                            </div>
+                        </template>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Keadaan Aset</label>

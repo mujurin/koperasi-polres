@@ -1,5 +1,6 @@
 @php
     $totalAnggota = \App\Models\User::count();
+    $totalSimpananPokok = \App\Models\SimpananPokok::sum('jumlah');
     $totalSimpananWajib = \App\Models\SimpananWajib::sum('jumlah');
     $antrianPinjaman = \App\Models\Pinjaman::where('status', 'proses')->count();
 
@@ -58,7 +59,6 @@
             </p>
         </div>
 
-        <livewire:admin.sync-anggota />
 
         {{-- Section 1: Ringkasan Umum --}}
         <div>
@@ -66,7 +66,7 @@
                 <flux:icon name="squares-2x2" class="size-4 text-indigo-500" />
                 Ringkasan Umum & Simpanan
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div
                     class="group relative overflow-hidden rounded-2xl bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 p-6 flex flex-col justify-between shadow-sm transition-all duration-300 hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-800">
                     <div class="flex items-center justify-between mb-4">
@@ -79,9 +79,27 @@
                     </div>
                     <div>
                         <h3 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-                            {{ $totalAnggota }}
+                            {{ $totalAnggota - 1}}
                         </h3>
                         <p class="text-sm text-zinc-500 dark:text-zinc-400 font-medium mt-1">Total Anggota Koperasi</p>
+                    </div>
+                </div>
+
+                <div
+                    class="group relative overflow-hidden rounded-2xl bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 p-6 flex flex-col justify-between shadow-sm transition-all duration-300 hover:shadow-md hover:border-cyan-300 dark:hover:border-cyan-800">
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="w-12 h-12 bg-cyan-50 dark:bg-cyan-900/30 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                            <flux:icon name="wallet" class="size-6 text-cyan-600 dark:text-cyan-400" />
+                        </div>
+                        <span
+                            class="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400">Pokok</span>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+                            Rp {{ number_format($totalSimpananPokok, 0, ',', '.') }}
+                        </h3>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400 font-medium mt-1">Total Simpanan Pokok</p>
                     </div>
                 </div>
 

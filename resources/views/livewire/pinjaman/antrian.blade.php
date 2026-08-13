@@ -135,7 +135,9 @@ new #[Layout('components.layouts.app')] class extends Component {
                                             </p>
                                             <div class="flex items-center gap-2 mt-0.5">
                                                 <p class="text-xs text-zinc-400 font-mono">{{ $pinjaman->user->nrp ?? '-' }}</p>
-                                                @if($pinjaman->user && $pinjaman->user->pinjaman()->where('status', 'disetujui')->where('id', '!=', $pinjaman->id)->exists())
+                                                @if(in_array($pinjaman->jenis_permohonan, ['Handphone', 'Motor', 'Barang Lain']))
+                                                    <span class="inline-flex rounded-full bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 uppercase tracking-wider">Primer</span>
+                                                @elseif($pinjaman->user && $pinjaman->user->pinjaman()->where('status', 'disetujui')->where('id', '!=', $pinjaman->id)->exists())
                                                     <span class="inline-flex rounded-full bg-orange-100 px-1.5 py-0.5 text-[9px] font-bold text-orange-700 dark:bg-orange-900/40 dark:text-orange-400 uppercase tracking-wider">Kompensasi</span>
                                                 @else
                                                     <span class="inline-flex rounded-full bg-emerald-100 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 uppercase tracking-wider">Baru</span>
